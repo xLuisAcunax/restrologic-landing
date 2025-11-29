@@ -1,5 +1,22 @@
 ---
-import { defaultLang } from '../i18n/ui';
+import Layout from '../layouts/Layout.astro';
+import Hero from '../components/Hero.astro';
+import Features from '../components/Features.astro';
+import Modules from '../components/Modules.astro';
+import Pricing from '../components/Pricing.astro';
+import Contact from '../components/Contact.astro';
 
-return Astro.redirect(`/${defaultLang}/`);
+// Default to Spanish for the root path
+const lang = 'es';
+---
+
+<Layout title="RestroLogic - Restaurant SaaS">
+	<main>
+		<Hero />
+        <Features />
+        <Modules />
+        <Pricing />
+        <Contact />
+	</main>
+</Layout>
 ---

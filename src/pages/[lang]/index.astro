@@ -5,12 +5,14 @@ import Features from '../../components/Features.astro';
 import Modules from '../../components/Modules.astro';
 import Pricing from '../../components/Pricing.astro';
 import Contact from '../../components/Contact.astro';
-import { languages } from '../../i18n/ui';
+import { languages, defaultLang } from '../../i18n/ui';
 
 export function getStaticPaths() {
-  return Object.keys(languages).map((lang) => {
+  return Object.keys(languages)
+    .filter(lang => lang !== defaultLang)
+    .map((lang) => {
       return { params: { lang } };
-  });
+    });
 }
 
 const { lang } = Astro.params;

@@ -1,0 +1,30 @@
+---
+import { getLangFromUrl, useTranslations } from '../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+const modules = [
+  { title: t('modules.delivery'), desc: t('modules.delivery.desc'), img: "/images/domicilios.png" },
+  { title: t('modules.invoicing'), desc: t('modules.invoicing.desc'), img: "/images/facturacion.png" },
+  { title: t('modules.inventory'), desc: t('modules.inventory.desc'), img: "/images/inventarios.png" },
+  { title: t('modules.admin'), desc: t('modules.admin.desc'), img: "/images/admin.png" },
+];
+---
+
+<section id="modules" class="py-20 bg-base-200">
+  <div class="container mx-auto px-4">
+    <h2 class="text-4xl font-bold text-center mb-10">{t('modules.title')}</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+      {modules.map(module => (
+        <div class="card bg-base-100 shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
+          <figure><img src={module.img} alt={module.title} class="object-cover h-64 w-full" /></figure>
+          <div class="card-body">
+            <h3 class="card-title">{module.title}</h3>
+            <p>{module.desc}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

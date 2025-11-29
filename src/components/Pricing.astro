@@ -1,0 +1,42 @@
+---
+import { getLangFromUrl, useTranslations } from '../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+const plans = [
+  { name: 'Basic', price: '$29', features: ['Single Branch', 'Basic Reports', '5 Users'] },
+  { name: 'Pro', price: '$59', features: ['Multi Branch', 'Advanced Reports', 'Unlimited Users', 'Inventory Module'] },
+  { name: 'Enterprise', price: 'Custom', features: ['All Modules', 'Dedicated Support', 'Custom Dev', 'White Label'] },
+];
+---
+
+<section id="pricing" class="py-20 relative bg-cover bg-center" style="background-image: url('/images/hero-bg.jpg');">
+  <div class="absolute inset-0 bg-neutral/80"></div>
+  <div class="container mx-auto px-4 relative z-10">
+    <h2 class="text-4xl font-bold text-center mb-10 text-white">{t('pricing.title')}</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+      {plans.map((plan, index) => (
+        <div class={`card bg-base-100 shadow-xl border ${index === 1 ? 'border-primary border-2 scale-105' : 'border-base-200'}`}>
+          <div class="card-body items-center text-center">
+            <h3 class="card-title text-2xl">{plan.name}</h3>
+            <div class="text-4xl font-bold my-4">{plan.price}</div>
+            <ul class="w-full text-left mb-6">
+              {plan.features.map(feature => (
+                <li class="flex items-center gap-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-success" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                  </svg>
+                  {feature}
+                </li>
+              ))}
+            </ul>
+            <div class="card-actions">
+              <button class={`btn ${index === 1 ? 'btn-primary' : 'btn-outline'}`}>Choose Plan</button>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

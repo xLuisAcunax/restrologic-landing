@@ -1,0 +1,37 @@
+---
+import { getLangFromUrl, useTranslations } from '../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+---
+
+<section id="contact" class="py-20 bg-base-300">
+  <div class="container mx-auto px-4 max-w-2xl">
+    <h2 class="text-4xl font-bold text-center mb-10">{t('contact.title')}</h2>
+    <div class="card bg-base-100 shadow-xl border-t-4 border-primary">
+      <div class="card-body">
+        <div class="form-control w-full mb-4">
+          <label class="label">
+            <span class="label-text font-semibold">{t('contact.name')}</span>
+          </label>
+          <input type="text" placeholder={t('contact.name')} class="input input-bordered w-full" />
+        </div>
+        <div class="form-control w-full mb-4">
+          <label class="label">
+            <span class="label-text font-semibold">{t('contact.email')}</span>
+          </label>
+          <input type="email" placeholder={t('contact.email')} class="input input-bordered w-full" />
+        </div>
+        <div class="form-control w-full mb-4">
+          <label class="label">
+            <span class="label-text font-semibold">{t('contact.message')}</span>
+          </label>
+          <textarea class="textarea textarea-bordered h-24 w-full" placeholder={t('contact.message')}></textarea>
+        </div>
+        <div class="form-control mt-6">
+          <button class="btn btn-primary w-full">{t('contact.submit')}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

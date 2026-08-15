@@ -7,7 +7,7 @@
  * new locale never has to touch a component.
  */
 
-import type { IconName } from '../components/ui/Icon.astro';
+import type { IconName } from '../components/ui/icons';
 import type { TranslationKey } from '../i18n/ui';
 
 /* -------------------------------------------------------------------------- */

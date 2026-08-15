@@ -1,0 +1,48 @@
+---
+import Icon from '../ui/Icon.astro';
+import { languages } from '../../i18n/ui';
+import {
+  getLangFromUrl,
+  useTranslations,
+  useTranslatedPath,
+  type Lang,
+} from '../../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const translatePath = useTranslatedPath(lang);
+
+const entries = Object.entries(languages) as [Lang, string][];
+---
+
+<div class="dropdown" data-dropdown data-open="false">
+  <button
+    type="button"
+    class="iconbtn"
+    data-dropdown-trigger
+    aria-expanded="false"
+    aria-haspopup="menu"
+    title={t('nav.language')}
+  >
+    <span class="sr-only">{t('nav.language')}</span>
+    <Icon name="globe" />
+  </button>
+
+  <ul class="dropdown__panel" role="menu">
+    {
+      entries.map(([code, label]) => (
+        <li role="none">
+          <a
+            role="menuitem"
+            class="dropdown__item"
+            href={translatePath('/', code)}
+            hreflang={code}
+            aria-current={code === lang ? 'true' : undefined}
+          >
+            {label}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</div>

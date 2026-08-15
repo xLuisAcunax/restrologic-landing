@@ -1,22 +1,33 @@
 ---
+/**
+ * Default-locale (Spanish) home page.
+ * The section order is the narrative: promise → proof → flow → capability →
+ * evidence → onboarding → price → objections → ask.
+ */
 import Layout from '../layouts/Layout.astro';
-import Hero from '../components/Hero.astro';
-import Features from '../components/Features.astro';
-import Modules from '../components/Modules.astro';
-import Pricing from '../components/Pricing.astro';
-import Contact from '../components/Contact.astro';
-
-// Default to Spanish for the root path
-const lang = 'es';
+import Hero from '../components/sections/Hero.astro';
+import Marquee from '../components/sections/Marquee.astro';
+import Pipeline from '../components/sections/Pipeline.astro';
+import Features from '../components/sections/Features.astro';
+import Modules from '../components/sections/Modules.astro';
+import ScreenGallery from '../components/sections/ScreenGallery.astro';
+import ComingSoon from '../components/sections/ComingSoon.astro';
+import HowItWorks from '../components/sections/HowItWorks.astro';
+import Pricing from '../components/sections/Pricing.astro';
+import Faq from '../components/sections/Faq.astro';
+import Contact from '../components/sections/Contact.astro';
 ---
 
-<Layout title="RestroLogic - All-in-One Restaurant Management Software">
-	<main>
-		<Hero />
-        <Features />
-        <Modules />
-        <Pricing />
-        <Contact />
-	</main>
+<Layout>
+  <Hero />
+  <Marquee />
+  <Pipeline />
+  <Features />
+  <Modules />
+  <ScreenGallery />
+  <ComingSoon />
+  <HowItWorks />
+  <Pricing />
+  <Faq />
+  <Contact />
 </Layout>
----

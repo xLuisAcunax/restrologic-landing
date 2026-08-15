@@ -1,0 +1,101 @@
+---
+/**
+ * Tabbed viewer for the product screens that do not warrant a full row.
+ *
+ * Built on the tabs pattern rather than a carousel: every panel is in the DOM
+ * and reachable, arrow keys move between tabs, and with JS disabled the first
+ * panel is visible while the rest are plain anchors — no screen becomes
+ * unreachable if the script never runs.
+ */
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import SectionHeading from '../ui/SectionHeading.astro';
+import Icon from '../ui/Icon.astro';
+import { galleryScreens } from '../../lib/content';
+import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+
+const t = useTranslations(getLangFromUrl(Astro.url));
+
+const screens = import.meta.glob<{ default: ImageMetadata }>(
+  '../../assets/screens/*.webp',
+  { eager: true },
+);
+
+function screenFor(name: string): ImageMetadata {
+  const entry = screens[`../../assets/screens/${name}.webp`];
+  if (!entry) {
+    throw new Error(
+      `[ScreenGallery] Missing "src/assets/screens/${name}.webp". ` +
+        `Available: ${Object.keys(screens).join(', ')}`,
+    );
+  }
+  return entry.default;
+}
+---
+
+<section class="section section--tight gallery" id="gallery">
+  <div class="container">
+    <SectionHeading
+      eyebrow={t('gallery.eyebrow')}
+      title={t('gallery.title')}
+      lede={t('gallery.lede')}
+    />
+
+    <div class="gallery__shell" data-gallery data-reveal>
+      <div
+        class="gallery__tabs"
+        role="tablist"
+        aria-label={t('gallery.title')}
+      >
+        {
+          galleryScreens.map((screen, index) => (
+            <button
+              type="button"
+              role="tab"
+              id={`gtab-${screen.id}`}
+              class={`gallery__tab tone--${screen.tone}`}
+              data-gallery-tab={screen.id}
+              aria-selected={index === 0 ? 'true' : 'false'}
+              aria-controls={`gpanel-${screen.id}`}
+              tabindex={index === 0 ? 0 : -1}
+            >
+              <Icon name={screen.icon} />
+              <span>{t(screen.titleKey)}</span>
+            </button>
+          ))
+        }
+      </div>
+
+      <div class="gallery__stage">
+        {
+          galleryScreens.map((screen, index) => (
+            <div
+              role="tabpanel"
+              id={`gpanel-${screen.id}`}
+              class={`gallery__panel tone--${screen.tone}`}
+              data-gallery-panel={screen.id}
+              aria-labelledby={`gtab-${screen.id}`}
+              data-active={index === 0 ? 'true' : 'false'}
+              hidden={index !== 0}
+            >
+              <figure class="gallery__figure">
+                <Image
+                  src={screenFor(screen.image)}
+                  alt={t(screen.altKey)}
+                  widths={[560, 900, 1400]}
+                  sizes="(min-width: 60rem) 62vw, 92vw"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </figure>
+              <figcaption class="gallery__caption">
+                <h3 class="gallery__title">{t(screen.titleKey)}</h3>
+                <p class="gallery__text">{t(screen.textKey)}</p>
+              </figcaption>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</section>

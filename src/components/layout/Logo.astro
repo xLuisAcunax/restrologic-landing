@@ -1,0 +1,68 @@
+---
+/**
+ * The RestroLogic mark: a serving cloche whose interior is a rising chart —
+ * the product in one glyph (service + insight). Drawn on a 32×32 grid so it
+ * stays crisp at nav size.
+ *
+ * The gradient needs a document-unique id because the mark renders more than
+ * once per page (header, drawer, footer).
+ */
+interface Props {
+  size?: number;
+  class?: string;
+  id?: string;
+}
+
+const { size = 34, class: className, id = 'brand' } = Astro.props;
+const gradientId = `rl-logo-${id}`;
+---
+
+<svg
+  class={className}
+  width={size}
+  height={size}
+  viewBox="0 0 32 32"
+  fill="none"
+  xmlns="http://www.w3.org/2000/svg"
+  aria-hidden="true"
+  focusable="false"
+>
+  <defs>
+    <linearGradient id={gradientId} x1="4" y1="4" x2="28" y2="28" gradientUnits="userSpaceOnUse">
+      <stop stop-color="var(--rl-amber-300)" />
+      <stop offset="0.55" stop-color="var(--rl-amber-500)" />
+      <stop offset="1" stop-color="var(--rl-rose-500)" />
+    </linearGradient>
+  </defs>
+
+  <!-- Plate -->
+  <rect
+    x="2.5"
+    y="24"
+    width="27"
+    height="3.2"
+    rx="1.6"
+    fill={`url(#${gradientId})`}
+  />
+
+  <!-- Cloche dome -->
+  <path
+    d="M5 24a11 11 0 0 1 22 0"
+    stroke={`url(#${gradientId})`}
+    stroke-width="2.4"
+    stroke-linecap="round"
+  />
+
+  <!-- Handle -->
+  <circle cx="16" cy="10.4" r="1.9" fill={`url(#${gradientId})`} />
+
+  <!-- Rising service chart, held inside the dome -->
+  <path
+    d="M10.5 21.5l3.4-3.6 2.7 2.2 4.9-5.1"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    opacity="0.9"
+  />
+</svg>

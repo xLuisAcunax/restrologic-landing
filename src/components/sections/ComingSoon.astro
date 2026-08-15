@@ -1,0 +1,46 @@
+---
+/**
+ * Roadmap strip.
+ *
+ * These modules do not exist yet, so they are deliberately kept out of the
+ * feature grid, the pricing tiers and the FAQ. Stating them plainly as
+ * upcoming is more useful to a prospect than either over-promising or
+ * pretending they were never planned.
+ */
+import Icon from '../ui/Icon.astro';
+import { soonItems } from '../../lib/content';
+import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+
+const t = useTranslations(getLangFromUrl(Astro.url));
+---
+
+<section class="section section--tight" aria-labelledby="soon-title">
+  <div class="container">
+    <div class="soon" data-reveal>
+      <div class="soon__head">
+        <span class="chip chip--accent">
+          <span class="dot dot--pulse"></span>
+          {t('soon.badge')}
+        </span>
+        <h2 class="soon__title" id="soon-title">{t('soon.title')}</h2>
+        <p class="soon__lede">{t('soon.lede')}</p>
+      </div>
+
+      <ul class="soon__list" data-stagger>
+        {
+          soonItems.map((item) => (
+            <li class={`soon__item tone--${item.tone}`}>
+              <span class="icon-tile">
+                <Icon name={item.icon} />
+              </span>
+              <div>
+                <h3 class="soon__item-title">{t(item.titleKey)}</h3>
+                <p class="soon__item-text">{t(item.textKey)}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+</section>

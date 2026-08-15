@@ -1,0 +1,30 @@
+---
+import Icon from '../ui/Icon.astro';
+import { marqueeItems } from '../../lib/content';
+import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+
+const t = useTranslations(getLangFromUrl(Astro.url));
+
+/**
+ * The track renders the item list twice: the CSS animation translates it by
+ * exactly -50%, so the second copy lands where the first began and the loop is
+ * seamless. The duplicate is presentational only.
+ */
+const loop = [...marqueeItems, ...marqueeItems];
+---
+
+<section class="marquee" aria-label={t('marquee.label')}>
+  <div class="marquee__track">
+    {
+      loop.map((item, index) => (
+        <span
+          class={`marquee__item tone--${item.tone}`}
+          aria-hidden={index >= marqueeItems.length ? 'true' : undefined}
+        >
+          <Icon name={item.icon} />
+          {t(item.labelKey)}
+        </span>
+      ))
+    }
+  </div>
+</section>

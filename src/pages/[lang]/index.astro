@@ -1,29 +1,42 @@
 ---
+/**
+ * Prefixed-locale home page (`/en/`).
+ *
+ * Renders exactly the same composition as the default-locale page; every
+ * component resolves its own copy from the URL, so there is nothing to keep in
+ * sync between the two routes.
+ */
 import Layout from '../../layouts/Layout.astro';
-import Hero from '../../components/Hero.astro';
-import Features from '../../components/Features.astro';
-import Modules from '../../components/Modules.astro';
-import Pricing from '../../components/Pricing.astro';
-import Contact from '../../components/Contact.astro';
+import Hero from '../../components/sections/Hero.astro';
+import Marquee from '../../components/sections/Marquee.astro';
+import Pipeline from '../../components/sections/Pipeline.astro';
+import Features from '../../components/sections/Features.astro';
+import Modules from '../../components/sections/Modules.astro';
+import ScreenGallery from '../../components/sections/ScreenGallery.astro';
+import ComingSoon from '../../components/sections/ComingSoon.astro';
+import HowItWorks from '../../components/sections/HowItWorks.astro';
+import Pricing from '../../components/sections/Pricing.astro';
+import Faq from '../../components/sections/Faq.astro';
+import Contact from '../../components/sections/Contact.astro';
 import { languages, defaultLang } from '../../i18n/ui';
 
 export function getStaticPaths() {
   return Object.keys(languages)
-    .filter(lang => lang !== defaultLang)
-    .map((lang) => {
-      return { params: { lang } };
-    });
+    .filter((lang) => lang !== defaultLang)
+    .map((lang) => ({ params: { lang } }));
 }
-
-const { lang } = Astro.params;
 ---
 
-<Layout title="RestroLogic - Restaurant SaaS">
-	<main>
-		<Hero />
-        <Features />
-        <Modules />
-        <Pricing />
-        <Contact />
-	</main>
+<Layout>
+  <Hero />
+  <Marquee />
+  <Pipeline />
+  <Features />
+  <Modules />
+  <ScreenGallery />
+  <ComingSoon />
+  <HowItWorks />
+  <Pricing />
+  <Faq />
+  <Contact />
 </Layout>

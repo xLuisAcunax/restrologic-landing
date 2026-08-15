@@ -1,0 +1,207 @@
+---
+/**
+ * Hand-built product mock for the hero.
+ *
+ * Deliberately not a screenshot: it is ~4 KB of markup instead of a multi-MB
+ * image, it re-colours itself for both themes, it stays sharp on any display,
+ * and parts of it animate. It is decorative — the surrounding copy carries the
+ * meaning — so the whole block is hidden from assistive technology.
+ */
+import Icon from '../ui/Icon.astro';
+import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+
+const t = useTranslations(getLangFromUrl(Astro.url));
+
+/** Floor map. `state` drives the colour; empty means the table is free. */
+const tables: { id: string; state: '' | 'busy' | 'ready' }[] = [
+  { id: '01', state: 'busy' },
+  { id: '02', state: '' },
+  { id: '03', state: 'ready' },
+  { id: '04', state: 'busy' },
+  { id: '05', state: '' },
+  { id: '06', state: 'busy' },
+  { id: '07', state: '' },
+  { id: '08', state: 'busy' },
+  { id: '09', state: 'ready' },
+  { id: '10', state: '' },
+  { id: '11', state: 'busy' },
+  { id: '12', state: 'ready' },
+];
+
+const tickets = [
+  { table: '04', items: '3', minutes: '4', state: 'kitchen' as const },
+  { table: '08', items: '2', minutes: '9', state: 'ready' as const },
+  { table: '02', items: '5', minutes: '17', state: 'paid' as const },
+];
+
+const stateLabel = {
+  kitchen: t('mock.state.kitchen'),
+  ready: t('mock.state.ready'),
+  paid: t('mock.state.paid'),
+} as const;
+
+const railIcons = [
+  'dashboard',
+  'utensils',
+  'chefHat',
+  'package',
+  'receipt',
+  'chart',
+] as const;
+---
+
+<div class="mock" aria-hidden="true">
+  <!-- Window chrome -->
+  <div class="mock__bar">
+    <div class="mock__lights"><i></i><i></i><i></i></div>
+    <div class="mock__url">{t('mock.url')}</div>
+  </div>
+
+  <div class="mock__body">
+    <!-- Module rail -->
+    <nav class="mock__rail">
+      {
+        railIcons.map((icon, index) => (
+          <span class="mock__railitem" data-active={index === 0 ? 'true' : undefined}>
+            <Icon name={icon} />
+          </span>
+        ))
+      }
+    </nav>
+
+    <div class="mock__main">
+      <div class="mock__head">
+        <div>
+          <div class="mock__h">{t('mock.title')}</div>
+          <div class="mock__sub">{t('mock.subtitle')}</div>
+        </div>
+        <span class="chip chip--accent">
+          <span class="dot dot--pulse"></span>
+          Live
+        </span>
+      </div>
+
+      <!-- KPI row -->
+      <div class="mock__kpis">
+        <div class="mock__kpi">
+          <div class="mock__kpi-label">{t('mock.kpi.1')}</div>
+          <div class="mock__kpi-val">$4.82M</div>
+          <div class="mock__kpi-trend">+12.4%</div>
+        </div>
+        <div class="mock__kpi">
+          <div class="mock__kpi-label">{t('mock.kpi.2')}</div>
+          <div class="mock__kpi-val">148</div>
+          <div class="mock__kpi-trend">+8.1%</div>
+        </div>
+        <div class="mock__kpi">
+          <div class="mock__kpi-label">{t('mock.kpi.3')}</div>
+          <div class="mock__kpi-val">$32.5K</div>
+          <div class="mock__kpi-trend">+3.9%</div>
+        </div>
+      </div>
+
+      <!-- Sales sparkline -->
+      <div class="mock__chart">
+        <svg viewBox="0 0 200 60" preserveAspectRatio="none">
+          <defs>
+            <linearGradient id="rl-spark-grad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="var(--brand)" stop-opacity="0.32"></stop>
+              <stop offset="100%" stop-color="var(--brand)" stop-opacity="0"></stop>
+            </linearGradient>
+          </defs>
+          <path
+            class="mock__spark-fill"
+            d="M0 45 L20 38 L40 42 L60 28 L80 32 L100 20 L120 26 L140 14 L160 18 L180 8 L200 12 L200 60 L0 60 Z"
+          ></path>
+          <path
+            class="mock__spark-line"
+            data-mock-spark
+            d="M0 45 L20 38 L40 42 L60 28 L80 32 L100 20 L120 26 L140 14 L160 18 L180 8 L200 12"
+          ></path>
+        </svg>
+      </div>
+
+      <!-- Floor map -->
+      <div>
+        <div class="mock__kpi-label" style="margin-bottom:.35rem">
+          {t('mock.floor')}
+        </div>
+        <div class="mock__floor">
+          {
+            tables.map((table) => (
+              <span
+                class="mock__table"
+                data-mock-table
+                data-state={table.state || undefined}
+              >
+                {table.id}
+              </span>
+            ))
+          }
+        </div>
+      </div>
+
+      <!-- Live tickets -->
+      <div>
+        <div class="mock__kpi-label" style="margin-bottom:.35rem">
+          {t('mock.tickets')}
+        </div>
+        <div class="mock__tickets">
+          {
+            tickets.map((ticket) => (
+              <div class="mock__ticket">
+                <span class="mock__ticket-name">Mesa {ticket.table}</span>
+                <span class="mock__ticket-meta">
+                  {ticket.items} · {ticket.minutes} min
+                </span>
+                <span class="mock__ticket-state" data-s={ticket.state}>
+                  {stateLabel[ticket.state]}
+                </span>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Floating notification cards -->
+<div class="floatcard floatcard--kds is-floating" data-float aria-hidden="true">
+  <span class="icon-tile icon-tile--accent" style="inline-size:2rem;block-size:2rem">
+    <Icon name="chefHat" />
+  </span>
+  <span class="floatcard__body">
+    <span class="floatcard__title">{t('mock.card.kds.title')}</span>
+    <span class="floatcard__meta">{t('mock.card.kds.meta')}</span>
+  </span>
+</div>
+
+<div
+  class="floatcard floatcard--stock is-floating is-floating--slow"
+  data-float
+  aria-hidden="true"
+>
+  <span class="icon-tile" style="inline-size:2rem;block-size:2rem">
+    <Icon name="package" />
+  </span>
+  <span class="floatcard__body">
+    <span class="floatcard__title">{t('mock.card.stock.title')}</span>
+    <span class="floatcard__meta">{t('mock.card.stock.meta')}</span>
+  </span>
+</div>
+
+<div
+  class="floatcard floatcard--cash is-floating is-floating--fast"
+  data-float
+  aria-hidden="true"
+>
+  <span class="icon-tile icon-tile--accent" style="inline-size:2rem;block-size:2rem">
+    <Icon name="receipt" />
+  </span>
+  <span class="floatcard__body">
+    <span class="floatcard__title">{t('mock.card.cash.title')}</span>
+    <span class="floatcard__meta">{t('mock.card.cash.meta')}</span>
+  </span>
+</div>
+

@@ -1,0 +1,798 @@
+/* ==========================================================================
+   RestroLogic — Design Tokens
+   --------------------------------------------------------------------------
+   The palette is lifted from the RestroLogic product UI so the landing page
+   and the app read as one brand: indigo ink, amber for the brand and the
+   active state, cyan for actions, and mint / rose / violet / teal as
+   functional accents on a cool blue-grey canvas.
+
+   Layers:
+     1. Primitives  (--rl-<hue>-<step>)  raw, theme-agnostic values
+     2. Hue ramps   (--hue-<name>-*)     the multi-colour accent system
+     3. Semantics   (--bg, --text, …)    meaning, theme-dependent
+   Components MUST only consume semantic or hue tokens, never primitives.
+   ========================================================================== */
+
+:root {
+  /* =====================================================================
+     1. PRIMITIVES
+     ===================================================================== */
+
+  /* Amber — the brand hue. The "Logic" in the wordmark, the active sidebar
+     item, the "saldo esperado" figure. */
+  --rl-amber-50: #fff8ec;
+  --rl-amber-100: #ffedd0;
+  --rl-amber-200: #fed9a4;
+  --rl-amber-300: #fdbc6d;
+  --rl-amber-400: #fba43f;
+  --rl-amber-500: #f59e0b;
+  --rl-amber-600: #d97d06;
+  --rl-amber-700: #96500a; /* AA on --bg and --bg-tint; #a85a08 was 3.98 */
+  --rl-amber-800: #82440a;
+  --rl-amber-900: #542b08;
+
+  /* Cyan — the app's action colour (Agregar, Guardar, Buscar Registros). */
+  --rl-cyan-50: #ecfbff;
+  --rl-cyan-100: #cff4fd;
+  --rl-cyan-200: #a3e9f9;
+  --rl-cyan-300: #67d8f2;
+  --rl-cyan-400: #2bbfe2;
+  --rl-cyan-500: #11a5c8;
+  --rl-cyan-600: #0c7f9f;
+  --rl-cyan-700: #0d6280;
+  --rl-cyan-800: #114f66;
+  --rl-cyan-900: #0f3547;
+
+  /* Indigo — the ink. Headings, and the "Restro" in the wordmark. */
+  --rl-indigo-50: #eef1ff;
+  --rl-indigo-100: #dfe4ff;
+  --rl-indigo-200: #c3caff;
+  --rl-indigo-300: #a0a7fb;
+  --rl-indigo-400: #7c7ef2;
+  --rl-indigo-500: #5f5ae4;
+  --rl-indigo-600: #4a3fca;
+  --rl-indigo-700: #3a2f9c;
+  --rl-indigo-800: #2b2473;
+  --rl-indigo-900: #1e1a4f;
+  --rl-indigo-950: #140f33;
+
+  /* Mint — availability, success, "DISPONIBLE". */
+  --rl-mint-50: #e7fbf2;
+  --rl-mint-100: #c8f5e1;
+  --rl-mint-200: #97ebc9;
+  --rl-mint-300: #56d9a9;
+  --rl-mint-400: #2bc189;
+  --rl-mint-500: #12a570;
+  --rl-mint-600: #0a7c55;
+  --rl-mint-700: #0a6144;
+  --rl-mint-800: #094a34;
+  --rl-mint-900: #063324;
+
+  /* Rose — alerts, occupied tables, destructive actions. */
+  --rl-rose-50: #fff0f3;
+  --rl-rose-100: #ffdde3;
+  --rl-rose-200: #ffc0cc;
+  --rl-rose-300: #fd8fa6;
+  --rl-rose-400: #f65f7f;
+  --rl-rose-500: #e63b60;
+  --rl-rose-600: #c31640;
+  --rl-rose-700: #9d1234;
+  --rl-rose-800: #781029;
+  --rl-rose-900: #4d0a1a;
+
+  /* Violet — a sixth hue so no two feature cards repeat a colour. */
+  --rl-violet-50: #f6f1ff;
+  --rl-violet-100: #ebe1ff;
+  --rl-violet-200: #d9c6ff;
+  --rl-violet-300: #bf9dfc;
+  --rl-violet-400: #a273f6;
+  --rl-violet-500: #8a51e8;
+  --rl-violet-600: #7132c6;
+  --rl-violet-700: #5a279e;
+  --rl-violet-800: #431e77;
+  --rl-violet-900: #2c144f;
+
+  /* Teal — the "Cobrar / Pagar" buttons. */
+  --rl-teal-200: #a8e5dc;
+  --rl-teal-300: #5ed6c4;
+  --rl-teal-400: #2bbda9;
+  --rl-teal-500: #109e8c;
+  --rl-teal-600: #0b6f63;
+  --rl-teal-700: #0b5e54;
+
+  /* Slate — the neutral ramp. Cool blue-grey, matching the app chrome. */
+  --rl-slate-0: #ffffff;
+  --rl-slate-25: #fafbfd;
+  --rl-slate-50: #f3f6fa;
+  --rl-slate-100: #edf1f7;
+  --rl-slate-200: #dee4ee;
+  --rl-slate-300: #c3ccdb;
+  --rl-slate-400: #949fb0;
+  --rl-slate-500: #6b7490;
+  --rl-slate-600: #4b5270;
+  --rl-slate-700: #363c54;
+  --rl-slate-800: #272c40;
+  --rl-slate-850: #1e2233;
+  --rl-slate-900: #161a29;
+  --rl-slate-950: #0d101c;
+
+  /* -------------------------------------------------------------------
+     Typography
+     ------------------------------------------------------------------- */
+  --font-display: "Outfit", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-body: "Outfit", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-accent: "Fraunces", "Iowan Old Style", Georgia, serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  /* Fluid type scale — clamp(min, preferred, max). */
+  --text-2xs: 0.6875rem;
+  --text-xs: 0.75rem;
+  --text-sm: 0.8125rem;
+  --text-base: clamp(0.9375rem, 0.9rem + 0.18vw, 1rem);
+  --text-md: clamp(1rem, 0.96rem + 0.22vw, 1.0625rem);
+  --text-lg: clamp(1.0625rem, 1rem + 0.35vw, 1.1875rem);
+  --text-xl: clamp(1.1875rem, 1.08rem + 0.5vw, 1.375rem);
+  --text-2xl: clamp(1.375rem, 1.2rem + 0.8vw, 1.75rem);
+  --text-3xl: clamp(1.625rem, 1.35rem + 1.3vw, 2.25rem);
+  --text-4xl: clamp(1.9rem, 1.45rem + 2.1vw, 3rem);
+  --text-5xl: clamp(2.15rem, 1.55rem + 2.7vw, 3.5rem);
+  --text-6xl: clamp(2.5rem, 1.5rem + 3.9vw, 4.35rem);
+
+  --leading-tight: 1.06;
+  --leading-snug: 1.2;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.68;
+
+  --tracking-tighter: -0.035em;
+  --tracking-tight: -0.02em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.02em;
+  --tracking-widest: 0.14em;
+
+  /* -------------------------------------------------------------------
+     Space
+     ------------------------------------------------------------------- */
+  --space-3xs: 0.25rem;
+  --space-2xs: 0.5rem;
+  --space-xs: 0.75rem;
+  --space-sm: 1rem;
+  --space-md: 1.5rem;
+  --space-lg: 2rem;
+  --space-xl: 3rem;
+  --space-2xl: 4rem;
+  --space-3xl: 6rem;
+  --space-4xl: 8rem;
+
+  --section-py: clamp(4rem, 3rem + 6vw, 8rem);
+  --section-py-sm: clamp(3rem, 2.4rem + 3vw, 5rem);
+
+  --container-max: 76rem;
+  --container-narrow: 46rem;
+  --container-wide: 88rem;
+  --gutter: clamp(1.15rem, 0.6rem + 2.4vw, 2.5rem);
+
+  /* -------------------------------------------------------------------
+     Radius
+     ------------------------------------------------------------------- */
+  --radius-xs: 0.375rem;
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.375rem;
+  --radius-2xl: 1.875rem;
+  --radius-full: 999rem;
+
+  /* -------------------------------------------------------------------
+     Motion
+     ------------------------------------------------------------------- */
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-soft: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  --dur-instant: 90ms;
+  --dur-fast: 180ms;
+  --dur-base: 280ms;
+  --dur-slow: 520ms;
+  --dur-slower: 900ms;
+
+  --z-base: 0;
+  --z-raised: 10;
+  --z-sticky: 100;
+  --z-header: 200;
+  --z-overlay: 300;
+  --z-modal: 400;
+  --z-toast: 500;
+}
+
+/* ==========================================================================
+   3. SEMANTIC TOKENS — LIGHT (default)
+   ========================================================================== */
+
+:root,
+[data-theme="light"] {
+  color-scheme: light;
+
+  /* Surfaces — cool blue-grey canvas with white cards, as in the app. */
+  --bg: var(--rl-slate-100);
+  --bg-tint: var(--rl-slate-200);
+  --surface: var(--rl-slate-0);
+  --surface-2: var(--rl-slate-50);
+  --surface-sunken: var(--rl-slate-200);
+  --surface-inverse: var(--rl-slate-800);
+
+  --glass: rgb(255 255 255 / 0.74);
+  --glass-strong: rgb(255 255 255 / 0.92);
+  --glass-blur: 16px;
+
+  --border: rgb(30 26 79 / 0.12);
+  --border-strong: rgb(30 26 79 / 0.22);
+  --border-brand: rgb(217 125 6 / 0.4);
+
+  /* Text — deep indigo ink, matching the app's headings. */
+  --text: var(--rl-indigo-950);
+  --text-muted: var(--rl-slate-600);
+  --text-subtle: #5a6180;
+  --text-inverse: var(--rl-slate-50);
+  --text-on-brand: #241505;
+
+  /* Brand (amber) */
+  --brand: var(--rl-amber-600);
+  --brand-hover: var(--rl-amber-700);
+  --brand-active: var(--rl-amber-800);
+  --brand-ink: var(--rl-amber-700);
+  --brand-soft: var(--rl-amber-50);
+  --brand-soft-border: var(--rl-amber-200);
+  --brand-strong: var(--rl-amber-400);
+
+  /* Action (cyan) — the app's primary button colour. */
+  --action: var(--rl-cyan-600);
+  --action-ink: var(--rl-cyan-700);
+  --action-soft: var(--rl-cyan-50);
+  --action-border: var(--rl-cyan-200);
+
+  /* Accent (mint) */
+  --accent: var(--rl-mint-600);
+  --accent-ink: var(--rl-mint-700);
+  --accent-soft: var(--rl-mint-50);
+
+  /* Status */
+  --status-info: var(--rl-cyan-700);
+  --status-warn: var(--rl-amber-700);
+  --status-danger: var(--rl-rose-600);
+  --status-success: var(--rl-mint-700);
+
+  /* Elevation — cool-tinted, matching the app's soft card shadows. */
+  --shadow-rgb: 30 34 51;
+  --shadow-xs: 0 1px 2px rgb(var(--shadow-rgb) / 0.06);
+  --shadow-sm: 0 1px 2px rgb(var(--shadow-rgb) / 0.05),
+    0 2px 8px rgb(var(--shadow-rgb) / 0.06);
+  --shadow-md: 0 2px 4px rgb(var(--shadow-rgb) / 0.05),
+    0 10px 24px rgb(var(--shadow-rgb) / 0.09);
+  --shadow-lg: 0 4px 10px rgb(var(--shadow-rgb) / 0.06),
+    0 20px 46px rgb(var(--shadow-rgb) / 0.12);
+  --shadow-xl: 0 10px 20px rgb(var(--shadow-rgb) / 0.07),
+    0 36px 74px rgb(var(--shadow-rgb) / 0.16);
+  --shadow-brand: 0 10px 28px rgb(245 158 11 / 0.42);
+
+  /* Gradients ---------------------------------------------------------- */
+
+  /* Decorative only — nothing carries text on this one. */
+  --grad-brand: linear-gradient(
+    135deg,
+    var(--rl-amber-400) 0%,
+    var(--rl-amber-600) 55%,
+    var(--rl-rose-500) 100%
+  );
+
+  /* Text-safe ramp: every brand surface with a label uses this instead.
+     --brand-strong is its lightest stop, i.e. the worst case for contrast. */
+  --grad-brand-strong: linear-gradient(
+    135deg,
+    var(--rl-amber-300) 0%,
+    var(--brand-strong) 45%,
+    var(--rl-amber-600) 100%
+  );
+
+  /* The multi-hue wash behind the hero and CTA. Four hues at low alpha —
+     this is what stops the page reading monochrome. */
+  --grad-warm-wash: radial-gradient(
+      62rem 38rem at 8% -6%,
+      rgb(245 158 11 / 0.22),
+      transparent 60%
+    ),
+    radial-gradient(56rem 34rem at 78% -4%, rgb(17 165 200 / 0.2), transparent 62%),
+    radial-gradient(46rem 30rem at 96% 30%, rgb(138 81 232 / 0.14), transparent 64%),
+    radial-gradient(50rem 32rem at 30% 20%, rgb(18 165 112 / 0.1), transparent 66%);
+
+  /* Headline gradient — travels amber → rose → violet → cyan. */
+  --grad-text: linear-gradient(
+    100deg,
+    var(--rl-amber-700) 0%,
+    var(--rl-rose-600) 38%,
+    var(--rl-violet-600) 72%,
+    var(--rl-cyan-700) 100%
+  );
+
+  /* Full spectrum, used by the scroll progress bar and connector rails. */
+  --grad-spectrum: linear-gradient(
+    90deg,
+    var(--rl-amber-500) 0%,
+    var(--rl-rose-500) 26%,
+    var(--rl-violet-500) 50%,
+    var(--rl-cyan-500) 74%,
+    var(--rl-mint-500) 100%
+  );
+
+  --hairline: rgb(30 26 79 / 0.1);
+  --scrim: rgb(20 15 51 / 0.5);
+
+  /* =====================================================================
+     2. HUE RAMPS — the multi-colour accent system (light)
+     Each hue is a quintet: base / ink (text) / soft (fill) / border / on.
+     ===================================================================== */
+  --hue-amber: var(--rl-amber-600);
+  --hue-amber-ink: var(--rl-amber-700);
+  --hue-amber-soft: var(--rl-amber-50);
+  --hue-amber-border: var(--rl-amber-200);
+  --hue-amber-on: #ffffff;
+  --hue-amber-strong: var(--rl-amber-700);
+
+  --hue-cyan: var(--rl-cyan-600);
+  --hue-cyan-ink: var(--rl-cyan-700);
+  --hue-cyan-soft: var(--rl-cyan-50);
+  --hue-cyan-border: var(--rl-cyan-200);
+  --hue-cyan-on: #ffffff;
+  --hue-cyan-strong: var(--rl-cyan-700);
+
+  --hue-mint: var(--rl-mint-600);
+  --hue-mint-ink: var(--rl-mint-700);
+  --hue-mint-soft: var(--rl-mint-50);
+  --hue-mint-border: var(--rl-mint-200);
+  --hue-mint-on: #ffffff;
+  --hue-mint-strong: var(--rl-mint-700);
+
+  --hue-indigo: var(--rl-indigo-600);
+  --hue-indigo-ink: var(--rl-indigo-700);
+  --hue-indigo-soft: var(--rl-indigo-50);
+  --hue-indigo-border: var(--rl-indigo-200);
+  --hue-indigo-on: #ffffff;
+  --hue-indigo-strong: var(--rl-indigo-700);
+
+  --hue-rose: var(--rl-rose-600);
+  --hue-rose-ink: var(--rl-rose-700);
+  --hue-rose-soft: var(--rl-rose-50);
+  --hue-rose-border: var(--rl-rose-200);
+  --hue-rose-on: #ffffff;
+  --hue-rose-strong: var(--rl-rose-700);
+
+  --hue-violet: var(--rl-violet-600);
+  --hue-violet-ink: var(--rl-violet-700);
+  --hue-violet-soft: var(--rl-violet-50);
+  --hue-violet-border: var(--rl-violet-200);
+  --hue-violet-on: #ffffff;
+  --hue-violet-strong: var(--rl-violet-700);
+
+  --hue-teal: var(--rl-teal-600);
+  --hue-teal-ink: var(--rl-teal-700);
+  --hue-teal-soft: #e6f7f4;
+  --hue-teal-border: var(--rl-teal-200);
+  --hue-teal-on: #ffffff;
+  --hue-teal-strong: var(--rl-teal-700);
+}
+
+/* ==========================================================================
+   SEMANTIC TOKENS — DARK
+   A night version of the app chrome: deep indigo-slate rather than black.
+   ========================================================================== */
+
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --bg: #0b0e1a;
+  --bg-tint: var(--rl-slate-900);
+  --surface: var(--rl-slate-850);
+  --surface-2: var(--rl-slate-800);
+  --surface-sunken: #070912;
+  --surface-inverse: var(--rl-slate-50);
+
+  --glass: rgb(30 34 51 / 0.68);
+  --glass-strong: rgb(17 20 33 / 0.9);
+  --glass-blur: 18px;
+
+  --border: rgb(198 210 235 / 0.13);
+  --border-strong: rgb(198 210 235 / 0.24);
+  --border-brand: rgb(251 164 63 / 0.42);
+
+  --text: #eef1fa;
+  --text-muted: #a8b1cc;
+  --text-subtle: #8e97b3;
+  --text-inverse: var(--rl-indigo-950);
+  --text-on-brand: #2a1704;
+
+  --brand: var(--rl-amber-400);
+  --brand-hover: var(--rl-amber-300);
+  --brand-active: var(--rl-amber-500);
+  --brand-ink: var(--rl-amber-300);
+  --brand-soft: rgb(251 164 63 / 0.14);
+  --brand-soft-border: rgb(251 164 63 / 0.32);
+  --brand-strong: var(--rl-amber-400);
+
+  --action: var(--rl-cyan-300);
+  --action-ink: var(--rl-cyan-300);
+  --action-soft: rgb(103 216 242 / 0.14);
+  --action-border: rgb(103 216 242 / 0.32);
+
+  --accent: var(--rl-mint-300);
+  --accent-ink: var(--rl-mint-300);
+  --accent-soft: rgb(86 217 169 / 0.14);
+
+  --status-info: var(--rl-cyan-300);
+  --status-warn: var(--rl-amber-300);
+  --status-danger: var(--rl-rose-300);
+  --status-success: var(--rl-mint-300);
+
+  --shadow-rgb: 0 0 0;
+  --shadow-xs: 0 1px 2px rgb(0 0 0 / 0.4);
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.4), 0 2px 8px rgb(0 0 0 / 0.36);
+  --shadow-md: 0 2px 4px rgb(0 0 0 / 0.38), 0 10px 26px rgb(0 0 0 / 0.46);
+  --shadow-lg: 0 4px 10px rgb(0 0 0 / 0.42), 0 22px 50px rgb(0 0 0 / 0.52);
+  --shadow-xl: 0 10px 20px rgb(0 0 0 / 0.46), 0 38px 78px rgb(0 0 0 / 0.6);
+  --shadow-brand: 0 12px 36px rgb(251 164 63 / 0.26);
+
+  --grad-brand: linear-gradient(
+    135deg,
+    var(--rl-amber-300) 0%,
+    var(--rl-amber-500) 58%,
+    var(--rl-rose-400) 100%
+  );
+
+  --grad-brand-strong: linear-gradient(
+    135deg,
+    var(--rl-amber-300) 0%,
+    var(--rl-amber-400) 58%,
+    #f0b64a 100%
+  );
+
+  --grad-warm-wash: radial-gradient(
+      62rem 38rem at 8% -6%,
+      rgb(251 164 63 / 0.22),
+      transparent 60%
+    ),
+    radial-gradient(56rem 34rem at 78% -4%, rgb(43 191 226 / 0.2), transparent 62%),
+    radial-gradient(46rem 30rem at 96% 30%, rgb(162 115 246 / 0.16), transparent 64%),
+    radial-gradient(50rem 32rem at 30% 20%, rgb(43 193 137 / 0.12), transparent 66%);
+
+  --grad-text: linear-gradient(
+    100deg,
+    var(--rl-amber-300) 0%,
+    var(--rl-rose-300) 38%,
+    var(--rl-violet-300) 72%,
+    var(--rl-cyan-300) 100%
+  );
+
+  --grad-spectrum: linear-gradient(
+    90deg,
+    var(--rl-amber-300) 0%,
+    var(--rl-rose-300) 26%,
+    var(--rl-violet-300) 50%,
+    var(--rl-cyan-300) 74%,
+    var(--rl-mint-300) 100%
+  );
+
+  --hairline: rgb(198 210 235 / 0.1);
+  --scrim: rgb(0 0 0 / 0.66);
+
+  /* Hue ramps (dark): bright base, tinted fill, near-black label colour. */
+  --hue-amber: var(--rl-amber-300);
+  --hue-amber-ink: var(--rl-amber-300);
+  --hue-amber-soft: rgb(253 188 109 / 0.14);
+  --hue-amber-border: rgb(253 188 109 / 0.32);
+  --hue-amber-on: #241505;
+  --hue-amber-strong: var(--rl-amber-300);
+
+  --hue-cyan: var(--rl-cyan-300);
+  --hue-cyan-ink: var(--rl-cyan-300);
+  --hue-cyan-soft: rgb(103 216 242 / 0.14);
+  --hue-cyan-border: rgb(103 216 242 / 0.32);
+  --hue-cyan-on: #04222c;
+  --hue-cyan-strong: var(--rl-cyan-300);
+
+  --hue-mint: var(--rl-mint-300);
+  --hue-mint-ink: var(--rl-mint-300);
+  --hue-mint-soft: rgb(86 217 169 / 0.14);
+  --hue-mint-border: rgb(86 217 169 / 0.32);
+  --hue-mint-on: #032117;
+  --hue-mint-strong: var(--rl-mint-300);
+
+  --hue-indigo: var(--rl-indigo-300);
+  --hue-indigo-ink: var(--rl-indigo-300);
+  --hue-indigo-soft: rgb(160 167 251 / 0.15);
+  --hue-indigo-border: rgb(160 167 251 / 0.32);
+  --hue-indigo-on: #14103a;
+  --hue-indigo-strong: var(--rl-indigo-300);
+
+  --hue-rose: var(--rl-rose-300);
+  --hue-rose-ink: var(--rl-rose-300);
+  --hue-rose-soft: rgb(253 143 166 / 0.14);
+  --hue-rose-border: rgb(253 143 166 / 0.32);
+  --hue-rose-on: #350a17;
+  --hue-rose-strong: var(--rl-rose-300);
+
+  --hue-violet: var(--rl-violet-300);
+  --hue-violet-ink: var(--rl-violet-300);
+  --hue-violet-soft: rgb(191 157 252 / 0.14);
+  --hue-violet-border: rgb(191 157 252 / 0.32);
+  --hue-violet-on: #22103c;
+  --hue-violet-strong: var(--rl-violet-300);
+
+  --hue-teal: var(--rl-teal-300);
+  --hue-teal-ink: var(--rl-teal-300);
+  --hue-teal-soft: rgb(94 214 196 / 0.14);
+  --hue-teal-border: rgb(94 214 196 / 0.32);
+  --hue-teal-on: #04211d;
+  --hue-teal-strong: var(--rl-teal-300);
+}
+
+/* Honour the OS preference before the theme script runs / with JS disabled.
+   The dark block is repeated here because :root cannot inherit from an
+   attribute selector, and doing it any other way reintroduces the flash. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+
+    --bg: #0b0e1a;
+    --bg-tint: var(--rl-slate-900);
+    --surface: var(--rl-slate-850);
+    --surface-2: var(--rl-slate-800);
+    --surface-sunken: #070912;
+    --surface-inverse: var(--rl-slate-50);
+
+    --glass: rgb(30 34 51 / 0.68);
+    --glass-strong: rgb(17 20 33 / 0.9);
+
+    --border: rgb(198 210 235 / 0.13);
+    --border-strong: rgb(198 210 235 / 0.24);
+    --border-brand: rgb(251 164 63 / 0.42);
+
+    --text: #eef1fa;
+    --text-muted: #a8b1cc;
+    --text-subtle: #8e97b3;
+    --text-inverse: var(--rl-indigo-950);
+    --text-on-brand: #2a1704;
+
+    --brand: var(--rl-amber-400);
+    --brand-hover: var(--rl-amber-300);
+    --brand-active: var(--rl-amber-500);
+    --brand-ink: var(--rl-amber-300);
+    --brand-soft: rgb(251 164 63 / 0.14);
+    --brand-soft-border: rgb(251 164 63 / 0.32);
+    --brand-strong: var(--rl-amber-400);
+
+    --action: var(--rl-cyan-300);
+    --action-ink: var(--rl-cyan-300);
+    --action-soft: rgb(103 216 242 / 0.14);
+    --action-border: rgb(103 216 242 / 0.32);
+
+    --accent: var(--rl-mint-300);
+    --accent-ink: var(--rl-mint-300);
+    --accent-soft: rgb(86 217 169 / 0.14);
+
+    --status-info: var(--rl-cyan-300);
+    --status-warn: var(--rl-amber-300);
+    --status-danger: var(--rl-rose-300);
+    --status-success: var(--rl-mint-300);
+
+    --shadow-rgb: 0 0 0;
+    --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.4), 0 2px 8px rgb(0 0 0 / 0.36);
+    --shadow-md: 0 2px 4px rgb(0 0 0 / 0.38), 0 10px 26px rgb(0 0 0 / 0.46);
+    --shadow-lg: 0 4px 10px rgb(0 0 0 / 0.42), 0 22px 50px rgb(0 0 0 / 0.52);
+    --shadow-xl: 0 10px 20px rgb(0 0 0 / 0.46), 0 38px 78px rgb(0 0 0 / 0.6);
+    --shadow-brand: 0 12px 36px rgb(251 164 63 / 0.26);
+
+    --grad-brand: linear-gradient(
+      135deg,
+      var(--rl-amber-300) 0%,
+      var(--rl-amber-500) 58%,
+      var(--rl-rose-400) 100%
+    );
+    --grad-brand-strong: linear-gradient(
+      135deg,
+      var(--rl-amber-300) 0%,
+      var(--rl-amber-400) 58%,
+      #f0b64a 100%
+    );
+    --grad-warm-wash: radial-gradient(
+        62rem 38rem at 8% -6%,
+        rgb(251 164 63 / 0.22),
+        transparent 60%
+      ),
+      radial-gradient(
+        56rem 34rem at 78% -4%,
+        rgb(43 191 226 / 0.2),
+        transparent 62%
+      ),
+      radial-gradient(
+        46rem 30rem at 96% 30%,
+        rgb(162 115 246 / 0.16),
+        transparent 64%
+      ),
+      radial-gradient(
+        50rem 32rem at 30% 20%,
+        rgb(43 193 137 / 0.12),
+        transparent 66%
+      );
+    --grad-text: linear-gradient(
+      100deg,
+      var(--rl-amber-300) 0%,
+      var(--rl-rose-300) 38%,
+      var(--rl-violet-300) 72%,
+      var(--rl-cyan-300) 100%
+    );
+    --grad-spectrum: linear-gradient(
+      90deg,
+      var(--rl-amber-300) 0%,
+      var(--rl-rose-300) 26%,
+      var(--rl-violet-300) 50%,
+      var(--rl-cyan-300) 74%,
+      var(--rl-mint-300) 100%
+    );
+
+    --hairline: rgb(198 210 235 / 0.1);
+    --scrim: rgb(0 0 0 / 0.66);
+
+    --hue-amber: var(--rl-amber-300);
+    --hue-amber-ink: var(--rl-amber-300);
+    --hue-amber-soft: rgb(253 188 109 / 0.14);
+    --hue-amber-border: rgb(253 188 109 / 0.32);
+    --hue-amber-on: #241505;
+  --hue-amber-strong: var(--rl-amber-300);
+
+    --hue-cyan: var(--rl-cyan-300);
+    --hue-cyan-ink: var(--rl-cyan-300);
+    --hue-cyan-soft: rgb(103 216 242 / 0.14);
+    --hue-cyan-border: rgb(103 216 242 / 0.32);
+    --hue-cyan-on: #04222c;
+  --hue-cyan-strong: var(--rl-cyan-300);
+
+    --hue-mint: var(--rl-mint-300);
+    --hue-mint-ink: var(--rl-mint-300);
+    --hue-mint-soft: rgb(86 217 169 / 0.14);
+    --hue-mint-border: rgb(86 217 169 / 0.32);
+    --hue-mint-on: #032117;
+  --hue-mint-strong: var(--rl-mint-300);
+
+    --hue-indigo: var(--rl-indigo-300);
+    --hue-indigo-ink: var(--rl-indigo-300);
+    --hue-indigo-soft: rgb(160 167 251 / 0.15);
+    --hue-indigo-border: rgb(160 167 251 / 0.32);
+    --hue-indigo-on: #14103a;
+  --hue-indigo-strong: var(--rl-indigo-300);
+
+    --hue-rose: var(--rl-rose-300);
+    --hue-rose-ink: var(--rl-rose-300);
+    --hue-rose-soft: rgb(253 143 166 / 0.14);
+    --hue-rose-border: rgb(253 143 166 / 0.32);
+    --hue-rose-on: #350a17;
+  --hue-rose-strong: var(--rl-rose-300);
+
+    --hue-violet: var(--rl-violet-300);
+    --hue-violet-ink: var(--rl-violet-300);
+    --hue-violet-soft: rgb(191 157 252 / 0.14);
+    --hue-violet-border: rgb(191 157 252 / 0.32);
+    --hue-violet-on: #22103c;
+  --hue-violet-strong: var(--rl-violet-300);
+
+    --hue-teal: var(--rl-teal-300);
+    --hue-teal-ink: var(--rl-teal-300);
+    --hue-teal-soft: rgb(94 214 196 / 0.14);
+    --hue-teal-border: rgb(94 214 196 / 0.32);
+    --hue-teal-on: #04211d;
+  --hue-teal-strong: var(--rl-teal-300);
+  }
+}
+
+/* ==========================================================================
+   TONE UTILITY
+   --------------------------------------------------------------------------
+   Re-points the brand tokens at one hue ramp for a subtree. Because every
+   component already reads --brand / --brand-ink / --brand-soft, wrapping an
+   element in `.tone--cyan` recolours its icon tile, chip, hover glow, border
+   and cursor spotlight with no component-specific CSS at all. This is what
+   makes the page multi-coloured without multiplying the stylesheet.
+   ========================================================================== */
+
+[class*="tone--"] {
+  --brand: var(--tone);
+  --brand-ink: var(--tone-ink);
+  --brand-soft: var(--tone-soft);
+  --brand-soft-border: var(--tone-border);
+  --border-brand: var(--tone-border);
+  --text-on-brand: var(--tone-on);
+}
+
+.tone--amber {
+  --tone: var(--hue-amber);
+  --tone-ink: var(--hue-amber-ink);
+  --tone-soft: var(--hue-amber-soft);
+  --tone-border: var(--hue-amber-border);
+  --tone-on: var(--hue-amber-on);
+  --tone-strong: var(--hue-amber-strong);
+}
+
+.tone--cyan {
+  --tone: var(--hue-cyan);
+  --tone-ink: var(--hue-cyan-ink);
+  --tone-soft: var(--hue-cyan-soft);
+  --tone-border: var(--hue-cyan-border);
+  --tone-on: var(--hue-cyan-on);
+  --tone-strong: var(--hue-cyan-strong);
+}
+
+.tone--mint {
+  --tone: var(--hue-mint);
+  --tone-ink: var(--hue-mint-ink);
+  --tone-soft: var(--hue-mint-soft);
+  --tone-border: var(--hue-mint-border);
+  --tone-on: var(--hue-mint-on);
+  --tone-strong: var(--hue-mint-strong);
+}
+
+.tone--indigo {
+  --tone: var(--hue-indigo);
+  --tone-ink: var(--hue-indigo-ink);
+  --tone-soft: var(--hue-indigo-soft);
+  --tone-border: var(--hue-indigo-border);
+  --tone-on: var(--hue-indigo-on);
+  --tone-strong: var(--hue-indigo-strong);
+}
+
+.tone--rose {
+  --tone: var(--hue-rose);
+  --tone-ink: var(--hue-rose-ink);
+  --tone-soft: var(--hue-rose-soft);
+  --tone-border: var(--hue-rose-border);
+  --tone-on: var(--hue-rose-on);
+  --tone-strong: var(--hue-rose-strong);
+}
+
+.tone--violet {
+  --tone: var(--hue-violet);
+  --tone-ink: var(--hue-violet-ink);
+  --tone-soft: var(--hue-violet-soft);
+  --tone-border: var(--hue-violet-border);
+  --tone-on: var(--hue-violet-on);
+  --tone-strong: var(--hue-violet-strong);
+}
+
+.tone--teal {
+  --tone: var(--hue-teal);
+  --tone-ink: var(--hue-teal-ink);
+  --tone-soft: var(--hue-teal-soft);
+  --tone-border: var(--hue-teal-border);
+  --tone-on: var(--hue-teal-on);
+  --tone-strong: var(--hue-teal-strong);
+}
+
+/* Expose semantic tokens to Tailwind utilities. `inline` keeps the var
+   reference live so theme switching works at runtime. */
+@theme inline {
+  --color-bg: var(--bg);
+  --color-bg-tint: var(--bg-tint);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-border: var(--border);
+  --color-text: var(--text);
+  --color-muted: var(--text-muted);
+  --color-subtle: var(--text-subtle);
+  --color-brand: var(--brand);
+  --color-brand-ink: var(--brand-ink);
+  --color-action: var(--action);
+  --color-accent: var(--accent);
+
+  --font-sans: var(--font-body);
+  --font-serif: var(--font-accent);
+  --font-mono: var(--font-mono);
+
+  --radius-card: var(--radius-xl);
+}

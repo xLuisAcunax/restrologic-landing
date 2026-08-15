@@ -1,0 +1,53 @@
+---
+/**
+ * Render-blocking theme + motion bootstrap.
+ *
+ * Must stay inline and must stay in <head> before any painted markup: it
+ * decides the theme before the first paint, which is what prevents the white
+ * flash a dark-mode visitor would otherwise see.
+ *
+ * It also arms the motion failsafe. `data-motion="on"` is what hides
+ * pre-animation elements; if the motion bundle never reports readiness the
+ * timer tears that state down, so a failed chunk can never leave the page
+ * blank.
+ */
+---
+
+<script is:inline>
+  (function () {
+    var root = document.documentElement;
+
+    /* ---- Theme ------------------------------------------------------- */
+    try {
+      var stored = localStorage.getItem('rl-theme');
+      if (stored === 'light' || stored === 'dark') {
+        root.dataset.theme = stored;
+      } else {
+        root.dataset.theme = window.matchMedia('(prefers-color-scheme: dark)')
+          .matches
+          ? 'dark'
+          : 'light';
+      }
+    } catch (error) {
+      root.dataset.theme = 'light';
+    }
+
+    /* ---- Motion ------------------------------------------------------ */
+    try {
+      var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      if (!reduced) {
+        root.dataset.motion = 'on';
+
+        // Failsafe: reveal everything if the motion bundle never boots.
+        window.setTimeout(function () {
+          if (root.dataset.motionReady !== 'true') {
+            root.dataset.motion = 'off';
+          }
+        }, 2500);
+      }
+    } catch (error) {
+      root.dataset.motion = 'off';
+    }
+  })();
+</script>

@@ -1,0 +1,52 @@
+---
+import SectionHeading from '../ui/SectionHeading.astro';
+import Button from '../ui/Button.astro';
+import Icon from '../ui/Icon.astro';
+import { faqItems } from '../../lib/content';
+import {
+  getLangFromUrl,
+  useTranslations,
+  useTranslatedPath,
+} from '../../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const translatePath = useTranslatedPath(lang);
+---
+
+<section class="section section--tinted" id="faq">
+  <div class="container">
+    <div class="faq">
+      <div class="faq__aside">
+        <SectionHeading
+          eyebrow={t('faq.eyebrow')}
+          title={t('faq.title')}
+          lede={t('faq.lede')}
+          align="start"
+        />
+        <Button href={translatePath('/#contact')} variant="soft" data-reveal>
+          {t('faq.contact')}
+          <Icon name="arrowRight" class="btn__arrow" />
+        </Button>
+      </div>
+
+      <div class="accordion" data-accordion data-stagger>
+        {
+          faqItems.map((item, index) => (
+            <details class="qa" name="rl-faq" open={index === 0}>
+              <summary class="qa__summary">
+                {t(item.qKey)}
+                <span class="qa__icon" aria-hidden="true">
+                  <Icon name="plus" style="width:.85rem;height:.85rem" />
+                </span>
+              </summary>
+              <div class="qa__body">
+                <p>{t(item.aKey)}</p>
+              </div>
+            </details>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</section>

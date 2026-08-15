@@ -1,0 +1,49 @@
+---
+import SectionHeading from '../ui/SectionHeading.astro';
+import { howSteps, stats } from '../../lib/content';
+import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+
+const t = useTranslations(getLangFromUrl(Astro.url));
+---
+
+<section class="section section--tinted" id="how">
+  <div class="container">
+    <SectionHeading
+      eyebrow={t('how.eyebrow')}
+      title={t('how.title')}
+      lede={t('how.lede')}
+    />
+
+    <ol class="steps" data-stagger>
+      {
+        howSteps.map((step, index) => (
+          <li class={`step tone--${step.tone}`}>
+            <span class="step__marker" aria-hidden="true">
+              {index + 1}
+            </span>
+            <div>
+              <h3 class="step__title">{t(step.titleKey)}</h3>
+              <p class="step__text">{t(step.textKey)}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+
+    <div class="stats" style="margin-top:clamp(3rem,2rem+4vw,4.5rem)" data-reveal>
+      {
+        stats.map((stat) => {
+          const value = t(stat.numKey);
+          return (
+            <div class={`stat tone--${stat.tone}`}>
+              <div class="stat__num" data-count={value}>
+                {value}
+              </div>
+              <div class="stat__label">{t(stat.labelKey)}</div>
+            </div>
+          );
+        })
+      }
+    </div>
+  </div>
+</section>

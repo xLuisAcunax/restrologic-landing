@@ -1,19 +1,47 @@
-import { ui, defaultLang } from './ui';
+import {
+  ui,
+  defaultLang,
+  languages,
+  localeTags,
+  type Lang,
+  type TranslationKey,
+} from './ui';
 
-export function getLangFromUrl(url: URL) {
-    const [, lang] = url.pathname.split('/');
-    if (lang in ui) return lang as keyof typeof ui;
-    return defaultLang;
+/** Narrow an unknown string to a supported locale. */
+export function isLang(value: string | undefined): value is Lang {
+  return typeof value === 'string' && value in languages;
 }
 
-export function useTranslations(lang: keyof typeof ui) {
-    return function t(key: keyof typeof ui[typeof defaultLang]) {
-        return ui[lang][key] || ui[defaultLang][key];
-    }
+/**
+ * Resolve the active locale from the request URL.
+ * The default locale is un-prefixed (`/`), others are prefixed (`/en/`).
+ */
+export function getLangFromUrl(url: URL): Lang {
+  const [, segment] = url.pathname.split('/');
+  return isLang(segment) ? segment : defaultLang;
 }
 
-export function useTranslatedPath(lang: keyof typeof ui) {
-    return function translatePath(path: string, l: string = lang) {
-        return !l || l === defaultLang ? path : `/${l}${path}`;
-    }
+/** Returns a `t(key)` lookup bound to a locale, falling back to the default. */
+export function useTranslations(lang: Lang) {
+  return function t(key: TranslationKey): string {
+    return ui[lang][key] ?? ui[defaultLang][key];
+  };
 }
+
+/**
+ * Build a locale-aware href. Paths are always authored in their default-locale
+ * form (`/#pricing`) and translated at render time (`/en/#pricing`).
+ */
+export function useTranslatedPath(lang: Lang) {
+  return function translatePath(path: string, target: Lang = lang): string {
+    const normalised = path.startsWith('/') ? path : `/${path}`;
+    return target === defaultLang ? normalised : `/${target}${normalised}`;
+  };
+}
+
+/** BCP-47 tag for `<html lang>`, `hreflang` and Intl APIs. */
+export function getLocaleTag(lang: Lang): string {
+  return localeTags[lang];
+}
+
+export { defaultLang, languages, type Lang, type TranslationKey };

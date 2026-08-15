@@ -1,0 +1,39 @@
+---
+import SectionHeading from '../ui/SectionHeading.astro';
+import { pipelineSteps } from '../../lib/content';
+import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+
+const t = useTranslations(getLangFromUrl(Astro.url));
+---
+
+<section class="section section--tinted" id="flow">
+  <div class="container">
+    <SectionHeading
+      eyebrow={t('pipeline.eyebrow')}
+      title={t('pipeline.title')}
+      lede={t('pipeline.lede')}
+    />
+
+    <div class="pipeline" data-pipeline>
+      <div class="pipeline__track">
+        <div class="pipeline__rail" data-pipeline-rail aria-hidden="true"></div>
+
+        {
+          pipelineSteps.map((step, index) => (
+            <article
+              class={`pipeline__step tone--${step.tone}`}
+              data-pipeline-step
+            >
+              <span class="pipeline__num" aria-hidden="true">
+                {String(index + 1).padStart(2, '0')}
+              </span>
+              <h3 class="pipeline__title">{t(step.titleKey)}</h3>
+              <p class="pipeline__text">{t(step.textKey)}</p>
+              <p class="pipeline__time">{t(step.timeKey)}</p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</section>

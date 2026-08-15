@@ -1,0 +1,75 @@
+---
+import AppMock from './AppMock.astro';
+import Button from '../ui/Button.astro';
+import Icon from '../ui/Icon.astro';
+import {
+  getLangFromUrl,
+  useTranslations,
+  useTranslatedPath,
+} from '../../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const translatePath = useTranslatedPath(lang);
+
+const proof = [
+  { num: t('hero.proof.1.num'), label: t('hero.proof.1.label') },
+  { num: t('hero.proof.2.num'), label: t('hero.proof.2.label') },
+  { num: t('hero.proof.3.num'), label: t('hero.proof.3.label') },
+];
+---
+
+<section class="hero" data-hero>
+  <div class="hero__bg" aria-hidden="true">
+    <div class="wash"></div>
+    <div class="orb orb--amber hero__orb-1" data-parallax-orb="0.18"></div>
+    <div class="orb orb--cyan hero__orb-2" data-parallax-orb="-0.26"></div>
+    <div class="orb orb--violet hero__orb-3" data-parallax-orb="0.34"></div>
+    <div class="dotgrid" data-parallax-orb="0.08"></div>
+  </div>
+
+  <div class="container hero__inner">
+    <div class="hero__copy">
+      <p class="chip chip--brand" data-hero-badge>
+        <Icon name="sparkles" style="width:.9rem;height:.9rem" />
+        {t('hero.badge')}
+      </p>
+
+      <h1 class="hero__title">
+        <span class="hero__line" data-hero-line>
+          <span>{t('hero.title.1')}</span>
+        </span>
+        <span class="hero__line" data-hero-line>
+          <span class="text-gradient">{t('hero.title.2')}</span>
+        </span>
+      </h1>
+
+      <p class="hero__lede" data-hero-lede>{t('hero.lede')}</p>
+
+      <div class="cluster hero__actions" data-hero-actions>
+        <Button href={translatePath('/#contact')} variant="primary" size="lg" magnetic>
+          {t('hero.cta.primary')}
+          <Icon name="arrowRight" class="btn__arrow" />
+        </Button>
+        <Button href={translatePath('/#modules')} variant="outline" size="lg">
+          {t('hero.cta.secondary')}
+        </Button>
+      </div>
+
+      <div class="hero__proof" data-hero-proof>
+        {
+          proof.map((item) => (
+            <div class="hero__proof-item">
+              <span class="hero__proof-num">{item.num}</span>
+              <span class="hero__proof-label">{item.label}</span>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+
+    <div class="hero__visual" data-hero-mock>
+      <AppMock />
+    </div>
+  </div>
+</section>

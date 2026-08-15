@@ -1,0 +1,4774 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RestroLogic — The operating system for your restaurant</title>
+<meta name="description" content="All-in-one restaurant software: table ordering, live kitchen display, recipe-based inventory, cash control and closing, products and per-location reports. One platform for the whole operation.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300..800&family=Fraunces:ital,opsz,wght@1,9..144,400..600&display=swap">
+<style>
+/* ==========================================================================
+   RestroLogic — Design Tokens
+   --------------------------------------------------------------------------
+   The palette is lifted from the RestroLogic product UI so the landing page
+   and the app read as one brand: indigo ink, amber for the brand and the
+   active state, cyan for actions, and mint / rose / violet / teal as
+   functional accents on a cool blue-grey canvas.
+
+   Layers:
+     1. Primitives  (--rl-<hue>-<step>)  raw, theme-agnostic values
+     2. Hue ramps   (--hue-<name>-*)     the multi-colour accent system
+     3. Semantics   (--bg, --text, …)    meaning, theme-dependent
+   Components MUST only consume semantic or hue tokens, never primitives.
+   ========================================================================== */
+
+:root {
+  /* =====================================================================
+     1. PRIMITIVES
+     ===================================================================== */
+
+  /* Amber — the brand hue. The "Logic" in the wordmark, the active sidebar
+     item, the "saldo esperado" figure. */
+  --rl-amber-50: #fff8ec;
+  --rl-amber-100: #ffedd0;
+  --rl-amber-200: #fed9a4;
+  --rl-amber-300: #fdbc6d;
+  --rl-amber-400: #fba43f;
+  --rl-amber-500: #f59e0b;
+  --rl-amber-600: #d97d06;
+  --rl-amber-700: #96500a; /* AA on --bg and --bg-tint; #a85a08 was 3.98 */
+  --rl-amber-800: #82440a;
+  --rl-amber-900: #542b08;
+
+  /* Cyan — the app's action colour (Agregar, Guardar, Buscar Registros). */
+  --rl-cyan-50: #ecfbff;
+  --rl-cyan-100: #cff4fd;
+  --rl-cyan-200: #a3e9f9;
+  --rl-cyan-300: #67d8f2;
+  --rl-cyan-400: #2bbfe2;
+  --rl-cyan-500: #11a5c8;
+  --rl-cyan-600: #0c7f9f;
+  --rl-cyan-700: #0d6280;
+  --rl-cyan-800: #114f66;
+  --rl-cyan-900: #0f3547;
+
+  /* Indigo — the ink. Headings, and the "Restro" in the wordmark. */
+  --rl-indigo-50: #eef1ff;
+  --rl-indigo-100: #dfe4ff;
+  --rl-indigo-200: #c3caff;
+  --rl-indigo-300: #a0a7fb;
+  --rl-indigo-400: #7c7ef2;
+  --rl-indigo-500: #5f5ae4;
+  --rl-indigo-600: #4a3fca;
+  --rl-indigo-700: #3a2f9c;
+  --rl-indigo-800: #2b2473;
+  --rl-indigo-900: #1e1a4f;
+  --rl-indigo-950: #140f33;
+
+  /* Mint — availability, success, "DISPONIBLE". */
+  --rl-mint-50: #e7fbf2;
+  --rl-mint-100: #c8f5e1;
+  --rl-mint-200: #97ebc9;
+  --rl-mint-300: #56d9a9;
+  --rl-mint-400: #2bc189;
+  --rl-mint-500: #12a570;
+  --rl-mint-600: #0a7c55;
+  --rl-mint-700: #0a6144;
+  --rl-mint-800: #094a34;
+  --rl-mint-900: #063324;
+
+  /* Rose — alerts, occupied tables, destructive actions. */
+  --rl-rose-50: #fff0f3;
+  --rl-rose-100: #ffdde3;
+  --rl-rose-200: #ffc0cc;
+  --rl-rose-300: #fd8fa6;
+  --rl-rose-400: #f65f7f;
+  --rl-rose-500: #e63b60;
+  --rl-rose-600: #c31640;
+  --rl-rose-700: #9d1234;
+  --rl-rose-800: #781029;
+  --rl-rose-900: #4d0a1a;
+
+  /* Violet — a sixth hue so no two feature cards repeat a colour. */
+  --rl-violet-50: #f6f1ff;
+  --rl-violet-100: #ebe1ff;
+  --rl-violet-200: #d9c6ff;
+  --rl-violet-300: #bf9dfc;
+  --rl-violet-400: #a273f6;
+  --rl-violet-500: #8a51e8;
+  --rl-violet-600: #7132c6;
+  --rl-violet-700: #5a279e;
+  --rl-violet-800: #431e77;
+  --rl-violet-900: #2c144f;
+
+  /* Teal — the "Cobrar / Pagar" buttons. */
+  --rl-teal-200: #a8e5dc;
+  --rl-teal-300: #5ed6c4;
+  --rl-teal-400: #2bbda9;
+  --rl-teal-500: #109e8c;
+  --rl-teal-600: #0b6f63;
+  --rl-teal-700: #0b5e54;
+
+  /* Slate — the neutral ramp. Cool blue-grey, matching the app chrome. */
+  --rl-slate-0: #ffffff;
+  --rl-slate-25: #fafbfd;
+  --rl-slate-50: #f3f6fa;
+  --rl-slate-100: #edf1f7;
+  --rl-slate-200: #dee4ee;
+  --rl-slate-300: #c3ccdb;
+  --rl-slate-400: #949fb0;
+  --rl-slate-500: #6b7490;
+  --rl-slate-600: #4b5270;
+  --rl-slate-700: #363c54;
+  --rl-slate-800: #272c40;
+  --rl-slate-850: #1e2233;
+  --rl-slate-900: #161a29;
+  --rl-slate-950: #0d101c;
+
+  /* -------------------------------------------------------------------
+     Typography
+     ------------------------------------------------------------------- */
+  --font-display: "Outfit", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-body: "Outfit", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-accent: "Fraunces", "Iowan Old Style", Georgia, serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  /* Fluid type scale — clamp(min, preferred, max). */
+  --text-2xs: 0.6875rem;
+  --text-xs: 0.75rem;
+  --text-sm: 0.8125rem;
+  --text-base: clamp(0.9375rem, 0.9rem + 0.18vw, 1rem);
+  --text-md: clamp(1rem, 0.96rem + 0.22vw, 1.0625rem);
+  --text-lg: clamp(1.0625rem, 1rem + 0.35vw, 1.1875rem);
+  --text-xl: clamp(1.1875rem, 1.08rem + 0.5vw, 1.375rem);
+  --text-2xl: clamp(1.375rem, 1.2rem + 0.8vw, 1.75rem);
+  --text-3xl: clamp(1.625rem, 1.35rem + 1.3vw, 2.25rem);
+  --text-4xl: clamp(1.9rem, 1.45rem + 2.1vw, 3rem);
+  --text-5xl: clamp(2.15rem, 1.55rem + 2.7vw, 3.5rem);
+  --text-6xl: clamp(2.5rem, 1.5rem + 3.9vw, 4.35rem);
+
+  --leading-tight: 1.06;
+  --leading-snug: 1.2;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.68;
+
+  --tracking-tighter: -0.035em;
+  --tracking-tight: -0.02em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.02em;
+  --tracking-widest: 0.14em;
+
+  /* -------------------------------------------------------------------
+     Space
+     ------------------------------------------------------------------- */
+  --space-3xs: 0.25rem;
+  --space-2xs: 0.5rem;
+  --space-xs: 0.75rem;
+  --space-sm: 1rem;
+  --space-md: 1.5rem;
+  --space-lg: 2rem;
+  --space-xl: 3rem;
+  --space-2xl: 4rem;
+  --space-3xl: 6rem;
+  --space-4xl: 8rem;
+
+  --section-py: clamp(4rem, 3rem + 6vw, 8rem);
+  --section-py-sm: clamp(3rem, 2.4rem + 3vw, 5rem);
+
+  --container-max: 76rem;
+  --container-narrow: 46rem;
+  --container-wide: 88rem;
+  --gutter: clamp(1.15rem, 0.6rem + 2.4vw, 2.5rem);
+
+  /* -------------------------------------------------------------------
+     Radius
+     ------------------------------------------------------------------- */
+  --radius-xs: 0.375rem;
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.375rem;
+  --radius-2xl: 1.875rem;
+  --radius-full: 999rem;
+
+  /* -------------------------------------------------------------------
+     Motion
+     ------------------------------------------------------------------- */
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-soft: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  --dur-instant: 90ms;
+  --dur-fast: 180ms;
+  --dur-base: 280ms;
+  --dur-slow: 520ms;
+  --dur-slower: 900ms;
+
+  --z-base: 0;
+  --z-raised: 10;
+  --z-sticky: 100;
+  --z-header: 200;
+  --z-overlay: 300;
+  --z-modal: 400;
+  --z-toast: 500;
+}
+
+/* ==========================================================================
+   3. SEMANTIC TOKENS — LIGHT (default)
+   ========================================================================== */
+
+:root,
+[data-theme="light"] {
+  color-scheme: light;
+
+  /* Surfaces — cool blue-grey canvas with white cards, as in the app. */
+  --bg: var(--rl-slate-100);
+  --bg-tint: var(--rl-slate-200);
+  --surface: var(--rl-slate-0);
+  --surface-2: var(--rl-slate-50);
+  --surface-sunken: var(--rl-slate-200);
+  --surface-inverse: var(--rl-slate-800);
+
+  --glass: rgb(255 255 255 / 0.74);
+  --glass-strong: rgb(255 255 255 / 0.92);
+  --glass-blur: 16px;
+
+  --border: rgb(30 26 79 / 0.12);
+  --border-strong: rgb(30 26 79 / 0.22);
+  --border-brand: rgb(217 125 6 / 0.4);
+
+  /* Text — deep indigo ink, matching the app's headings. */
+  --text: var(--rl-indigo-950);
+  --text-muted: var(--rl-slate-600);
+  --text-subtle: #5a6180;
+  --text-inverse: var(--rl-slate-50);
+  --text-on-brand: #241505;
+
+  /* Brand (amber) */
+  --brand: var(--rl-amber-600);
+  --brand-hover: var(--rl-amber-700);
+  --brand-active: var(--rl-amber-800);
+  --brand-ink: var(--rl-amber-700);
+  --brand-soft: var(--rl-amber-50);
+  --brand-soft-border: var(--rl-amber-200);
+  --brand-strong: var(--rl-amber-400);
+
+  /* Action (cyan) — the app's primary button colour. */
+  --action: var(--rl-cyan-600);
+  --action-ink: var(--rl-cyan-700);
+  --action-soft: var(--rl-cyan-50);
+  --action-border: var(--rl-cyan-200);
+
+  /* Accent (mint) */
+  --accent: var(--rl-mint-600);
+  --accent-ink: var(--rl-mint-700);
+  --accent-soft: var(--rl-mint-50);
+
+  /* Status */
+  --status-info: var(--rl-cyan-700);
+  --status-warn: var(--rl-amber-700);
+  --status-danger: var(--rl-rose-600);
+  --status-success: var(--rl-mint-700);
+
+  /* Elevation — cool-tinted, matching the app's soft card shadows. */
+  --shadow-rgb: 30 34 51;
+  --shadow-xs: 0 1px 2px rgb(var(--shadow-rgb) / 0.06);
+  --shadow-sm: 0 1px 2px rgb(var(--shadow-rgb) / 0.05),
+    0 2px 8px rgb(var(--shadow-rgb) / 0.06);
+  --shadow-md: 0 2px 4px rgb(var(--shadow-rgb) / 0.05),
+    0 10px 24px rgb(var(--shadow-rgb) / 0.09);
+  --shadow-lg: 0 4px 10px rgb(var(--shadow-rgb) / 0.06),
+    0 20px 46px rgb(var(--shadow-rgb) / 0.12);
+  --shadow-xl: 0 10px 20px rgb(var(--shadow-rgb) / 0.07),
+    0 36px 74px rgb(var(--shadow-rgb) / 0.16);
+  --shadow-brand: 0 10px 28px rgb(245 158 11 / 0.42);
+
+  /* Gradients ---------------------------------------------------------- */
+
+  /* Decorative only — nothing carries text on this one. */
+  --grad-brand: linear-gradient(
+    135deg,
+    var(--rl-amber-400) 0%,
+    var(--rl-amber-600) 55%,
+    var(--rl-rose-500) 100%
+  );
+
+  /* Text-safe ramp: every brand surface with a label uses this instead.
+     --brand-strong is its lightest stop, i.e. the worst case for contrast. */
+  --grad-brand-strong: linear-gradient(
+    135deg,
+    var(--rl-amber-300) 0%,
+    var(--brand-strong) 45%,
+    var(--rl-amber-600) 100%
+  );
+
+  /* The multi-hue wash behind the hero and CTA. Four hues at low alpha —
+     this is what stops the page reading monochrome. */
+  --grad-warm-wash: radial-gradient(
+      62rem 38rem at 8% -6%,
+      rgb(245 158 11 / 0.22),
+      transparent 60%
+    ),
+    radial-gradient(56rem 34rem at 78% -4%, rgb(17 165 200 / 0.2), transparent 62%),
+    radial-gradient(46rem 30rem at 96% 30%, rgb(138 81 232 / 0.14), transparent 64%),
+    radial-gradient(50rem 32rem at 30% 20%, rgb(18 165 112 / 0.1), transparent 66%);
+
+  /* Headline gradient — travels amber → rose → violet → cyan. */
+  --grad-text: linear-gradient(
+    100deg,
+    var(--rl-amber-700) 0%,
+    var(--rl-rose-600) 38%,
+    var(--rl-violet-600) 72%,
+    var(--rl-cyan-700) 100%
+  );
+
+  /* Full spectrum, used by the scroll progress bar and connector rails. */
+  --grad-spectrum: linear-gradient(
+    90deg,
+    var(--rl-amber-500) 0%,
+    var(--rl-rose-500) 26%,
+    var(--rl-violet-500) 50%,
+    var(--rl-cyan-500) 74%,
+    var(--rl-mint-500) 100%
+  );
+
+  --hairline: rgb(30 26 79 / 0.1);
+  --scrim: rgb(20 15 51 / 0.5);
+
+  /* =====================================================================
+     2. HUE RAMPS — the multi-colour accent system (light)
+     Each hue is a quintet: base / ink (text) / soft (fill) / border / on.
+     ===================================================================== */
+  --hue-amber: var(--rl-amber-600);
+  --hue-amber-ink: var(--rl-amber-700);
+  --hue-amber-soft: var(--rl-amber-50);
+  --hue-amber-border: var(--rl-amber-200);
+  --hue-amber-on: #ffffff;
+  --hue-amber-strong: var(--rl-amber-700);
+
+  --hue-cyan: var(--rl-cyan-600);
+  --hue-cyan-ink: var(--rl-cyan-700);
+  --hue-cyan-soft: var(--rl-cyan-50);
+  --hue-cyan-border: var(--rl-cyan-200);
+  --hue-cyan-on: #ffffff;
+  --hue-cyan-strong: var(--rl-cyan-700);
+
+  --hue-mint: var(--rl-mint-600);
+  --hue-mint-ink: var(--rl-mint-700);
+  --hue-mint-soft: var(--rl-mint-50);
+  --hue-mint-border: var(--rl-mint-200);
+  --hue-mint-on: #ffffff;
+  --hue-mint-strong: var(--rl-mint-700);
+
+  --hue-indigo: var(--rl-indigo-600);
+  --hue-indigo-ink: var(--rl-indigo-700);
+  --hue-indigo-soft: var(--rl-indigo-50);
+  --hue-indigo-border: var(--rl-indigo-200);
+  --hue-indigo-on: #ffffff;
+  --hue-indigo-strong: var(--rl-indigo-700);
+
+  --hue-rose: var(--rl-rose-600);
+  --hue-rose-ink: var(--rl-rose-700);
+  --hue-rose-soft: var(--rl-rose-50);
+  --hue-rose-border: var(--rl-rose-200);
+  --hue-rose-on: #ffffff;
+  --hue-rose-strong: var(--rl-rose-700);
+
+  --hue-violet: var(--rl-violet-600);
+  --hue-violet-ink: var(--rl-violet-700);
+  --hue-violet-soft: var(--rl-violet-50);
+  --hue-violet-border: var(--rl-violet-200);
+  --hue-violet-on: #ffffff;
+  --hue-violet-strong: var(--rl-violet-700);
+
+  --hue-teal: var(--rl-teal-600);
+  --hue-teal-ink: var(--rl-teal-700);
+  --hue-teal-soft: #e6f7f4;
+  --hue-teal-border: var(--rl-teal-200);
+  --hue-teal-on: #ffffff;
+  --hue-teal-strong: var(--rl-teal-700);
+}
+
+/* ==========================================================================
+   SEMANTIC TOKENS — DARK
+   A night version of the app chrome: deep indigo-slate rather than black.
+   ========================================================================== */
+
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --bg: #0b0e1a;
+  --bg-tint: var(--rl-slate-900);
+  --surface: var(--rl-slate-850);
+  --surface-2: var(--rl-slate-800);
+  --surface-sunken: #070912;
+  --surface-inverse: var(--rl-slate-50);
+
+  --glass: rgb(30 34 51 / 0.68);
+  --glass-strong: rgb(17 20 33 / 0.9);
+  --glass-blur: 18px;
+
+  --border: rgb(198 210 235 / 0.13);
+  --border-strong: rgb(198 210 235 / 0.24);
+  --border-brand: rgb(251 164 63 / 0.42);
+
+  --text: #eef1fa;
+  --text-muted: #a8b1cc;
+  --text-subtle: #8e97b3;
+  --text-inverse: var(--rl-indigo-950);
+  --text-on-brand: #2a1704;
+
+  --brand: var(--rl-amber-400);
+  --brand-hover: var(--rl-amber-300);
+  --brand-active: var(--rl-amber-500);
+  --brand-ink: var(--rl-amber-300);
+  --brand-soft: rgb(251 164 63 / 0.14);
+  --brand-soft-border: rgb(251 164 63 / 0.32);
+  --brand-strong: var(--rl-amber-400);
+
+  --action: var(--rl-cyan-300);
+  --action-ink: var(--rl-cyan-300);
+  --action-soft: rgb(103 216 242 / 0.14);
+  --action-border: rgb(103 216 242 / 0.32);
+
+  --accent: var(--rl-mint-300);
+  --accent-ink: var(--rl-mint-300);
+  --accent-soft: rgb(86 217 169 / 0.14);
+
+  --status-info: var(--rl-cyan-300);
+  --status-warn: var(--rl-amber-300);
+  --status-danger: var(--rl-rose-300);
+  --status-success: var(--rl-mint-300);
+
+  --shadow-rgb: 0 0 0;
+  --shadow-xs: 0 1px 2px rgb(0 0 0 / 0.4);
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.4), 0 2px 8px rgb(0 0 0 / 0.36);
+  --shadow-md: 0 2px 4px rgb(0 0 0 / 0.38), 0 10px 26px rgb(0 0 0 / 0.46);
+  --shadow-lg: 0 4px 10px rgb(0 0 0 / 0.42), 0 22px 50px rgb(0 0 0 / 0.52);
+  --shadow-xl: 0 10px 20px rgb(0 0 0 / 0.46), 0 38px 78px rgb(0 0 0 / 0.6);
+  --shadow-brand: 0 12px 36px rgb(251 164 63 / 0.26);
+
+  --grad-brand: linear-gradient(
+    135deg,
+    var(--rl-amber-300) 0%,
+    var(--rl-amber-500) 58%,
+    var(--rl-rose-400) 100%
+  );
+
+  --grad-brand-strong: linear-gradient(
+    135deg,
+    var(--rl-amber-300) 0%,
+    var(--rl-amber-400) 58%,
+    #f0b64a 100%
+  );
+
+  --grad-warm-wash: radial-gradient(
+      62rem 38rem at 8% -6%,
+      rgb(251 164 63 / 0.22),
+      transparent 60%
+    ),
+    radial-gradient(56rem 34rem at 78% -4%, rgb(43 191 226 / 0.2), transparent 62%),
+    radial-gradient(46rem 30rem at 96% 30%, rgb(162 115 246 / 0.16), transparent 64%),
+    radial-gradient(50rem 32rem at 30% 20%, rgb(43 193 137 / 0.12), transparent 66%);
+
+  --grad-text: linear-gradient(
+    100deg,
+    var(--rl-amber-300) 0%,
+    var(--rl-rose-300) 38%,
+    var(--rl-violet-300) 72%,
+    var(--rl-cyan-300) 100%
+  );
+
+  --grad-spectrum: linear-gradient(
+    90deg,
+    var(--rl-amber-300) 0%,
+    var(--rl-rose-300) 26%,
+    var(--rl-violet-300) 50%,
+    var(--rl-cyan-300) 74%,
+    var(--rl-mint-300) 100%
+  );
+
+  --hairline: rgb(198 210 235 / 0.1);
+  --scrim: rgb(0 0 0 / 0.66);
+
+  /* Hue ramps (dark): bright base, tinted fill, near-black label colour. */
+  --hue-amber: var(--rl-amber-300);
+  --hue-amber-ink: var(--rl-amber-300);
+  --hue-amber-soft: rgb(253 188 109 / 0.14);
+  --hue-amber-border: rgb(253 188 109 / 0.32);
+  --hue-amber-on: #241505;
+  --hue-amber-strong: var(--rl-amber-300);
+
+  --hue-cyan: var(--rl-cyan-300);
+  --hue-cyan-ink: var(--rl-cyan-300);
+  --hue-cyan-soft: rgb(103 216 242 / 0.14);
+  --hue-cyan-border: rgb(103 216 242 / 0.32);
+  --hue-cyan-on: #04222c;
+  --hue-cyan-strong: var(--rl-cyan-300);
+
+  --hue-mint: var(--rl-mint-300);
+  --hue-mint-ink: var(--rl-mint-300);
+  --hue-mint-soft: rgb(86 217 169 / 0.14);
+  --hue-mint-border: rgb(86 217 169 / 0.32);
+  --hue-mint-on: #032117;
+  --hue-mint-strong: var(--rl-mint-300);
+
+  --hue-indigo: var(--rl-indigo-300);
+  --hue-indigo-ink: var(--rl-indigo-300);
+  --hue-indigo-soft: rgb(160 167 251 / 0.15);
+  --hue-indigo-border: rgb(160 167 251 / 0.32);
+  --hue-indigo-on: #14103a;
+  --hue-indigo-strong: var(--rl-indigo-300);
+
+  --hue-rose: var(--rl-rose-300);
+  --hue-rose-ink: var(--rl-rose-300);
+  --hue-rose-soft: rgb(253 143 166 / 0.14);
+  --hue-rose-border: rgb(253 143 166 / 0.32);
+  --hue-rose-on: #350a17;
+  --hue-rose-strong: var(--rl-rose-300);
+
+  --hue-violet: var(--rl-violet-300);
+  --hue-violet-ink: var(--rl-violet-300);
+  --hue-violet-soft: rgb(191 157 252 / 0.14);
+  --hue-violet-border: rgb(191 157 252 / 0.32);
+  --hue-violet-on: #22103c;
+  --hue-violet-strong: var(--rl-violet-300);
+
+  --hue-teal: var(--rl-teal-300);
+  --hue-teal-ink: var(--rl-teal-300);
+  --hue-teal-soft: rgb(94 214 196 / 0.14);
+  --hue-teal-border: rgb(94 214 196 / 0.32);
+  --hue-teal-on: #04211d;
+  --hue-teal-strong: var(--rl-teal-300);
+}
+
+/* Honour the OS preference before the theme script runs / with JS disabled.
+   The dark block is repeated here because :root cannot inherit from an
+   attribute selector, and doing it any other way reintroduces the flash. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+
+    --bg: #0b0e1a;
+    --bg-tint: var(--rl-slate-900);
+    --surface: var(--rl-slate-850);
+    --surface-2: var(--rl-slate-800);
+    --surface-sunken: #070912;
+    --surface-inverse: var(--rl-slate-50);
+
+    --glass: rgb(30 34 51 / 0.68);
+    --glass-strong: rgb(17 20 33 / 0.9);
+
+    --border: rgb(198 210 235 / 0.13);
+    --border-strong: rgb(198 210 235 / 0.24);
+    --border-brand: rgb(251 164 63 / 0.42);
+
+    --text: #eef1fa;
+    --text-muted: #a8b1cc;
+    --text-subtle: #8e97b3;
+    --text-inverse: var(--rl-indigo-950);
+    --text-on-brand: #2a1704;
+
+    --brand: var(--rl-amber-400);
+    --brand-hover: var(--rl-amber-300);
+    --brand-active: var(--rl-amber-500);
+    --brand-ink: var(--rl-amber-300);
+    --brand-soft: rgb(251 164 63 / 0.14);
+    --brand-soft-border: rgb(251 164 63 / 0.32);
+    --brand-strong: var(--rl-amber-400);
+
+    --action: var(--rl-cyan-300);
+    --action-ink: var(--rl-cyan-300);
+    --action-soft: rgb(103 216 242 / 0.14);
+    --action-border: rgb(103 216 242 / 0.32);
+
+    --accent: var(--rl-mint-300);
+    --accent-ink: var(--rl-mint-300);
+    --accent-soft: rgb(86 217 169 / 0.14);
+
+    --status-info: var(--rl-cyan-300);
+    --status-warn: var(--rl-amber-300);
+    --status-danger: var(--rl-rose-300);
+    --status-success: var(--rl-mint-300);
+
+    --shadow-rgb: 0 0 0;
+    --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.4), 0 2px 8px rgb(0 0 0 / 0.36);
+    --shadow-md: 0 2px 4px rgb(0 0 0 / 0.38), 0 10px 26px rgb(0 0 0 / 0.46);
+    --shadow-lg: 0 4px 10px rgb(0 0 0 / 0.42), 0 22px 50px rgb(0 0 0 / 0.52);
+    --shadow-xl: 0 10px 20px rgb(0 0 0 / 0.46), 0 38px 78px rgb(0 0 0 / 0.6);
+    --shadow-brand: 0 12px 36px rgb(251 164 63 / 0.26);
+
+    --grad-brand: linear-gradient(
+      135deg,
+      var(--rl-amber-300) 0%,
+      var(--rl-amber-500) 58%,
+      var(--rl-rose-400) 100%
+    );
+    --grad-brand-strong: linear-gradient(
+      135deg,
+      var(--rl-amber-300) 0%,
+      var(--rl-amber-400) 58%,
+      #f0b64a 100%
+    );
+    --grad-warm-wash: radial-gradient(
+        62rem 38rem at 8% -6%,
+        rgb(251 164 63 / 0.22),
+        transparent 60%
+      ),
+      radial-gradient(
+        56rem 34rem at 78% -4%,
+        rgb(43 191 226 / 0.2),
+        transparent 62%
+      ),
+      radial-gradient(
+        46rem 30rem at 96% 30%,
+        rgb(162 115 246 / 0.16),
+        transparent 64%
+      ),
+      radial-gradient(
+        50rem 32rem at 30% 20%,
+        rgb(43 193 137 / 0.12),
+        transparent 66%
+      );
+    --grad-text: linear-gradient(
+      100deg,
+      var(--rl-amber-300) 0%,
+      var(--rl-rose-300) 38%,
+      var(--rl-violet-300) 72%,
+      var(--rl-cyan-300) 100%
+    );
+    --grad-spectrum: linear-gradient(
+      90deg,
+      var(--rl-amber-300) 0%,
+      var(--rl-rose-300) 26%,
+      var(--rl-violet-300) 50%,
+      var(--rl-cyan-300) 74%,
+      var(--rl-mint-300) 100%
+    );
+
+    --hairline: rgb(198 210 235 / 0.1);
+    --scrim: rgb(0 0 0 / 0.66);
+
+    --hue-amber: var(--rl-amber-300);
+    --hue-amber-ink: var(--rl-amber-300);
+    --hue-amber-soft: rgb(253 188 109 / 0.14);
+    --hue-amber-border: rgb(253 188 109 / 0.32);
+    --hue-amber-on: #241505;
+  --hue-amber-strong: var(--rl-amber-300);
+
+    --hue-cyan: var(--rl-cyan-300);
+    --hue-cyan-ink: var(--rl-cyan-300);
+    --hue-cyan-soft: rgb(103 216 242 / 0.14);
+    --hue-cyan-border: rgb(103 216 242 / 0.32);
+    --hue-cyan-on: #04222c;
+  --hue-cyan-strong: var(--rl-cyan-300);
+
+    --hue-mint: var(--rl-mint-300);
+    --hue-mint-ink: var(--rl-mint-300);
+    --hue-mint-soft: rgb(86 217 169 / 0.14);
+    --hue-mint-border: rgb(86 217 169 / 0.32);
+    --hue-mint-on: #032117;
+  --hue-mint-strong: var(--rl-mint-300);
+
+    --hue-indigo: var(--rl-indigo-300);
+    --hue-indigo-ink: var(--rl-indigo-300);
+    --hue-indigo-soft: rgb(160 167 251 / 0.15);
+    --hue-indigo-border: rgb(160 167 251 / 0.32);
+    --hue-indigo-on: #14103a;
+  --hue-indigo-strong: var(--rl-indigo-300);
+
+    --hue-rose: var(--rl-rose-300);
+    --hue-rose-ink: var(--rl-rose-300);
+    --hue-rose-soft: rgb(253 143 166 / 0.14);
+    --hue-rose-border: rgb(253 143 166 / 0.32);
+    --hue-rose-on: #350a17;
+  --hue-rose-strong: var(--rl-rose-300);
+
+    --hue-violet: var(--rl-violet-300);
+    --hue-violet-ink: var(--rl-violet-300);
+    --hue-violet-soft: rgb(191 157 252 / 0.14);
+    --hue-violet-border: rgb(191 157 252 / 0.32);
+    --hue-violet-on: #22103c;
+  --hue-violet-strong: var(--rl-violet-300);
+
+    --hue-teal: var(--rl-teal-300);
+    --hue-teal-ink: var(--rl-teal-300);
+    --hue-teal-soft: rgb(94 214 196 / 0.14);
+    --hue-teal-border: rgb(94 214 196 / 0.32);
+    --hue-teal-on: #04211d;
+  --hue-teal-strong: var(--rl-teal-300);
+  }
+}
+
+/* ==========================================================================
+   TONE UTILITY
+   --------------------------------------------------------------------------
+   Re-points the brand tokens at one hue ramp for a subtree. Because every
+   component already reads --brand / --brand-ink / --brand-soft, wrapping an
+   element in `.tone--cyan` recolours its icon tile, chip, hover glow, border
+   and cursor spotlight with no component-specific CSS at all. This is what
+   makes the page multi-coloured without multiplying the stylesheet.
+   ========================================================================== */
+
+[class*="tone--"] {
+  --brand: var(--tone);
+  --brand-ink: var(--tone-ink);
+  --brand-soft: var(--tone-soft);
+  --brand-soft-border: var(--tone-border);
+  --border-brand: var(--tone-border);
+  --text-on-brand: var(--tone-on);
+}
+
+.tone--amber {
+  --tone: var(--hue-amber);
+  --tone-ink: var(--hue-amber-ink);
+  --tone-soft: var(--hue-amber-soft);
+  --tone-border: var(--hue-amber-border);
+  --tone-on: var(--hue-amber-on);
+  --tone-strong: var(--hue-amber-strong);
+}
+
+.tone--cyan {
+  --tone: var(--hue-cyan);
+  --tone-ink: var(--hue-cyan-ink);
+  --tone-soft: var(--hue-cyan-soft);
+  --tone-border: var(--hue-cyan-border);
+  --tone-on: var(--hue-cyan-on);
+  --tone-strong: var(--hue-cyan-strong);
+}
+
+.tone--mint {
+  --tone: var(--hue-mint);
+  --tone-ink: var(--hue-mint-ink);
+  --tone-soft: var(--hue-mint-soft);
+  --tone-border: var(--hue-mint-border);
+  --tone-on: var(--hue-mint-on);
+  --tone-strong: var(--hue-mint-strong);
+}
+
+.tone--indigo {
+  --tone: var(--hue-indigo);
+  --tone-ink: var(--hue-indigo-ink);
+  --tone-soft: var(--hue-indigo-soft);
+  --tone-border: var(--hue-indigo-border);
+  --tone-on: var(--hue-indigo-on);
+  --tone-strong: var(--hue-indigo-strong);
+}
+
+.tone--rose {
+  --tone: var(--hue-rose);
+  --tone-ink: var(--hue-rose-ink);
+  --tone-soft: var(--hue-rose-soft);
+  --tone-border: var(--hue-rose-border);
+  --tone-on: var(--hue-rose-on);
+  --tone-strong: var(--hue-rose-strong);
+}
+
+.tone--violet {
+  --tone: var(--hue-violet);
+  --tone-ink: var(--hue-violet-ink);
+  --tone-soft: var(--hue-violet-soft);
+  --tone-border: var(--hue-violet-border);
+  --tone-on: var(--hue-violet-on);
+  --tone-strong: var(--hue-violet-strong);
+}
+
+.tone--teal {
+  --tone: var(--hue-teal);
+  --tone-ink: var(--hue-teal-ink);
+  --tone-soft: var(--hue-teal-soft);
+  --tone-border: var(--hue-teal-border);
+  --tone-on: var(--hue-teal-on);
+  --tone-strong: var(--hue-teal-strong);
+}
+
+/* Expose semantic tokens to Tailwind utilities. `inline` keeps the var
+   reference live so theme switching works at runtime. */
+@theme inline {
+  --color-bg: var(--bg);
+  --color-bg-tint: var(--bg-tint);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-border: var(--border);
+  --color-text: var(--text);
+  --color-muted: var(--text-muted);
+  --color-subtle: var(--text-subtle);
+  --color-brand: var(--brand);
+  --color-brand-ink: var(--brand-ink);
+  --color-action: var(--action);
+  --color-accent: var(--accent);
+
+  --font-sans: var(--font-body);
+  --font-serif: var(--font-accent);
+  --font-mono: var(--font-mono);
+
+  --radius-card: var(--radius-xl);
+}
+
+/* ==========================================================================
+   RestroLogic — Base layer
+   Reset, document defaults, typography, accessibility primitives.
+   ========================================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+  /* Offset anchor targets so the sticky header never covers a heading. */
+  scroll-padding-top: 6.5rem;
+}
+
+body {
+  min-height: 100dvh;
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  font-synthesis-weight: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+  transition: background-color var(--dur-base) var(--ease-out-soft),
+    color var(--dur-base) var(--ease-out-soft);
+}
+
+/* Media defaults */
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+/* No blanket `fill` here: a global `fill: currentColor` overrides the
+   `fill="none"` presentation attribute on stroked icons and renders them as
+   solid blobs. Filled marks opt in explicitly instead. */
+
+img {
+  height: auto;
+  font-style: italic; /* styles the alt text if the image fails */
+  background-repeat: no-repeat;
+  background-size: cover;
+  vertical-align: middle;
+}
+
+/* Forms inherit type */
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+/* Typography ---------------------------------------------------------- */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-display);
+  font-weight: 640;
+  line-height: var(--leading-snug);
+  letter-spacing: var(--tracking-tight);
+  text-wrap: balance;
+  color: var(--text);
+}
+
+h1 {
+  font-size: var(--text-5xl);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tighter);
+  font-weight: 680;
+}
+
+h2 {
+  font-size: var(--text-4xl);
+  letter-spacing: var(--tracking-tighter);
+}
+
+h3 {
+  font-size: var(--text-xl);
+}
+
+h4 {
+  font-size: var(--text-lg);
+}
+
+p,
+li {
+  text-wrap: pretty;
+}
+
+p {
+  color: var(--text-muted);
+}
+
+strong,
+b {
+  font-weight: 640;
+  color: var(--text);
+}
+
+a {
+  color: inherit;
+  text-decoration-color: color-mix(in oklab, currentColor 35%, transparent);
+  text-underline-offset: 0.22em;
+}
+
+ul[class],
+ol[class] {
+  list-style: none;
+  padding: 0;
+}
+
+hr {
+  border: none;
+  height: 1px;
+  background: var(--border);
+}
+
+::selection {
+  background: color-mix(in oklab, var(--brand) 30%, transparent);
+  color: var(--text);
+}
+
+/* Accessibility -------------------------------------------------------- */
+
+:where(a, button, input, textarea, select, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 3px;
+  border-radius: var(--radius-xs);
+}
+
+/* Never show a focus ring for pointer users. */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  translate: -50% -140%;
+  z-index: var(--z-toast);
+  padding: 0.7rem 1.2rem;
+  background: var(--brand);
+  color: var(--text-on-brand);
+  font-weight: 600;
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+  transition: translate var(--dur-fast) var(--ease-out-soft);
+}
+
+.skip-link:focus-visible {
+  translate: -50% 0;
+}
+
+/* Scrollbar (WebKit) --------------------------------------------------- */
+
+@supports selector(::-webkit-scrollbar) {
+  ::-webkit-scrollbar {
+    width: 11px;
+    height: 11px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--bg);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: color-mix(in oklab, var(--text) 22%, transparent);
+    border: 3px solid var(--bg);
+    border-radius: var(--radius-full);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: color-mix(in oklab, var(--text) 34%, transparent);
+  }
+}
+
+/* Reduced motion ------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Progressive enhancement contract -------------------------------------
+   Content is visible by default. The inline head script writes
+   data-motion="on" only when JS is running AND motion is allowed, which is
+   what arms the hidden "from" state below. If the motion bundle never
+   confirms readiness, a failsafe timer flips the attribute back to "off"
+   and everything is revealed. No-JS, reduced-motion and broken-bundle
+   visitors all get a complete, readable page.
+   ---------------------------------------------------------------------- */
+
+[data-motion="on"] [data-reveal],
+[data-motion="on"] [data-stagger] > * {
+  opacity: 0;
+}
+
+[data-motion="on"] [data-reveal],
+[data-motion="on"] [data-stagger] > *,
+[data-motion="on"] [data-pipeline-step],
+[data-motion="on"] [data-float] {
+  will-change: transform, opacity;
+}
+
+/* Headings animate their own words, so the block itself stays laid out. */
+[data-motion="on"] [data-split] {
+  opacity: 0;
+}
+
+/* Word-level mask reveal, created at runtime by `splitWords`. */
+.word {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  /* Descenders would otherwise be clipped by the mask. */
+  padding-block-end: 0.12em;
+  margin-block-end: -0.12em;
+}
+
+.word__inner {
+  display: inline-block;
+}
+
+/* Hero headline lines are authored as masks rather than split at runtime,
+   so the largest text on the page never depends on JS to be laid out. */
+.hero__line {
+  display: block;
+  overflow: hidden;
+  padding-block-end: 0.1em;
+  margin-block-end: -0.1em;
+}
+
+.hero__line > span {
+  display: block;
+}
+
+/* ==========================================================================
+   RestroLogic — Layout primitives
+   Composable, unopinionated building blocks. No section owns these.
+   ========================================================================== */
+
+/* Container ------------------------------------------------------------ */
+
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.container--narrow {
+  max-width: var(--container-narrow);
+}
+
+.container--wide {
+  max-width: var(--container-wide);
+}
+
+/* Section -------------------------------------------------------------- */
+
+.section {
+  position: relative;
+  padding-block: var(--section-py);
+}
+
+.section--tight {
+  padding-block: var(--section-py-sm);
+}
+
+.section--tinted {
+  background: var(--bg-tint);
+}
+
+.section--sunken {
+  background: var(--surface-sunken);
+}
+
+/* Hairline separators that read as plated edges. */
+.section--edged {
+  border-block: 1px solid var(--hairline);
+}
+
+.section__head {
+  max-width: 44rem;
+  margin-inline: auto;
+  text-align: center;
+  margin-bottom: clamp(2.5rem, 1.8rem + 2.4vw, 4rem);
+}
+
+.section__head--start {
+  margin-inline: 0;
+  text-align: start;
+}
+
+.section__title {
+  font-size: var(--text-4xl);
+  margin-block: var(--space-xs) var(--space-sm);
+}
+
+.section__lede {
+  font-size: var(--text-lg);
+  color: var(--text-muted);
+  line-height: var(--leading-relaxed);
+  max-width: 40rem;
+  margin-inline: auto;
+}
+
+.section__head--start .section__lede {
+  margin-inline: 0;
+}
+
+/* Eyebrow — the small tracked label above a section title. */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: var(--text-xs);
+  font-weight: 620;
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  color: var(--brand-ink);
+}
+
+.eyebrow::before {
+  content: "";
+  inline-size: 1.6rem;
+  block-size: 1px;
+  background: currentColor;
+  opacity: 0.55;
+}
+
+.section__head:not(.section__head--start) .eyebrow::after {
+  content: "";
+  inline-size: 1.6rem;
+  block-size: 1px;
+  background: currentColor;
+  opacity: 0.55;
+}
+
+/* Flow / stack --------------------------------------------------------- */
+
+.stack > * + * {
+  margin-block-start: var(--flow, 1rem);
+}
+
+.cluster {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--cluster-gap, 0.75rem);
+}
+
+/* Grid helpers --------------------------------------------------------- */
+
+.grid-auto {
+  display: grid;
+  gap: var(--grid-gap, 1.5rem);
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(min(var(--grid-min, 17rem), 100%), 1fr)
+  );
+}
+
+/* Text helpers --------------------------------------------------------- */
+
+.text-gradient {
+  background: var(--grad-text);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.text-accent {
+  font-family: var(--font-accent);
+  font-style: italic;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+.text-muted {
+  color: var(--text-muted);
+}
+
+/* Decorative backgrounds ----------------------------------------------- */
+
+/* Soft radial brand wash. Purely decorative, always aria-hidden. */
+.wash {
+  position: absolute;
+  inset: 0;
+  background: var(--grad-warm-wash);
+  pointer-events: none;
+  z-index: var(--z-base);
+}
+
+/* Fine dotted "tablecloth" grid. */
+.dotgrid {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: radial-gradient(
+    circle at 1px 1px,
+    color-mix(in oklab, var(--text) 16%, transparent) 1px,
+    transparent 0
+  );
+  background-size: 26px 26px;
+  mask-image: radial-gradient(60% 55% at 50% 40%, #000 0%, transparent 78%);
+  opacity: 0.5;
+}
+
+/* Subtle film grain — stops large flat areas from banding. */
+.grain {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.35;
+  mix-blend-mode: soft-light;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+}
+
+/* Glow orb used behind hero/CTA blocks. */
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(70px);
+  pointer-events: none;
+  opacity: 0.55;
+}
+
+.orb--amber {
+  background: radial-gradient(circle, var(--hue-amber), transparent 68%);
+}
+
+.orb--cyan {
+  background: radial-gradient(circle, var(--hue-cyan), transparent 68%);
+}
+
+.orb--violet {
+  background: radial-gradient(circle, var(--hue-violet), transparent 68%);
+}
+
+.orb--mint {
+  background: radial-gradient(circle, var(--hue-mint), transparent 68%);
+}
+
+.orb--rose {
+  background: radial-gradient(circle, var(--hue-rose), transparent 68%);
+}
+
+/* A hairline painted with the full brand spectrum. Used to cap sections so
+   the eye picks up every hue even where the content is neutral. */
+.spectrum-rule {
+  block-size: 2px;
+  border: 0;
+  background: var(--grad-spectrum);
+  opacity: 0.85;
+}
+
+/* Visually hide decorative layers from assistive tech automatically. */
+[aria-hidden="true"] {
+  user-select: none;
+}
+
+/* ==========================================================================
+   RestroLogic — Component layer
+   Reusable, section-agnostic UI. Every rule consumes semantic tokens only.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Button
+   -------------------------------------------------------------------------- */
+
+.btn {
+  --btn-bg: transparent;
+  --btn-fg: var(--text);
+  --btn-border: transparent;
+  --btn-shadow: none;
+
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55em;
+  padding: 0.78em 1.35em;
+  border: 1px solid var(--btn-border);
+  border-radius: var(--radius-full);
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  box-shadow: var(--btn-shadow);
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1;
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+  isolation: isolate;
+  overflow: hidden;
+  transition: background-color var(--dur-fast) var(--ease-out-soft),
+    color var(--dur-fast) var(--ease-out-soft),
+    border-color var(--dur-fast) var(--ease-out-soft),
+    box-shadow var(--dur-base) var(--ease-out-soft),
+    transform var(--dur-fast) var(--ease-out-soft);
+}
+
+.btn:active {
+  transform: translateY(1px) scale(0.985);
+}
+
+.btn:disabled,
+.btn[aria-disabled="true"] {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* Sheen sweep on hover — the small piece of delight on every CTA. */
+.btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(
+    100deg,
+    transparent 20%,
+    color-mix(in oklab, var(--btn-fg) 22%, transparent) 50%,
+    transparent 80%
+  );
+  translate: -120% 0;
+  transition: translate var(--dur-slow) var(--ease-out-expo);
+}
+
+.btn:hover::after {
+  translate: 120% 0;
+}
+
+/* Variants */
+
+.btn--primary {
+  --btn-bg: var(--brand);
+  --btn-fg: var(--text-on-brand);
+  --btn-shadow: var(--shadow-brand);
+  background-image: var(--grad-brand-strong);
+  font-weight: 640;
+}
+
+.btn--primary:hover {
+  --btn-shadow: 0 14px 38px rgb(245 158 11 / 0.5);
+  transform: translateY(-2px);
+}
+
+.btn--outline {
+  --btn-border: var(--border-strong);
+  --btn-fg: var(--text);
+}
+
+.btn--outline:hover {
+  --btn-border: var(--border-brand);
+  --btn-bg: var(--brand-soft);
+  --btn-fg: var(--brand-ink);
+  transform: translateY(-2px);
+}
+
+.btn--soft {
+  --btn-bg: var(--brand-soft);
+  --btn-fg: var(--brand-ink);
+  --btn-border: var(--brand-soft-border);
+}
+
+.btn--soft:hover {
+  --btn-bg: color-mix(in oklab, var(--brand) 18%, transparent);
+  transform: translateY(-2px);
+}
+
+.btn--ghost {
+  --btn-fg: var(--text-muted);
+  padding-inline: 0.9em;
+}
+
+.btn--ghost:hover {
+  --btn-bg: color-mix(in oklab, var(--text) 7%, transparent);
+  --btn-fg: var(--text);
+}
+
+/* Sizes */
+
+.btn--lg {
+  padding: 1em 1.75em;
+  font-size: var(--text-md);
+}
+
+.btn--sm {
+  padding: 0.6em 1em;
+  font-size: var(--text-xs);
+}
+
+.btn--icon {
+  padding: 0.62em;
+  aspect-ratio: 1;
+}
+
+.btn--block {
+  width: 100%;
+}
+
+/* Arrow inside a button nudges forward on hover. */
+.btn__arrow {
+  inline-size: 1em;
+  block-size: 1em;
+  transition: translate var(--dur-base) var(--ease-spring);
+}
+
+.btn:hover .btn__arrow {
+  translate: 0.22em 0;
+}
+
+/* --------------------------------------------------------------------------
+   Card
+   -------------------------------------------------------------------------- */
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: clamp(1.35rem, 1.1rem + 0.9vw, 2rem);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--dur-base) var(--ease-out-soft),
+    box-shadow var(--dur-base) var(--ease-out-soft),
+    border-color var(--dur-base) var(--ease-out-soft);
+}
+
+.card--glass {
+  background: var(--glass);
+  backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+}
+
+.card--flush {
+  padding: 0;
+  overflow: hidden;
+}
+
+.card--interactive {
+  cursor: pointer;
+}
+
+.card--interactive:hover,
+.card--interactive:focus-within {
+  transform: translateY(-4px);
+  border-color: var(--border-brand);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Spotlight follows the cursor. Coordinates are written by JS as --mx/--my;
+   with no JS the layer simply never becomes visible. */
+.card--spotlight::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(
+    22rem 22rem at var(--mx, 50%) var(--my, 0%),
+    color-mix(in oklab, var(--brand) 16%, transparent),
+    transparent 60%
+  );
+  transition: opacity var(--dur-base) var(--ease-out-soft);
+}
+
+.card--spotlight:hover::before {
+  opacity: 1;
+}
+
+.card__title {
+  font-size: var(--text-lg);
+  font-weight: 640;
+  letter-spacing: var(--tracking-tight);
+}
+
+.card__text {
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  line-height: var(--leading-relaxed);
+}
+
+/* --------------------------------------------------------------------------
+   Icon tile — the rounded square behind a feature glyph
+   -------------------------------------------------------------------------- */
+
+.icon-tile {
+  display: grid;
+  place-items: center;
+  inline-size: 3rem;
+  block-size: 3rem;
+  flex: none;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--brand-soft-border);
+  background: var(--brand-soft);
+  color: var(--brand-ink);
+  transition: transform var(--dur-base) var(--ease-spring),
+    background-color var(--dur-base) var(--ease-out-soft),
+    color var(--dur-base) var(--ease-out-soft);
+}
+
+.icon-tile svg {
+  inline-size: 1.5rem;
+  block-size: 1.5rem;
+}
+
+.card--interactive:hover .icon-tile {
+  transform: rotate(-6deg) scale(1.08);
+  background: var(--brand);
+  color: var(--text-on-brand);
+  box-shadow: 0 8px 22px color-mix(in oklab, var(--brand) 45%, transparent);
+}
+
+/* The card's top edge lights up in its own hue on hover — the cheapest way
+   to make a six-card grid read as six colours rather than one. */
+.card--interactive::after {
+  content: "";
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline: 12%;
+  block-size: 2px;
+  border-radius: 0 0 2px 2px;
+  background: var(--brand);
+  scale: 0 1;
+  opacity: 0.9;
+  transition: scale var(--dur-base) var(--ease-out-expo);
+}
+
+.card--interactive:hover::after,
+.card--interactive:focus-within::after {
+  scale: 1 1;
+}
+
+.icon-tile--accent {
+  border-color: color-mix(in oklab, var(--accent) 34%, transparent);
+  background: var(--accent-soft);
+  color: var(--accent-ink);
+}
+
+.icon-tile--lg {
+  inline-size: 3.5rem;
+  block-size: 3.5rem;
+  border-radius: var(--radius-lg);
+}
+
+/* --------------------------------------------------------------------------
+   Chip / Badge / Pill
+   -------------------------------------------------------------------------- */
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.4rem 0.8rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: var(--surface-2);
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+  font-weight: 560;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+
+.chip--brand {
+  border-color: var(--brand-soft-border);
+  background: var(--brand-soft);
+  color: var(--brand-ink);
+}
+
+.chip--accent {
+  border-color: color-mix(in oklab, var(--accent) 32%, transparent);
+  background: var(--accent-soft);
+  color: var(--accent-ink);
+}
+
+.chip--glass {
+  background: var(--glass);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* Live status dot */
+.dot {
+  inline-size: 0.45rem;
+  block-size: 0.45rem;
+  border-radius: 50%;
+  background: currentColor;
+  flex: none;
+}
+
+.dot--pulse {
+  position: relative;
+  color: var(--accent);
+}
+
+.dot--pulse::after {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  border: 1px solid currentColor;
+  animation: rl-ping 2s var(--ease-out-soft) infinite;
+}
+
+/* --------------------------------------------------------------------------
+   Form controls
+   -------------------------------------------------------------------------- */
+
+.field {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.field__label {
+  font-size: var(--text-xs);
+  font-weight: 620;
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--text-subtle);
+}
+
+.field__hint {
+  font-size: var(--text-xs);
+  color: var(--text-subtle);
+}
+
+.input,
+.textarea,
+.select {
+  inline-size: 100%;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  color: var(--text);
+  font-size: var(--text-sm);
+  transition: border-color var(--dur-fast) var(--ease-out-soft),
+    box-shadow var(--dur-fast) var(--ease-out-soft),
+    background-color var(--dur-fast) var(--ease-out-soft);
+}
+
+.input::placeholder,
+.textarea::placeholder {
+  color: var(--text-subtle);
+}
+
+.input:focus,
+.textarea:focus,
+.select:focus {
+  outline: none;
+  border-color: var(--brand);
+  box-shadow: 0 0 0 4px color-mix(in oklab, var(--brand) 18%, transparent);
+}
+
+.textarea {
+  min-block-size: 8rem;
+  resize: vertical;
+}
+
+/* --------------------------------------------------------------------------
+   Segmented control (billing period switch)
+   -------------------------------------------------------------------------- */
+
+.segmented {
+  position: relative;
+  display: inline-flex;
+  padding: 0.28rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: var(--surface-2);
+}
+
+.segmented__thumb {
+  position: absolute;
+  inset-block: 0.28rem;
+  inset-inline-start: 0.28rem;
+  border-radius: var(--radius-full);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--dur-base) var(--ease-out-expo),
+    width var(--dur-base) var(--ease-out-expo);
+  pointer-events: none;
+}
+
+.segmented__option {
+  position: relative;
+  z-index: 1;
+  padding: 0.5rem 1.05rem;
+  border-radius: var(--radius-full);
+  font-size: var(--text-xs);
+  font-weight: 620;
+  color: var(--text-muted);
+  transition: color var(--dur-fast) var(--ease-out-soft);
+}
+
+.segmented__option[aria-selected="true"] {
+  color: var(--text);
+}
+
+/* --------------------------------------------------------------------------
+   Accordion (FAQ)
+   -------------------------------------------------------------------------- */
+
+.accordion {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.qa {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  overflow: hidden;
+  transition: border-color var(--dur-base) var(--ease-out-soft),
+    box-shadow var(--dur-base) var(--ease-out-soft);
+}
+
+.qa[open] {
+  border-color: var(--border-brand);
+  box-shadow: var(--shadow-md);
+}
+
+.qa__summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.15rem 1.35rem;
+  cursor: pointer;
+  list-style: none;
+  font-family: var(--font-display);
+  font-size: var(--text-md);
+  font-weight: 600;
+  color: var(--text);
+}
+
+.qa__summary::-webkit-details-marker {
+  display: none;
+}
+
+.qa__summary:hover {
+  color: var(--brand-ink);
+}
+
+.qa__icon {
+  flex: none;
+  inline-size: 1.5rem;
+  block-size: 1.5rem;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid var(--border-strong);
+  color: var(--brand-ink);
+  transition: rotate var(--dur-base) var(--ease-out-expo),
+    background-color var(--dur-base) var(--ease-out-soft);
+}
+
+.qa[open] .qa__icon {
+  rotate: 45deg;
+  background: var(--brand-soft);
+}
+
+.qa__body {
+  padding: 0 1.35rem 1.35rem;
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  line-height: var(--leading-relaxed);
+}
+
+/* --------------------------------------------------------------------------
+   Scroll progress
+   -------------------------------------------------------------------------- */
+
+/* A spectrum bar pinned to the very top of the viewport. The fill is scaled
+   on the X axis from a scroll-linked value, so it costs one compositor
+   property and never triggers layout. */
+.scrollbar {
+  position: fixed;
+  inset-block-start: 0;
+  inset-inline: 0;
+  z-index: calc(var(--z-header) + 1);
+  block-size: 3px;
+  pointer-events: none;
+  background: color-mix(in oklab, var(--text) 8%, transparent);
+  opacity: 0;
+  transition: opacity var(--dur-base) var(--ease-out-soft);
+}
+
+/* Only shown once the visitor has actually started scrolling. */
+.header[data-stuck="true"] ~ .scrollbar,
+.scrollbar[data-visible="true"] {
+  opacity: 1;
+}
+
+.scrollbar__fill {
+  display: block;
+  block-size: 100%;
+  background: var(--grad-spectrum);
+  transform-origin: left center;
+  scale: var(--scroll-progress, 0) 1;
+}
+
+/* --------------------------------------------------------------------------
+   Header / navigation
+   -------------------------------------------------------------------------- */
+
+.header {
+  position: fixed;
+  inset-inline: 0;
+  inset-block-start: 0;
+  z-index: var(--z-header);
+  padding-block: 0.75rem;
+  transition: background-color var(--dur-base) var(--ease-out-soft),
+    box-shadow var(--dur-base) var(--ease-out-soft),
+    border-color var(--dur-base) var(--ease-out-soft),
+    padding var(--dur-base) var(--ease-out-soft);
+  border-block-end: 1px solid transparent;
+}
+
+/* `data-stuck` is toggled by the scroll observer. */
+.header[data-stuck="true"] {
+  padding-block: 0.45rem;
+  background: var(--glass-strong);
+  backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+  border-block-end-color: var(--border);
+  box-shadow: var(--shadow-sm);
+}
+
+.header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 700;
+  letter-spacing: var(--tracking-tight);
+  color: var(--text);
+  text-decoration: none;
+}
+
+.brand__mark {
+  inline-size: 2.1rem;
+  block-size: 2.1rem;
+  flex: none;
+  transition: rotate var(--dur-slow) var(--ease-spring);
+}
+
+.brand:hover .brand__mark {
+  rotate: -14deg;
+}
+
+.brand__name em {
+  font-style: normal;
+  color: var(--brand-ink);
+}
+
+.nav {
+  display: none;
+}
+
+.nav__list {
+  display: flex;
+  align-items: center;
+  gap: 0.15rem;
+}
+
+.nav__link {
+  position: relative;
+  display: block;
+  padding: 0.5rem 0.8rem;
+  border-radius: var(--radius-full);
+  font-size: var(--text-sm);
+  font-weight: 560;
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color var(--dur-fast) var(--ease-out-soft);
+}
+
+.nav__link:hover,
+.nav__link[aria-current="true"] {
+  color: var(--text);
+}
+
+/* Underline grows from the centre, painted with the brand spectrum. */
+.nav__link::after {
+  content: "";
+  position: absolute;
+  inset-block-end: 0.28rem;
+  inset-inline: 0.8rem;
+  block-size: 2px;
+  border-radius: 2px;
+  background: var(--grad-spectrum);
+  scale: 0 1;
+  transition: scale var(--dur-base) var(--ease-out-expo);
+}
+
+.nav__link:hover::after,
+.nav__link[aria-current="true"]::after {
+  scale: 1 1;
+}
+
+.header__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.header__cta {
+  display: none;
+}
+
+/* Icon button used by the theme toggle, lang picker and burger. */
+.iconbtn {
+  display: grid;
+  place-items: center;
+  inline-size: 2.4rem;
+  block-size: 2.4rem;
+  border-radius: var(--radius-full);
+  border: 1px solid transparent;
+  color: var(--text-muted);
+  transition: background-color var(--dur-fast) var(--ease-out-soft),
+    color var(--dur-fast) var(--ease-out-soft),
+    border-color var(--dur-fast) var(--ease-out-soft);
+}
+
+.iconbtn:hover {
+  background: color-mix(in oklab, var(--text) 8%, transparent);
+  color: var(--text);
+  border-color: var(--border);
+}
+
+.iconbtn svg {
+  inline-size: 1.15rem;
+  block-size: 1.15rem;
+}
+
+/* Theme toggle: sun and moon cross-fade + rotate in place. */
+.theme-toggle__icons {
+  display: grid;
+  place-items: center;
+}
+
+.theme-toggle__icons > * {
+  grid-area: 1 / 1;
+  transition: opacity var(--dur-base) var(--ease-out-soft),
+    rotate var(--dur-slow) var(--ease-spring),
+    scale var(--dur-base) var(--ease-spring);
+}
+
+.theme-toggle .i-sun {
+  opacity: 0;
+  rotate: -90deg;
+  scale: 0.5;
+}
+
+.theme-toggle .i-moon {
+  opacity: 1;
+  rotate: 0deg;
+  scale: 1;
+}
+
+[data-theme="dark"] .theme-toggle .i-sun {
+  opacity: 1;
+  rotate: 0deg;
+  scale: 1;
+}
+
+[data-theme="dark"] .theme-toggle .i-moon {
+  opacity: 0;
+  rotate: 90deg;
+  scale: 0.5;
+}
+
+/* Dropdown (language picker) */
+.dropdown {
+  position: relative;
+}
+
+.dropdown__panel {
+  position: absolute;
+  inset-inline-end: 0;
+  inset-block-start: calc(100% + 0.5rem);
+  min-inline-size: 10rem;
+  padding: 0.35rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--glass-strong);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  box-shadow: var(--shadow-lg);
+  opacity: 0;
+  translate: 0 -0.4rem;
+  visibility: hidden;
+  transition: opacity var(--dur-fast) var(--ease-out-soft),
+    translate var(--dur-fast) var(--ease-out-soft),
+    visibility var(--dur-fast);
+}
+
+.dropdown[data-open="true"] .dropdown__panel {
+  opacity: 1;
+  translate: 0 0;
+  visibility: visible;
+}
+
+.dropdown__item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 0.7rem;
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  text-decoration: none;
+}
+
+.dropdown__item:hover {
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+.dropdown__item[aria-current="true"] {
+  color: var(--brand-ink);
+  font-weight: 620;
+}
+
+/* Burger → X */
+.burger__box {
+  display: grid;
+  gap: 4px;
+  inline-size: 1.05rem;
+}
+
+.burger__bar {
+  block-size: 2px;
+  border-radius: 2px;
+  background: currentColor;
+  transition: translate var(--dur-base) var(--ease-out-expo),
+    rotate var(--dur-base) var(--ease-out-expo),
+    opacity var(--dur-fast) linear;
+}
+
+[data-drawer-open="true"] .burger__bar:nth-child(1) {
+  translate: 0 6px;
+  rotate: 45deg;
+}
+
+[data-drawer-open="true"] .burger__bar:nth-child(2) {
+  opacity: 0;
+}
+
+[data-drawer-open="true"] .burger__bar:nth-child(3) {
+  translate: 0 -6px;
+  rotate: -45deg;
+}
+
+/* Mobile drawer */
+.drawer {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-overlay);
+  display: grid;
+  grid-template-rows: 1fr auto;
+  padding: 6rem var(--gutter) 2rem;
+  background: var(--glass-strong);
+  backdrop-filter: blur(22px) saturate(180%);
+  -webkit-backdrop-filter: blur(22px) saturate(180%);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--dur-base) var(--ease-out-soft), visibility var(--dur-base);
+}
+
+.drawer[data-open="true"] {
+  opacity: 1;
+  visibility: visible;
+}
+
+.drawer__list {
+  display: grid;
+  gap: 0.25rem;
+  align-content: start;
+}
+
+.drawer__link {
+  display: flex;
+  align-items: baseline;
+  gap: 0.9rem;
+  padding: 0.85rem 0.25rem;
+  border-block-end: 1px solid var(--hairline);
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: 620;
+  letter-spacing: var(--tracking-tight);
+  color: var(--text);
+  text-decoration: none;
+}
+
+.drawer__link span {
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  color: var(--brand-ink);
+}
+
+.drawer__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-block-start: 1.5rem;
+}
+
+/* --------------------------------------------------------------------------
+   Footer
+   -------------------------------------------------------------------------- */
+
+.footer {
+  position: relative;
+  border-block-start: 1px solid var(--border);
+  background: var(--bg-tint);
+  padding-block: var(--space-3xl) var(--space-lg);
+}
+
+.footer__grid {
+  display: grid;
+  gap: var(--space-xl);
+  grid-template-columns: 1fr;
+}
+
+.footer__tagline {
+  max-inline-size: 24rem;
+  margin-block-start: 1rem;
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  line-height: var(--leading-relaxed);
+}
+
+.footer__coltitle {
+  font-size: var(--text-2xs);
+  font-weight: 680;
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  color: var(--text-subtle);
+  margin-block-end: 0.9rem;
+}
+
+.footer__links {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.footer__link {
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  text-decoration: none;
+  width: fit-content;
+  /* Reach the 24px minimum target height (WCAG 2.2 SC 2.5.8). */
+  padding-block: 0.28rem;
+  transition: color var(--dur-fast) var(--ease-out-soft),
+    translate var(--dur-fast) var(--ease-out-soft);
+}
+
+.footer__link:hover {
+  color: var(--brand-ink);
+  translate: 3px 0;
+}
+
+.footer__bottom {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-block-start: var(--space-2xl);
+  padding-block-start: var(--space-md);
+  border-block-start: 1px solid var(--border);
+  color: var(--text-subtle);
+  font-size: var(--text-xs);
+}
+
+.social {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.social__link {
+  display: grid;
+  place-items: center;
+  inline-size: 2.3rem;
+  block-size: 2.3rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  color: var(--text-muted);
+  transition: color var(--dur-fast) var(--ease-out-soft),
+    border-color var(--dur-fast) var(--ease-out-soft),
+    background-color var(--dur-fast) var(--ease-out-soft),
+    translate var(--dur-base) var(--ease-spring);
+}
+
+.social__link:hover {
+  color: var(--brand-ink);
+  border-color: var(--border-brand);
+  background: var(--brand-soft);
+  translate: 0 -3px;
+}
+
+.social__link svg {
+  inline-size: 1.1rem;
+  block-size: 1.1rem;
+  /* Brand glyphs are filled paths, not strokes — opt in to the fill. */
+  fill: currentColor;
+}
+
+/* --------------------------------------------------------------------------
+   Responsive switches
+   -------------------------------------------------------------------------- */
+
+@media (width >= 60rem) {
+  .nav {
+    display: block;
+  }
+
+  .header__cta {
+    display: inline-flex;
+  }
+
+  .burger {
+    display: none;
+  }
+
+  .footer__grid {
+    grid-template-columns: 1.6fr repeat(3, 1fr);
+    gap: var(--space-2xl);
+  }
+}
+
+/* ==========================================================================
+   RestroLogic — Section-scoped styles
+   Each block owns a single root class. Nothing here leaks outside its block.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   HERO
+   -------------------------------------------------------------------------- */
+
+.hero {
+  position: relative;
+  padding-block: clamp(7rem, 5rem + 9vw, 11rem) var(--section-py);
+  /* Clip horizontally only: the decorative orbs must not create a sideways
+     scrollbar, but the float cards hang below the mock and need vertical room. */
+  overflow-x: clip;
+}
+
+.hero__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.hero__orb-1 {
+  inline-size: 34rem;
+  block-size: 34rem;
+  inset-block-start: -12rem;
+  inset-inline-start: -10rem;
+  opacity: 0.42;
+}
+
+.hero__orb-2 {
+  inline-size: 28rem;
+  block-size: 28rem;
+  inset-block-start: 2rem;
+  inset-inline-end: -9rem;
+  opacity: 0.36;
+}
+
+.hero__orb-3 {
+  inline-size: 22rem;
+  block-size: 22rem;
+  inset-block-end: -8rem;
+  inset-inline-start: 34%;
+  opacity: 0.26;
+}
+
+.hero__inner {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: clamp(3rem, 2rem + 5vw, 4.5rem);
+  align-items: center;
+}
+
+.hero__copy {
+  max-inline-size: 38rem;
+}
+
+.hero__title {
+  font-size: var(--text-6xl);
+  margin-block: 1.25rem 1.25rem;
+}
+
+.hero__lede {
+  font-size: var(--text-lg);
+  line-height: var(--leading-relaxed);
+  color: var(--text-muted);
+  max-inline-size: 34rem;
+}
+
+.hero__actions {
+  margin-block-start: 2rem;
+  --cluster-gap: 0.75rem;
+}
+
+.hero__proof {
+  margin-block-start: 2rem;
+  padding-block-start: 1.6rem;
+  border-block-start: 1px solid var(--hairline);
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.hero__proof-item {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.hero__proof-num {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: 700;
+  letter-spacing: var(--tracking-tight);
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+.hero__proof-label {
+  font-size: var(--text-2xs);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--text-subtle);
+}
+
+.hero__visual {
+  position: relative;
+  perspective: 1600px;
+}
+
+@media (width >= 68rem) {
+  .hero__inner {
+    grid-template-columns: minmax(0, 1.02fr) minmax(0, 1fr);
+    gap: clamp(2rem, 1rem + 4vw, 4rem);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   APP MOCK — hand-built product UI. No screenshot, no image weight.
+   -------------------------------------------------------------------------- */
+
+.mock {
+  position: relative;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-xl);
+  background: var(--surface);
+  box-shadow: var(--shadow-xl);
+  overflow: hidden;
+  transform-style: preserve-3d;
+}
+
+/* Gentle 3D presentation angle on wide screens only. */
+@media (width >= 68rem) {
+  .mock {
+    rotate: y -9deg;
+    transform: rotateX(4deg);
+  }
+}
+
+.mock__bar {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.7rem 0.9rem;
+  border-block-end: 1px solid var(--border);
+  background: var(--surface-2);
+}
+
+.mock__lights {
+  display: flex;
+  gap: 0.35rem;
+}
+
+.mock__lights i {
+  inline-size: 0.6rem;
+  block-size: 0.6rem;
+  border-radius: 50%;
+  background: var(--border-strong);
+}
+
+.mock__lights i:first-child {
+  background: color-mix(in oklab, var(--rl-rose-500) 70%, transparent);
+}
+.mock__lights i:nth-child(2) {
+  background: color-mix(in oklab, var(--rl-amber-400) 80%, transparent);
+}
+.mock__lights i:nth-child(3) {
+  background: color-mix(in oklab, var(--rl-mint-400) 75%, transparent);
+}
+
+.mock__url {
+  flex: 1;
+  padding: 0.28rem 0.7rem;
+  border-radius: var(--radius-full);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  color: var(--text-subtle);
+  text-align: center;
+}
+
+.mock__body {
+  display: grid;
+  grid-template-columns: 3.25rem minmax(0, 1fr);
+  min-block-size: 20rem;
+}
+
+.mock__rail {
+  display: grid;
+  align-content: start;
+  gap: 0.4rem;
+  padding: 0.75rem 0.5rem;
+  border-inline-end: 1px solid var(--border);
+  background: var(--surface-2);
+}
+
+.mock__railitem {
+  display: grid;
+  place-items: center;
+  block-size: 2.2rem;
+  border-radius: var(--radius-sm);
+  color: var(--text-subtle);
+}
+
+.mock__railitem svg {
+  inline-size: 1.05rem;
+  block-size: 1.05rem;
+}
+
+.mock__railitem[data-active="true"] {
+  background: var(--brand-soft);
+  color: var(--brand-ink);
+}
+
+.mock__main {
+  padding: 1rem;
+  display: grid;
+  gap: 0.85rem;
+  align-content: start;
+}
+
+.mock__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.mock__h {
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: 680;
+  letter-spacing: var(--tracking-tight);
+}
+
+.mock__sub {
+  font-size: var(--text-2xs);
+  color: var(--text-subtle);
+}
+
+/* KPI row */
+.mock__kpis {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+.mock__kpi {
+  padding: 0.6rem 0.65rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+}
+
+.mock__kpi-label {
+  font-size: 0.5625rem;
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--text-subtle);
+}
+
+.mock__kpi-val {
+  margin-block-start: 0.15rem;
+  font-family: var(--font-display);
+  font-size: var(--text-md);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: var(--tracking-tight);
+}
+
+.mock__kpi-trend {
+  font-size: 0.5625rem;
+  font-weight: 620;
+  color: var(--status-success);
+}
+
+/* Sparkline strip */
+.mock__chart {
+  block-size: 4.25rem;
+  padding: 0.5rem 0.65rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+}
+
+.mock__chart svg {
+  inline-size: 100%;
+  block-size: 100%;
+  overflow: visible;
+}
+
+.mock__spark-line {
+  fill: none;
+  stroke: var(--brand);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.mock__spark-fill {
+  fill: url(#rl-spark-grad);
+  stroke: none;
+}
+
+/* Floorplan — the "mesas" grid, the most restaurant-specific visual. */
+.mock__floor {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 0.35rem;
+}
+
+.mock__table {
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  border-radius: var(--radius-xs);
+  border: 1px solid var(--border);
+  background: var(--bg);
+  font-family: var(--font-mono);
+  font-size: 0.5625rem;
+  font-weight: 600;
+  color: var(--text-subtle);
+}
+
+.mock__table[data-state="busy"] {
+  border-color: var(--brand-soft-border);
+  background: var(--brand-soft);
+  color: var(--brand-ink);
+}
+
+.mock__table[data-state="ready"] {
+  border-color: color-mix(in oklab, var(--accent) 40%, transparent);
+  background: var(--accent-soft);
+  color: var(--accent-ink);
+}
+
+/* Live ticket list */
+.mock__tickets {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.mock__ticket {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0.6rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  font-size: 0.625rem;
+}
+
+.mock__ticket-name {
+  font-weight: 620;
+  color: var(--text);
+}
+
+.mock__ticket-meta {
+  color: var(--text-subtle);
+}
+
+.mock__ticket-state {
+  margin-inline-start: auto;
+  padding: 0.15rem 0.45rem;
+  border-radius: var(--radius-full);
+  font-size: 0.5625rem;
+  font-weight: 660;
+  letter-spacing: 0.02em;
+}
+
+.mock__ticket-state[data-s="kitchen"] {
+  background: var(--brand-soft);
+  color: var(--brand-ink);
+}
+
+.mock__ticket-state[data-s="ready"] {
+  background: var(--accent-soft);
+  color: var(--accent-ink);
+}
+
+.mock__ticket-state[data-s="paid"] {
+  background: color-mix(in oklab, var(--text) 9%, transparent);
+  color: var(--text-muted);
+}
+
+/* Floating cards orbiting the mock */
+.floatcard {
+  position: absolute;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.65rem 0.85rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--glass-strong);
+  backdrop-filter: blur(14px) saturate(170%);
+  -webkit-backdrop-filter: blur(14px) saturate(170%);
+  box-shadow: var(--shadow-lg);
+  font-size: var(--text-xs);
+  white-space: nowrap;
+}
+
+.floatcard__body {
+  display: grid;
+  gap: 0.1rem;
+  min-inline-size: 0;
+}
+
+.floatcard__title {
+  font-weight: 660;
+  color: var(--text);
+  font-size: var(--text-xs);
+  line-height: 1.25;
+}
+
+.floatcard__meta {
+  color: var(--text-subtle);
+  font-size: var(--text-2xs);
+  line-height: 1.25;
+}
+
+/* Cards hang off the mock's corners and edges. Anchoring them outside the
+   frame keeps the product UI itself readable — a notification that covers the
+   feature it is advertising is worse than no notification. */
+.floatcard--kds {
+  inset-block-start: -1.5rem;
+  inset-inline-start: -2.5rem;
+}
+
+.floatcard--stock {
+  inset-block-start: 44%;
+  inset-inline-end: -2.75rem;
+}
+
+.floatcard--cash {
+  inset-block-end: -1.75rem;
+  inset-inline-start: -1.5rem;
+}
+
+/* Below the two-column breakpoint the mock spans the full width, so there is
+   no gutter for cards to hang in. Keep only the strongest one and tuck it
+   inside the frame rather than letting the rest push past the viewport. */
+@media (width < 68rem) {
+  .floatcard--stock,
+  .floatcard--cash {
+    display: none;
+  }
+
+  .floatcard--kds {
+    inset-block-start: -1rem;
+    inset-inline-start: 0.75rem;
+    inset-inline-end: 0.75rem;
+    scale: 0.94;
+  }
+}
+
+/* On the narrowest phones the card's own text is the constraint. */
+@media (width < 26rem) {
+  .floatcard {
+    white-space: normal;
+  }
+
+  .floatcard--kds {
+    scale: 0.9;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   MARQUEE — trust strip
+   -------------------------------------------------------------------------- */
+
+.marquee {
+  position: relative;
+  overflow: hidden;
+  padding-block: var(--space-lg);
+  border-block: 1px solid var(--hairline);
+  mask-image: linear-gradient(
+    90deg,
+    transparent,
+    #000 12%,
+    #000 88%,
+    transparent
+  );
+}
+
+.marquee__track {
+  display: flex;
+  align-items: center;
+  gap: 3.5rem;
+  width: max-content;
+  animation: rl-marquee 38s linear infinite;
+}
+
+.marquee:hover .marquee__track {
+  animation-play-state: paused;
+}
+
+.marquee__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--font-display);
+  font-size: var(--text-md);
+  font-weight: 620;
+  letter-spacing: var(--tracking-tight);
+  color: var(--text-subtle);
+  opacity: 0.75;
+  transition: color var(--dur-fast) var(--ease-out-soft), opacity var(--dur-fast);
+}
+
+.marquee__item:hover {
+  color: var(--text);
+  opacity: 1;
+}
+
+.marquee__item svg {
+  inline-size: 1.35rem;
+  block-size: 1.35rem;
+  color: var(--tone, var(--brand));
+}
+
+/* --------------------------------------------------------------------------
+   PIPELINE — order lifecycle
+   -------------------------------------------------------------------------- */
+
+.pipeline {
+  position: relative;
+}
+
+.pipeline__track {
+  position: relative;
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: 1fr;
+  counter-reset: step;
+}
+
+.pipeline__rail {
+  display: none;
+}
+
+.pipeline__step {
+  position: relative;
+  padding: 1.5rem 1.35rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+  transition: border-color var(--dur-base) var(--ease-out-soft),
+    box-shadow var(--dur-base) var(--ease-out-soft),
+    transform var(--dur-base) var(--ease-out-soft);
+}
+
+.pipeline__step::before {
+  content: "";
+  position: absolute;
+  inset-block: 1.15rem;
+  inset-inline-start: 0;
+  inline-size: 3px;
+  border-radius: 0 3px 3px 0;
+  background: var(--tone, var(--brand));
+  opacity: 0.9;
+}
+
+.pipeline__step:hover {
+  transform: translateY(-4px);
+  border-color: var(--border-brand);
+  box-shadow: var(--shadow-lg);
+}
+
+.pipeline__num {
+  display: inline-grid;
+  place-items: center;
+  inline-size: 1.9rem;
+  block-size: 1.9rem;
+  border-radius: 50%;
+  /* Solid tone rather than the brand ramp: each step owns a hue, and
+     --tone-strong is guaranteed to clear contrast against --tone-on. */
+  background: var(--tone-strong, var(--brand-strong));
+  color: var(--tone-on, var(--text-on-brand));
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  font-weight: 700;
+  box-shadow: var(--shadow-brand);
+}
+
+.pipeline__title {
+  margin-block: 0.85rem 0.4rem;
+  font-size: var(--text-md);
+  font-weight: 660;
+}
+
+.pipeline__text {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  line-height: var(--leading-relaxed);
+}
+
+.pipeline__time {
+  margin-block-start: 0.9rem;
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  color: var(--brand-ink);
+  letter-spacing: var(--tracking-wide);
+}
+
+@media (width >= 56rem) {
+  .pipeline__track {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  /* The connecting rail sits behind the cards and is drawn by GSAP. */
+  .pipeline__rail {
+    display: block;
+    position: absolute;
+    inset-inline: 8%;
+    inset-block-start: -1.75rem;
+    block-size: 2px;
+    background: var(--border);
+    overflow: hidden;
+  }
+
+  .pipeline__rail::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: var(--grad-spectrum);
+    transform-origin: left center;
+    /* Fully drawn by default; the scroll scene scrubs it from 0 only once
+       motion is confirmed active, so no-JS still sees a complete rail. */
+    scale: 1 1;
+    transition: scale 120ms linear;
+  }
+
+  [data-motion="on"] .pipeline__rail::after {
+    scale: var(--rail-progress, 0) 1;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   FEATURES
+   -------------------------------------------------------------------------- */
+
+.features__grid {
+  --grid-min: 17.5rem;
+  --grid-gap: 1.15rem;
+}
+
+.feature {
+  gap: 1rem;
+}
+
+.feature__head {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.feature__tag {
+  margin-inline-start: auto;
+}
+
+.feature__list {
+  display: grid;
+  gap: 0.45rem;
+  margin-block-start: auto;
+  padding-block-start: 1rem;
+  border-block-start: 1px solid var(--hairline);
+}
+
+.feature__li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+.feature__li svg {
+  flex: none;
+  inline-size: 0.95rem;
+  block-size: 0.95rem;
+  margin-block-start: 0.12rem;
+  color: var(--accent);
+}
+
+/* --------------------------------------------------------------------------
+   MODULES — alternating screenshot rows
+   -------------------------------------------------------------------------- */
+
+.module {
+  display: grid;
+  gap: clamp(2rem, 1.4rem + 3vw, 3.5rem);
+  align-items: center;
+  padding-block: clamp(2.5rem, 2rem + 3vw, 4.5rem);
+}
+
+.module + .module {
+  border-block-start: 1px solid var(--hairline);
+}
+
+.module__copy {
+  max-inline-size: 34rem;
+}
+
+.module__title {
+  margin-block: 1rem 0.85rem;
+  font-size: var(--text-3xl);
+}
+
+.module__text {
+  font-size: var(--text-md);
+  line-height: var(--leading-relaxed);
+  color: var(--text-muted);
+}
+
+.module__points {
+  display: grid;
+  gap: 0.65rem;
+  margin-block-start: 1.5rem;
+}
+
+.module__point {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+.module__point svg {
+  flex: none;
+  inline-size: 1.1rem;
+  block-size: 1.1rem;
+  margin-block-start: 0.12rem;
+  color: var(--tone, var(--brand));
+}
+
+/* Screenshot frame — a browser-ish plate with a warm glow behind it. */
+.module__shot {
+  position: relative;
+  border-radius: var(--radius-xl);
+}
+
+.module__shot::before {
+  content: "";
+  position: absolute;
+  inset: 8% 6%;
+  border-radius: var(--radius-2xl);
+  background: var(--tone, var(--brand));
+  filter: blur(52px);
+  opacity: 0.3;
+  z-index: 0;
+}
+
+.module__frame {
+  position: relative;
+  z-index: 1;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow-xl);
+  overflow: hidden;
+  transition: transform var(--dur-slow) var(--ease-out-soft);
+}
+
+.module__shot:hover .module__frame {
+  transform: translateY(-6px);
+}
+
+.module__frame img {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  /* Real product captures, all within 2.079–2.096. Letting them keep their
+     natural ratio means no cropping and no letterboxing. */
+}
+
+@media (width >= 60rem) {
+  /* Real 2:1 product captures need the width more than the copy does — an
+     even split renders them too small to read what's on screen. */
+  .module {
+    grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
+  }
+
+  .module--reverse {
+    grid-template-columns: minmax(0, 1.18fr) minmax(0, 0.82fr);
+  }
+
+  .module--reverse .module__copy {
+    order: 2;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   STATS
+   -------------------------------------------------------------------------- */
+
+.stats {
+  display: grid;
+  gap: 1px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  background: var(--border);
+  overflow: hidden;
+}
+
+.stat {
+  padding: clamp(1.5rem, 1.2rem + 1.2vw, 2.25rem);
+  background: var(--surface);
+  text-align: center;
+}
+
+.stat {
+  position: relative;
+}
+
+/* Each stat carries its own hue via a .tone-- class on the tile. */
+.stat::before {
+  content: "";
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline: 0;
+  block-size: 3px;
+  background: var(--tone, var(--brand));
+  transform-origin: left center;
+  scale: var(--edge-progress, 1) 1;
+}
+
+.stat__num {
+  font-family: var(--font-display);
+  font-size: var(--text-4xl);
+  font-weight: 720;
+  letter-spacing: var(--tracking-tighter);
+  font-variant-numeric: tabular-nums;
+  color: var(--tone-ink, var(--brand-ink));
+}
+
+.stat__label {
+  margin-block-start: 0.35rem;
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+@media (width >= 52rem) {
+  .stats {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+/* --------------------------------------------------------------------------
+   HOW IT WORKS
+   -------------------------------------------------------------------------- */
+
+.steps {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.step {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 1.25rem;
+  align-items: start;
+}
+
+.step__marker {
+  position: relative;
+  display: grid;
+  place-items: center;
+  inline-size: 2.75rem;
+  block-size: 2.75rem;
+  flex: none;
+  border-radius: 50%;
+  border: 1px solid var(--tone-border, var(--border-brand));
+  background: var(--tone-soft, var(--surface));
+  color: var(--tone-ink, var(--brand-ink));
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--text-sm);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Vertical connector between markers. */
+.step:not(:last-child) .step__marker::after {
+  content: "";
+  position: absolute;
+  inset-block-start: 100%;
+  inset-inline-start: 50%;
+  translate: -50% 0;
+  inline-size: 1px;
+  block-size: calc(100% + 1.5rem);
+  background: linear-gradient(var(--border-brand), transparent);
+}
+
+.step__title {
+  font-size: var(--text-lg);
+  font-weight: 640;
+  margin-block-end: 0.35rem;
+}
+
+.step__text {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  line-height: var(--leading-relaxed);
+}
+
+@media (width >= 56rem) {
+  .steps {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 2.5rem;
+  }
+
+  .step {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .step:not(:last-child) .step__marker::after {
+    inset-block-start: 50%;
+    inset-inline-start: 100%;
+    translate: 0 -50%;
+    inline-size: calc(100% + 2.5rem);
+    block-size: 1px;
+    background: linear-gradient(90deg, var(--border-brand), transparent);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   PRICING
+   -------------------------------------------------------------------------- */
+
+.pricing__switch {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.75rem;
+  margin-block-end: 2.5rem;
+}
+
+.pricing__grid {
+  display: grid;
+  gap: 1.25rem;
+  align-items: start;
+}
+
+.plan {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+  padding: clamp(1.5rem, 1.2rem + 1vw, 2.15rem);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--dur-base) var(--ease-out-soft),
+    box-shadow var(--dur-base) var(--ease-out-soft),
+    border-color var(--dur-base) var(--ease-out-soft);
+}
+
+.plan:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--border-strong);
+}
+
+.plan--featured {
+  border-color: var(--border-brand);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Animated conic ring on the featured plan. */
+.plan--featured::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: conic-gradient(
+    from var(--ring-angle, 0deg),
+    transparent 0deg,
+    var(--brand) 70deg,
+    var(--rl-amber-400) 120deg,
+    transparent 200deg,
+    transparent 360deg
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  animation: rl-ring 6s linear infinite;
+  pointer-events: none;
+}
+
+.plan__flag {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 50%;
+  translate: -50% -50%;
+  padding: 0.3rem 0.85rem;
+  border-radius: var(--radius-full);
+  /* Carries text -> must use the text-safe ramp. */
+  background: var(--grad-brand-strong);
+  color: var(--text-on-brand);
+  font-size: var(--text-2xs);
+  font-weight: 700;
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  box-shadow: var(--shadow-brand);
+  white-space: nowrap;
+}
+
+.plan__name {
+  font-size: var(--text-lg);
+  font-weight: 680;
+}
+
+.plan__desc {
+  font-size: var(--text-xs);
+  color: var(--text-subtle);
+  margin-block-start: 0.25rem;
+}
+
+.plan__price {
+  display: flex;
+  align-items: baseline;
+  gap: 0.35rem;
+}
+
+.plan__amount {
+  font-family: var(--font-display);
+  font-size: var(--text-4xl);
+  font-weight: 720;
+  letter-spacing: var(--tracking-tighter);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+/* A word ("Custom", "A medida") reads as shouting at numeral scale. */
+.plan__amount--word {
+  font-size: var(--text-3xl);
+}
+
+.plan__period {
+  font-size: var(--text-xs);
+  color: var(--text-subtle);
+}
+
+.plan__features {
+  display: grid;
+  gap: 0.6rem;
+  padding-block-start: 1.15rem;
+  border-block-start: 1px solid var(--hairline);
+}
+
+.plan__feature {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+.plan__feature svg {
+  flex: none;
+  inline-size: 1.05rem;
+  block-size: 1.05rem;
+  margin-block-start: 0.15rem;
+  color: var(--accent);
+}
+
+.plan__cta {
+  margin-block-start: auto;
+}
+
+.pricing__note {
+  margin-block-start: 1.75rem;
+  text-align: center;
+  font-size: var(--text-xs);
+  color: var(--text-subtle);
+}
+
+@media (width >= 56rem) {
+  .pricing__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .plan--featured {
+    transform: scale(1.035);
+  }
+
+  .plan--featured:hover {
+    transform: scale(1.035) translateY(-4px);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   FAQ
+   -------------------------------------------------------------------------- */
+
+.faq {
+  display: grid;
+  gap: clamp(2rem, 1.5rem + 2.5vw, 3.5rem);
+}
+
+@media (width >= 60rem) {
+  .faq {
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    align-items: start;
+  }
+
+  .faq__aside {
+    position: sticky;
+    top: 7rem;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   CTA / CONTACT
+   -------------------------------------------------------------------------- */
+
+.cta {
+  position: relative;
+  overflow: clip;
+}
+
+.cta__panel {
+  position: relative;
+  display: grid;
+  gap: clamp(2rem, 1.5rem + 3vw, 3.5rem);
+  padding: clamp(2rem, 1.5rem + 3vw, 3.5rem);
+  border: 1px solid var(--border-brand);
+  border-radius: var(--radius-2xl);
+  background: var(--surface);
+  box-shadow: var(--shadow-xl);
+  overflow: hidden;
+}
+
+.cta__glow {
+  position: absolute;
+  inset-block-start: -40%;
+  inset-inline-start: -10%;
+  inline-size: 30rem;
+  block-size: 30rem;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--hue-amber), transparent 65%);
+  opacity: 0.18;
+  filter: blur(50px);
+  pointer-events: none;
+}
+
+/* A second glow in a contrasting hue keeps the panel from reading as a
+   single-colour block. */
+.cta__glow--alt {
+  inset-block-start: auto;
+  inset-block-end: -45%;
+  inset-inline-start: auto;
+  inset-inline-end: -12%;
+  inline-size: 26rem;
+  block-size: 26rem;
+  background: radial-gradient(circle, var(--hue-cyan), transparent 65%);
+  opacity: 0.16;
+}
+
+/* Spectrum edge along the top of the CTA panel, drawn in on scroll. */
+.cta__panel::before {
+  content: "";
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline: 0;
+  block-size: 3px;
+  background: var(--grad-spectrum);
+  transform-origin: left center;
+  scale: var(--edge-progress, 1) 1;
+}
+
+.cta__copy {
+  position: relative;
+  z-index: 1;
+}
+
+.cta__title {
+  font-size: var(--text-3xl);
+  margin-block: 0.85rem 0.85rem;
+}
+
+.cta__text {
+  font-size: var(--text-md);
+  line-height: var(--leading-relaxed);
+  color: var(--text-muted);
+}
+
+.cta__perks {
+  display: grid;
+  gap: 0.65rem;
+  margin-block-start: 1.75rem;
+}
+
+.cta__perk {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+.cta__perk svg {
+  flex: none;
+  inline-size: 1.05rem;
+  block-size: 1.05rem;
+  color: var(--accent);
+}
+
+.cta__form {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 1rem;
+  align-content: start;
+}
+
+.cta__row {
+  display: grid;
+  gap: 1rem;
+}
+
+@media (width >= 40rem) {
+  .cta__row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (width >= 62rem) {
+  .cta__panel {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+    align-items: center;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   SCREEN GALLERY — tabbed viewer for the remaining product screens
+   -------------------------------------------------------------------------- */
+
+/* The section root exists so the block has a named owner even though the
+   shell carries the visuals. */
+.gallery {
+  scroll-margin-block-start: 6.5rem;
+}
+
+.gallery__shell {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-2xl);
+  background: var(--surface);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+}
+
+.gallery__tabs {
+  display: flex;
+  gap: 0.25rem;
+  padding: 0.6rem;
+  border-block-end: 1px solid var(--border);
+  background: var(--surface-2);
+  /* Tabs outgrow narrow screens; scrolling beats wrapping into two rows. */
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.gallery__tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.gallery__tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: none;
+  padding: 0.6rem 0.95rem;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--text-muted);
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color var(--dur-fast) var(--ease-out-soft),
+    color var(--dur-fast) var(--ease-out-soft),
+    border-color var(--dur-fast) var(--ease-out-soft);
+}
+
+.gallery__tab svg {
+  inline-size: 1.05rem;
+  block-size: 1.05rem;
+  color: var(--tone, var(--brand));
+}
+
+.gallery__tab:hover {
+  background: var(--surface);
+  color: var(--text);
+}
+
+.gallery__tab[aria-selected='true'] {
+  background: var(--tone-soft, var(--brand-soft));
+  border-color: var(--tone-border, var(--brand-soft-border));
+  color: var(--tone-ink, var(--brand-ink));
+}
+
+.gallery__stage {
+  position: relative;
+  padding: clamp(1rem, 0.7rem + 1.4vw, 1.75rem);
+}
+
+.gallery__panel[hidden] {
+  display: none;
+}
+
+.gallery__panel {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.gallery__figure {
+  position: relative;
+  margin: 0;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--surface-2);
+  box-shadow: var(--shadow-md);
+}
+
+.gallery__figure::after {
+  content: "";
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline: 0;
+  block-size: 3px;
+  background: var(--tone, var(--brand));
+}
+
+.gallery__figure img {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+}
+
+.gallery__caption {
+  max-inline-size: 44rem;
+}
+
+.gallery__title {
+  font-size: var(--text-lg);
+  font-weight: 660;
+  margin-block-end: 0.3rem;
+}
+
+.gallery__text {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  line-height: var(--leading-relaxed);
+}
+
+/* Panels cross-fade when motion is available. */
+[data-motion='on'] .gallery__panel[data-active='true'] {
+  animation: rl-panel-in var(--dur-slow) var(--ease-out-expo) both;
+}
+
+@keyframes rl-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-motion='on'] .gallery__panel[data-active='true'] {
+    animation: none;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   COMING SOON
+   -------------------------------------------------------------------------- */
+
+.soon {
+  display: grid;
+  gap: clamp(1.75rem, 1.4rem + 2vw, 3rem);
+  padding: clamp(1.75rem, 1.4rem + 2vw, 2.75rem);
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-2xl);
+  background: var(--surface-2);
+}
+
+.soon__head {
+  max-inline-size: 34rem;
+}
+
+.soon__title {
+  font-size: var(--text-2xl);
+  margin-block: 0.75rem 0.5rem;
+}
+
+.soon__lede {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  line-height: var(--leading-relaxed);
+}
+
+.soon__list {
+  display: grid;
+  gap: 1.15rem;
+}
+
+.soon__item {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.9rem;
+  align-items: start;
+}
+
+.soon__item .icon-tile {
+  inline-size: 2.5rem;
+  block-size: 2.5rem;
+  /* Muted: these are not shipped capability. */
+  opacity: 0.85;
+}
+
+.soon__item .icon-tile svg {
+  inline-size: 1.2rem;
+  block-size: 1.2rem;
+}
+
+.soon__item-title {
+  font-size: var(--text-md);
+  font-weight: 640;
+  margin-block-end: 0.2rem;
+}
+
+.soon__item-text {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  line-height: var(--leading-relaxed);
+}
+
+@media (width >= 56rem) {
+  .soon {
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.4fr);
+    align-items: center;
+  }
+
+  .soon__list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.5rem;
+  }
+
+  .soon__item {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+}
+
+@media (width >= 60rem) {
+  .gallery__panel {
+    grid-template-columns: minmax(0, 1.9fr) minmax(0, 1fr);
+    gap: 1.75rem;
+    align-items: center;
+  }
+}
+
+/* ==========================================================================
+   RestroLogic — Keyframes & ambient motion
+   GSAP owns scroll-driven and sequenced motion. This file owns the small,
+   looping, decorative animations that never need a timeline.
+   ========================================================================== */
+
+@keyframes rl-marquee {
+  from {
+    translate: 0 0;
+  }
+  to {
+    /* The track renders its content twice, so -50% is a seamless loop. */
+    translate: -50% 0;
+  }
+}
+
+@keyframes rl-ping {
+  0% {
+    scale: 1;
+    opacity: 0.9;
+  }
+  70%,
+  100% {
+    scale: 2.1;
+    opacity: 0;
+  }
+}
+
+@keyframes rl-ring {
+  to {
+    --ring-angle: 360deg;
+  }
+}
+
+@keyframes rl-float {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 -8px;
+  }
+}
+
+@keyframes rl-steam {
+  0% {
+    opacity: 0;
+    translate: 0 0;
+    scale: 0.8;
+  }
+  25% {
+    opacity: 0.55;
+  }
+  100% {
+    opacity: 0;
+    translate: 0 -26px;
+    scale: 1.5;
+  }
+}
+
+@keyframes rl-shimmer {
+  to {
+    background-position: 200% 0;
+  }
+}
+
+/* Registering these as real custom properties is what makes them animatable:
+   an unregistered custom property is an opaque string, and neither CSS nor
+   GSAP can interpolate it. */
+@property --ring-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@property --scroll-progress {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 0;
+}
+
+@property --rail-progress {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 0;
+}
+
+/* Defaults to 1 so the edge is fully drawn without JS. */
+@property --edge-progress {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 1;
+}
+
+/* Ambient float used by the hero's floating cards when JS is unavailable. */
+.is-floating {
+  animation: rl-float 6s var(--ease-in-out-soft) infinite;
+}
+
+.is-floating--slow {
+  animation-duration: 8.5s;
+  animation-delay: -2s;
+}
+
+.is-floating--fast {
+  animation-duration: 5s;
+  animation-delay: -1s;
+}
+
+/* Steam wisps above the logo mark / hero plate. */
+.steam {
+  position: absolute;
+  inline-size: 3px;
+  border-radius: 3px;
+  background: linear-gradient(
+    to top,
+    color-mix(in oklab, var(--text) 26%, transparent),
+    transparent
+  );
+  block-size: 22px;
+  animation: rl-steam 3.4s var(--ease-out-soft) infinite;
+  pointer-events: none;
+}
+
+.steam:nth-child(2) {
+  animation-delay: 1.1s;
+}
+.steam:nth-child(3) {
+  animation-delay: 2.2s;
+}
+
+/* Skeleton shimmer, used by the mock's "loading" bars. */
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--surface-2) 0%,
+    color-mix(in oklab, var(--brand) 12%, var(--surface-2)) 50%,
+    var(--surface-2) 100%
+  );
+  background-size: 200% 100%;
+  animation: rl-shimmer 2.4s linear infinite;
+}
+
+/* --------------------------------------------------------------------------
+   Reduced motion: kill every ambient loop outright.
+   GSAP is disabled separately in JS, so this covers the CSS half only.
+   -------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee__track,
+  .is-floating,
+  .steam,
+  .shimmer,
+  .plan--featured::before,
+  .dot--pulse::after {
+    animation: none !important;
+  }
+
+  /* A static marquee must not clip its content off-screen. */
+  .marquee__track {
+    flex-wrap: wrap;
+    width: 100%;
+    justify-content: center;
+    gap: 1.5rem 2.5rem;
+  }
+
+  .marquee {
+    mask-image: none;
+  }
+
+  .steam {
+    display: none;
+  }
+}
+
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to main content</a>
+
+<header class="header" data-header data-stuck="false">
+  <div class="container header__inner">
+    <a class="brand" href="#top"><svg class="brand__mark" width="34" height="34" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+<defs><linearGradient id="rl-logo-header" x1="4" y1="4" x2="28" y2="28" gradientUnits="userSpaceOnUse">
+<stop stop-color="var(--rl-amber-300)"/><stop offset="0.55" stop-color="var(--rl-amber-500)"/><stop offset="1" stop-color="var(--rl-rose-500)"/>
+</linearGradient></defs>
+<rect x="2.5" y="24" width="27" height="3.2" rx="1.6" fill="url(#rl-logo-header)"/>
+<path d="M5 24a11 11 0 0 1 22 0" stroke="url(#rl-logo-header)" stroke-width="2.4" stroke-linecap="round"/>
+<circle cx="16" cy="10.4" r="1.9" fill="url(#rl-logo-header)"/>
+<path d="M10.5 21.5l3.4-3.6 2.7 2.2 4.9-5.1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.9"/>
+</svg><span class="brand__name">Restro<em>Logic</em></span></a>
+    <nav class="nav" aria-label="Menu"><ul class="nav__list"><li><a class="nav__link" href="#features" data-nav-link aria-current="false">Features</a></li><li><a class="nav__link" href="#modules" data-nav-link aria-current="false">Modules</a></li><li><a class="nav__link" href="#how" data-nav-link aria-current="false">How it works</a></li><li><a class="nav__link" href="#pricing" data-nav-link aria-current="false">Pricing</a></li><li><a class="nav__link" href="#faq" data-nav-link aria-current="false">FAQ</a></li></ul></nav>
+    <div class="header__actions">
+      <div class="dropdown" data-dropdown data-open="false">
+        <button type="button" class="iconbtn" data-dropdown-trigger aria-expanded="false" aria-haspopup="menu" title="Language">
+          <span class="sr-only">Language</span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+        </button>
+        <ul class="dropdown__panel" role="menu">
+          <li role="none"><a role="menuitem" class="dropdown__item" href="/" aria-current="true">Español</a></li>
+          <li role="none"><a role="menuitem" class="dropdown__item" href="/en/">English</a></li>
+        </ul>
+      </div>
+      <button type="button" class="iconbtn theme-toggle" data-theme-toggle aria-pressed="false" title="Toggle theme">
+        <span class="sr-only">Toggle theme</span>
+        <span class="theme-toggle__icons" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" class="i-sun"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" class="i-moon"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg></span>
+      </button>
+      <a class="btn btn--primary btn--sm header__cta" href="#contact">Contact</a>
+      <button type="button" class="iconbtn burger" data-drawer-toggle aria-expanded="false" aria-controls="site-drawer">
+        <span class="sr-only">Menu</span>
+        <span class="burger__box" aria-hidden="true"><span class="burger__bar"></span><span class="burger__bar"></span><span class="burger__bar"></span></span>
+      </button>
+    </div>
+  </div>
+</header>
+<div class="drawer" id="site-drawer" data-drawer data-open="false" aria-label="Menu">
+  <nav class="drawer__list">
+    <a class="drawer__link" href="#features"><span>01</span>Features</a><a class="drawer__link" href="#modules"><span>02</span>Modules</a><a class="drawer__link" href="#how"><span>03</span>How it works</a><a class="drawer__link" href="#pricing"><span>04</span>Pricing</a><a class="drawer__link" href="#faq"><span>05</span>FAQ</a>
+  </nav>
+  <div class="drawer__foot">
+    <a class="btn btn--primary" href="#contact">Contact</a>
+  </div>
+</div>
+<div class="scrollbar" data-scrollbar aria-hidden="true">
+  <span class="scrollbar__fill" data-scroll-progress></span>
+</div><main id="main">
+<section class="hero" data-hero id="top">
+  <div class="hero__bg" aria-hidden="true">
+    <div class="wash"></div>
+    <div class="orb orb--amber hero__orb-1" data-parallax-orb="0.18"></div>
+    <div class="orb orb--cyan hero__orb-2" data-parallax-orb="-0.26"></div>
+    <div class="orb orb--violet hero__orb-3" data-parallax-orb="0.34"></div>
+    <div class="dotgrid" data-parallax-orb="0.08"></div>
+  </div>
+  <div class="container hero__inner">
+    <div class="hero__copy">
+      <p class="chip chip--brand" data-hero-badge><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" style="width:.9rem;height:.9rem"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"/></svg>Built for real restaurants</p>
+      <h1 class="hero__title">
+        <span class="hero__line" data-hero-line><span>The operating system</span></span>
+        <span class="hero__line" data-hero-line><span class="text-accent text-gradient">for your restaurant</span></span>
+      </h1>
+      <p class="hero__lede" data-hero-lede>From the moment a server takes the order to the moment you close the register. RestroLogic connects tables, kitchen, inventory and reporting in one platform — no paper tickets, no notebooks, no surprises at the end of the night.</p>
+      <div class="cluster hero__actions" data-hero-actions>
+        <a class="btn btn--primary btn--lg" href="#contact" data-magnetic>Book a demo<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" class="btn__arrow"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
+        <a class="btn btn--outline btn--lg" href="#modules">See the modules</a>
+      </div>
+      <div class="hero__proof" data-hero-proof><div class="hero__proof-item"><span class="hero__proof-num">40%</span><span class="hero__proof-label">Less time per order</span></div><div class="hero__proof-item"><span class="hero__proof-num">100%</span><span class="hero__proof-label">Cash traceability</span></div><div class="hero__proof-item"><span class="hero__proof-num">24/7</span><span class="hero__proof-label">Cloud based</span></div></div>
+    </div>
+    <div class="hero__visual" data-hero-mock>
+<div class="mock" aria-hidden="true">
+  <div class="mock__bar">
+    <div class="mock__lights"><i></i><i></i><i></i></div>
+    <div class="mock__url">app.restrologic.com/dashboard</div>
+  </div>
+  <div class="mock__body">
+    <nav class="mock__rail"><span class="mock__railitem" data-active="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg></span><span class="mock__railitem"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 2v7a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3zm0 0v7"/></svg></span><span class="mock__railitem"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M17 21a1 1 0 0 0 1-1v-5.35c0-.46.32-.85.73-1.04a4 4 0 0 0-2.14-7.59 5 5 0 0 0-9.18 0 4 4 0 0 0-2.14 7.59c.41.19.73.58.73 1.04V20a1 1 0 0 0 1 1Z"/><path d="M6 17h12"/></svg></span><span class="mock__railitem"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg></span><span class="mock__railitem"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/></svg></span><span class="mock__railitem"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg></span></nav>
+    <div class="mock__main">
+      <div class="mock__head">
+        <div><div class="mock__h">Today's service</div><div class="mock__sub">Downtown · Evening shift</div></div>
+        <span class="chip chip--accent"><span class="dot dot--pulse"></span>Live</span>
+      </div>
+      <div class="mock__kpis">
+        <div class="mock__kpi"><div class="mock__kpi-label">Sales</div><div class="mock__kpi-val">$4.82M</div><div class="mock__kpi-trend">+12.4%</div></div>
+        <div class="mock__kpi"><div class="mock__kpi-label">Orders</div><div class="mock__kpi-val">148</div><div class="mock__kpi-trend">+8.1%</div></div>
+        <div class="mock__kpi"><div class="mock__kpi-label">Avg. ticket</div><div class="mock__kpi-val">$32.5K</div><div class="mock__kpi-trend">+3.9%</div></div>
+      </div>
+      <div class="mock__chart">
+        <svg viewBox="0 0 200 60" preserveAspectRatio="none">
+          <defs><linearGradient id="rl-spark-grad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="var(--brand)" stop-opacity="0.32"/>
+            <stop offset="100%" stop-color="var(--brand)" stop-opacity="0"/>
+          </linearGradient></defs>
+          <path class="mock__spark-fill" d="M0 45 L20 38 L40 42 L60 28 L80 32 L100 20 L120 26 L140 14 L160 18 L180 8 L200 12 L200 60 L0 60 Z"/>
+          <path class="mock__spark-line" data-mock-spark d="M0 45 L20 38 L40 42 L60 28 L80 32 L100 20 L120 26 L140 14 L160 18 L180 8 L200 12"/>
+        </svg>
+      </div>
+      <div><div class="mock__kpi-label" style="margin-bottom:.35rem">Floor</div><div class="mock__floor"><span class="mock__table" data-mock-table data-state="busy">01</span><span class="mock__table" data-mock-table>02</span><span class="mock__table" data-mock-table data-state="ready">03</span><span class="mock__table" data-mock-table data-state="busy">04</span><span class="mock__table" data-mock-table>05</span><span class="mock__table" data-mock-table data-state="busy">06</span><span class="mock__table" data-mock-table>07</span><span class="mock__table" data-mock-table data-state="busy">08</span><span class="mock__table" data-mock-table data-state="ready">09</span><span class="mock__table" data-mock-table>10</span><span class="mock__table" data-mock-table data-state="busy">11</span><span class="mock__table" data-mock-table data-state="ready">12</span></div></div>
+      <div><div class="mock__kpi-label" style="margin-bottom:.35rem">In progress</div><div class="mock__tickets"><div class="mock__ticket"><span class="mock__ticket-name">Mesa 04</span><span class="mock__ticket-meta">3 · 4 min</span><span class="mock__ticket-state" data-s="kitchen">Kitchen</span></div><div class="mock__ticket"><span class="mock__ticket-name">Mesa 08</span><span class="mock__ticket-meta">2 · 9 min</span><span class="mock__ticket-state" data-s="ready">Ready</span></div><div class="mock__ticket"><span class="mock__ticket-name">Mesa 02</span><span class="mock__ticket-meta">5 · 17 min</span><span class="mock__ticket-state" data-s="paid">Paid</span></div></div></div>
+    </div>
+  </div>
+</div>
+<div class="floatcard floatcard--kds is-floating" data-float aria-hidden="true">
+  <span class="icon-tile icon-tile--accent" style="inline-size:2rem;block-size:2rem"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M17 21a1 1 0 0 0 1-1v-5.35c0-.46.32-.85.73-1.04a4 4 0 0 0-2.14-7.59 5 5 0 0 0-9.18 0 4 4 0 0 0-2.14 7.59c.41.19.73.58.73 1.04V20a1 1 0 0 0 1 1Z"/><path d="M6 17h12"/></svg></span>
+  <span class="floatcard__body"><span class="floatcard__title">Table 12 · Ready to serve</span><span class="floatcard__meta">2 dishes · 6 min in kitchen</span></span>
+</div>
+<div class="floatcard floatcard--stock is-floating is-floating--slow" data-float aria-hidden="true">
+  <span class="icon-tile" style="inline-size:2rem;block-size:2rem"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg></span>
+  <span class="floatcard__body"><span class="floatcard__title">Low stock: Beef loin</span><span class="floatcard__meta">2.4 kg left · automatic alert</span></span>
+</div>
+<div class="floatcard floatcard--cash is-floating is-floating--fast" data-float aria-hidden="true">
+  <span class="icon-tile icon-tile--accent" style="inline-size:2rem;block-size:2rem"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/></svg></span>
+  <span class="floatcard__body"><span class="floatcard__title">Register closed clean</span><span class="floatcard__meta">No discrepancies · 9:40 pm</span></span>
+</div></div>
+  </div>
+</section><section class="marquee" aria-label="Everything your operation needs"><div class="marquee__track"><span class="marquee__item tone--amber"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 2v7a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3zm0 0v7"/></svg>Table ordering</span><span class="marquee__item tone--rose"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M17 21a1 1 0 0 0 1-1v-5.35c0-.46.32-.85.73-1.04a4 4 0 0 0-2.14-7.59 5 5 0 0 0-9.18 0 4 4 0 0 0-2.14 7.59c.41.19.73.58.73 1.04V20a1 1 0 0 0 1 1Z"/><path d="M6 17h12"/></svg>Live kitchen</span><span class="marquee__item tone--mint"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>Inventory</span><span class="marquee__item tone--violet"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.07-2.14-.22-4.05 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.15.43-2.29 1-3a2.5 2.5 0 0 0 2.5 2.5Z"/></svg>Recipes & costs</span><span class="marquee__item tone--cyan"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/></svg>Cash closing</span><span class="marquee__item tone--indigo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="18.5" cy="17.5" r="3.5"/><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="15" cy="5" r="1"/><path d="M12 17.5V14l-3-3 4-3 2 3h2"/></svg>Multi-location</span><span class="marquee__item tone--teal"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>Reports</span><span class="marquee__item tone--rose"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1Z"/><path d="m9 12 2 2 4-4"/></svg>Role permissions</span><span class="marquee__item tone--amber"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 2v7a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3zm0 0v7"/></svg>Table ordering</span><span class="marquee__item tone--rose"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M17 21a1 1 0 0 0 1-1v-5.35c0-.46.32-.85.73-1.04a4 4 0 0 0-2.14-7.59 5 5 0 0 0-9.18 0 4 4 0 0 0-2.14 7.59c.41.19.73.58.73 1.04V20a1 1 0 0 0 1 1Z"/><path d="M6 17h12"/></svg>Live kitchen</span><span class="marquee__item tone--mint"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>Inventory</span><span class="marquee__item tone--violet"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.07-2.14-.22-4.05 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.15.43-2.29 1-3a2.5 2.5 0 0 0 2.5 2.5Z"/></svg>Recipes & costs</span><span class="marquee__item tone--cyan"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/></svg>Cash closing</span><span class="marquee__item tone--indigo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="18.5" cy="17.5" r="3.5"/><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="15" cy="5" r="1"/><path d="M12 17.5V14l-3-3 4-3 2 3h2"/></svg>Multi-location</span><span class="marquee__item tone--teal"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>Reports</span><span class="marquee__item tone--rose"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1Z"/><path d="m9 12 2 2 4-4"/></svg>Role permissions</span></div></section>
+<section class="section section--tinted" id="flow"><div class="container">
+  <div class="section__head">
+      <p class="eyebrow" data-reveal>The full flow</p>
+      <h2 class="section__title" data-reveal data-split>From the table to the register, without losing a single order</h2>
+      <p class="section__lede" data-reveal>Every order moves through clear states. Everyone sees the same thing, at the same time.</p>
+    </div>
+  <div class="pipeline" data-pipeline><div class="pipeline__track">
+    <div class="pipeline__rail" data-pipeline-rail aria-hidden="true"></div><article class="pipeline__step tone--amber" data-pipeline-step><span class="pipeline__num" aria-hidden="true">01</span><h3 class="pipeline__title">The order is taken</h3><p class="pipeline__text">The server opens the table from a phone or tablet, builds the order with modifiers and sends it. No writing the ticket twice.</p><p class="pipeline__time">Step 1 · ~30 s</p></article><article class="pipeline__step tone--rose" data-pipeline-step><span class="pipeline__num" aria-hidden="true">02</span><h3 class="pipeline__title">The kitchen receives it</h3><p class="pipeline__text">The ticket appears instantly on the kitchen display, sorted by wait time. Cooks mark each dish as it progresses.</p><p class="pipeline__time">Step 2 · live</p></article><article class="pipeline__step tone--mint" data-pipeline-step><span class="pipeline__num" aria-hidden="true">03</span><h3 class="pipeline__title">Ready to serve</h3><p class="pipeline__text">The server is notified the moment a dish is up. Fewer trips to the pass, fewer cold plates.</p><p class="pipeline__time">Step 3 · notification</p></article><article class="pipeline__step tone--cyan" data-pipeline-step><span class="pipeline__num" aria-hidden="true">04</span><h3 class="pipeline__title">Paid and closed</h3><p class="pipeline__text">Split the check, record the payment method, and at the end of the shift the register reconciles itself.</p><p class="pipeline__time">Step 4 · auto closing</p></article>
+  </div></div>
+</div></section>
+<section class="section" id="features"><div class="container">
+  <div class="section__head">
+      <p class="eyebrow" data-reveal>Features</p>
+      <h2 class="section__title" data-reveal data-split>A module for every part of your operation</h2>
+      <p class="section__lede" data-reveal>It isn't a POS with add-ons bolted on. Every area of the restaurant gets its own tool, and they all share the same data.</p>
+    </div>
+  <div class="grid-auto features__grid" data-stagger><article class="card card--interactive card--spotlight feature tone--amber">
+          <div class="feature__head"><span class="icon-tile"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 2v7a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3zm0 0v7"/></svg></span>
+          <h3 class="card__title">Table ordering</h3></div>
+          <p class="card__text">A live floor map with the status of every table. Take orders, add items, split checks and move parties between tables.</p>
+          <ul class="feature__list"><li class="feature__li"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg>Floor map by zone</li><li class="feature__li"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg>Modifiers and notes per dish</li><li class="feature__li"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg>Split and transfer checks</li></ul></article><article class="card card--interactive card--spotlight feature tone--rose">
+          <div class="feature__head"><span class="icon-tile"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M17 21a1 1 0 0 0 1-1v-5.35c0-.46.32-.85.73-1.04a4 4 0 0 0-2.14-7.59 5 5 0 0 0-9.18 0 4 4 0 0 0-2.14 7.59c.41.19.73.58.73 1.04V20a1 1 0 0 0 1 1Z"/><path d="M6 17h12"/></svg></span>
+          <h3 class="card__title">Live kitchen display</h3></div>
+          <p class="card__text">A kitchen screen with tickets sorted by age. Each station sees only its own items and marks progress dish by dish.</p>
+          <ul class="feature__list"><li class="feature__li"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg>Status per dish, not per order</li><li class="feature__li"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg>Prep-time alerts</li><li class="feature__li"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg>Automatic server notification</li></ul></article><article class="card card--interactive card--spotlight feature tone--mint">
+          <div class="feature__head"><span class="icon-tile"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg></span>
+          <h3 class="card__title">Inventory & recipes</h3></div>
+          <p class="card__text">Define a recipe for each dish and inventory depletes itself on every sale. You always know your real cost and margin per item.</p>
+          <ul class="feature__list"><li class="feature__li"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg>Automatic recipe-based depletion</li><li class="feature__li"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg>Minimum-stock alerts</li><li class="feature__li"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg>Cost and margin per dish</li></ul></article><article class="card card--interactive card--spotlight feature tone--cyan">
+          <div class="feature__head"><span class="icon-tile"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/></svg></span>
+          <h3 class="card__title">Cash control & closing</h3></div>
+          <p class="card__text">Open and close the register with a count by payment method. Every movement is logged with user, time and reason.</p>
+          <ul class="feature__list"><li class="feature__li"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg>Count by payment method</li><li class="feature__li"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg>Justified cash in and out</li><li class="feature__li"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg>Closing report per shift</li></ul></article><article class="card card--interactive card--spotlight feature tone--violet">
+          <div class="feature__head"><span class="icon-tile"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 21v-7"/><path d="M4 10V3"/><path d="M12 21v-9"/><path d="M12 8V3"/><path d="M20 21v-5"/><path d="M20 12V3"/><path d="M1 14h6"/><path d="M9 8h6"/><path d="M17 16h6"/></svg></span>
+          <h3 class="card__title">Products & recipes</h3></div>
+          <p class="card__text">Your full menu with per-size price variants, categories, and each dish’s recipe wired straight into inventory.</p>
+          <ul class="feature__list"><li class="feature__li"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg>Per-size price variants</li><li class="feature__li"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg>Categories and subcategories</li><li class="feature__li"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg>Recipe linked to raw materials</li></ul></article><article class="card card--interactive card--spotlight feature tone--indigo">
+          <div class="feature__head"><span class="icon-tile"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg></span>
+          <h3 class="card__title">Reports & multi-location</h3></div>
+          <p class="card__text">Sales, best sellers, cash flow and full order history. Filter by date range, location or user.</p>
+          <ul class="feature__list"><li class="feature__li"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg>Reports by date range</li><li class="feature__li"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg>Complete order history</li><li class="feature__li"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg>Consolidated cross-location comparison</li></ul></article></div>
+</div></section>
+<section class="section" id="modules"><div class="container">
+  <div class="section__head">
+      <p class="eyebrow" data-reveal>Inside the product</p>
+      <h2 class="section__title" data-reveal data-split>These are the actual screens</h2>
+      <p class="section__lede" data-reveal>Captures of the product running, not mockups. Every module is designed to be used in the middle of service.</p>
+    </div><article class="module tone--indigo">
+          <div class="module__copy" data-reveal>
+            <span class="chip chip--brand"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" style="width:.9rem;height:.9rem"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>Module</span>
+            <h3 class="module__title">Admin dashboard</h3>
+            <p class="module__text">The state of the business on one screen: today’s sales, register status, occupied tables and the kitchen queue, all live.</p>
+            <ul class="module__points"><li class="module__point"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg>Live sales, cash and tables</li><li class="module__point"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg>Kitchen and service queue at a glance</li><li class="module__point"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg>Location switcher in the top bar</li></ul>
+          </div>
+          <div class="module__shot" data-parallax data-reveal>
+            <div class="module__frame">
+              <img src="assets/screens/dashboard.webp" alt="RestroLogic admin dashboard showing today’s sales, register status, occupied tables and the live kitchen queue" loading="lazy" decoding="async">
+            </div>
+          </div>
+        </article><article class="module tone--amber module--reverse">
+          <div class="module__copy" data-reveal>
+            <span class="chip chip--brand"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" style="width:.9rem;height:.9rem"><path d="M3 2v7a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3zm0 0v7"/></svg>Module</span>
+            <h3 class="module__title">Point of sale & tables</h3>
+            <p class="module__text">The floor monitor with every table’s status — free, occupied, reserved or blocked — plus elapsed time and its open ticket.</p>
+            <ul class="module__points"><li class="module__point"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg>Live table states</li><li class="module__point"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg>Elapsed time and ticket number</li><li class="module__point"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg>Active orders, one-click payment</li></ul>
+          </div>
+          <div class="module__shot" data-parallax data-reveal>
+            <div class="module__frame">
+              <img src="assets/screens/pos-mesas.webp" alt="RestroLogic table monitor showing the status, elapsed time and ticket for every table on the floor" loading="lazy" decoding="async">
+            </div>
+          </div>
+        </article><article class="module tone--mint">
+          <div class="module__copy" data-reveal>
+            <span class="chip chip--brand"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" style="width:.9rem;height:.9rem"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>Module</span>
+            <h3 class="module__title">Inventory & raw materials</h3>
+            <p class="module__text">Every ingredient with its unit cost and stock on hand, adjustable in one click from the same screen.</p>
+            <ul class="module__points"><li class="module__point"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg>Unit cost and stock per ingredient</li><li class="module__point"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg>Quick stock adjustment</li><li class="module__point"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg>Create and edit without leaving the list</li></ul>
+          </div>
+          <div class="module__shot" data-parallax data-reveal>
+            <div class="module__frame">
+              <img src="assets/screens/inventario.webp" alt="RestroLogic inventory module showing raw materials with unit cost, stock on hand and the edit form" loading="lazy" decoding="async">
+            </div>
+          </div>
+        </article><article class="module tone--violet module--reverse">
+          <div class="module__copy" data-reveal>
+            <span class="chip chip--brand"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" style="width:.9rem;height:.9rem"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>Module</span>
+            <h3 class="module__title">Reports & audit</h3>
+            <p class="module__text">The full history of orders and cash movements over any date range you choose, exportable to Excel.</p>
+            <ul class="module__points"><li class="module__point"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg>Filter by date range</li><li class="module__point"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg>Detail per order, server and status</li><li class="module__point"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg>Export to Excel</li></ul>
+          </div>
+          <div class="module__shot" data-parallax data-reveal>
+            <div class="module__frame">
+              <img src="assets/screens/reportes-ordenes.webp" alt="RestroLogic order report showing date, customer, server, subtotal, tip, total and status for each order" loading="lazy" decoding="async">
+            </div>
+          </div>
+        </article>
+</div></section>
+<section class="section section--tight gallery" id="gallery"><div class="container">
+  <div class="section__head">
+      <p class="eyebrow" data-reveal>More screens</p>
+      <h2 class="section__title" data-reveal data-split>The rest of the product</h2>
+      <p class="section__lede" data-reveal>Browse the other screens your team works with every day.</p>
+    </div>
+  <div class="gallery__shell" data-gallery data-reveal>
+    <div class="gallery__tabs" role="tablist" aria-label="The rest of the product"><button type="button" role="tab" id="gtab-products" class="gallery__tab tone--violet" data-gallery-tab="products" aria-selected="true" aria-controls="gpanel-products" tabindex="0"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 21v-7"/><path d="M4 10V3"/><path d="M12 21v-9"/><path d="M12 8V3"/><path d="M20 21v-5"/><path d="M20 12V3"/><path d="M1 14h6"/><path d="M9 8h6"/><path d="M17 16h6"/></svg><span>Product catalogue</span></button><button type="button" role="tab" id="gtab-orders" class="gallery__tab tone--rose" data-gallery-tab="orders" aria-selected="false" aria-controls="gpanel-orders" tabindex="-1"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M17 21a1 1 0 0 0 1-1v-5.35c0-.46.32-.85.73-1.04a4 4 0 0 0-2.14-7.59 5 5 0 0 0-9.18 0 4 4 0 0 0-2.14 7.59c.41.19.73.58.73 1.04V20a1 1 0 0 0 1 1Z"/><path d="M6 17h12"/></svg><span>Active orders</span></button><button type="button" role="tab" id="gtab-cash" class="gallery__tab tone--cyan" data-gallery-tab="cash" aria-selected="false" aria-controls="gpanel-cash" tabindex="-1"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/></svg><span>Cash & daily count</span></button><button type="button" role="tab" id="gtab-cashreport" class="gallery__tab tone--teal" data-gallery-tab="cashreport" aria-selected="false" aria-controls="gpanel-cashreport" tabindex="-1"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/></svg><span>Cash report</span></button></div>
+    <div class="gallery__stage"><div role="tabpanel" id="gpanel-products" class="gallery__panel tone--violet" data-gallery-panel="products" aria-labelledby="gtab-products" data-active="true"><figure class="gallery__figure"><img src="assets/screens/productos.webp" alt="RestroLogic product catalogue showing dishes, categories and per-size price variants" loading="lazy" decoding="async"></figure><figcaption class="gallery__caption"><h3 class="gallery__title">Product catalogue</h3><p class="gallery__text">Dishes, drinks and per-size price variants, each with its own recipe and category.</p></figcaption></div><div role="tabpanel" id="gpanel-orders" class="gallery__panel tone--rose" data-gallery-panel="orders" aria-labelledby="gtab-orders" data-active="false" hidden><figure class="gallery__figure"><img src="assets/screens/pos-ordenes.webp" alt="RestroLogic active orders screen showing the status of each ticket and the total to charge" loading="lazy" decoding="async"></figure><figcaption class="gallery__caption"><h3 class="gallery__title">Active orders</h3><p class="gallery__text">Track every open ticket: what is being prepared, what is ready, and what the check adds up to.</p></figcaption></div><div role="tabpanel" id="gpanel-cash" class="gallery__panel tone--cyan" data-gallery-panel="cash" aria-labelledby="gtab-cash" data-active="false" hidden><figure class="gallery__figure"><img src="assets/screens/caja.webp" alt="RestroLogic cash and daily count screen showing net sales, tips and expected cash" loading="lazy" decoding="async"></figure><figcaption class="gallery__caption"><h3 class="gallery__title">Cash & daily count</h3><p class="gallery__text">Sales by payment method, adjustments, tips and expected cash before closing the shift.</p></figcaption></div><div role="tabpanel" id="gpanel-cashreport" class="gallery__panel tone--teal" data-gallery-panel="cashreport" aria-labelledby="gtab-cashreport" data-active="false" hidden><figure class="gallery__figure"><img src="assets/screens/reportes-caja.webp" alt="RestroLogic cash report showing the consolidated summary of takings, tips and period balance" loading="lazy" decoding="async"></figure><figcaption class="gallery__caption"><h3 class="gallery__title">Cash report</h3><p class="gallery__text">The consolidated period view: cash and digital takings, tips and estimated balance.</p></figcaption></div></div>
+  </div>
+</div></section>
+<section class="section section--tight"><div class="container">
+  <div class="soon" data-reveal>
+    <div class="soon__head">
+      <span class="chip chip--accent"><span class="dot dot--pulse"></span>Coming soon</span>
+      <h2 class="soon__title">On the way</h2>
+      <p class="soon__lede">Modules in development. We will announce them here the moment they are production-ready.</p>
+    </div>
+    <ul class="soon__list" data-stagger><li class="soon__item tone--violet"><span class="icon-tile"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="18.5" cy="17.5" r="3.5"/><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="15" cy="5" r="1"/><path d="M12 17.5V14l-3-3 4-3 2 3h2"/></svg></span><div><h3 class="soon__item-title">Deliveries</h3><p class="soon__item-text">Delivery orders, driver assignment and per-shift settlement.</p></div></li><li class="soon__item tone--cyan"><span class="icon-tile"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/></svg></span><div><h3 class="soon__item-title">Electronic invoicing</h3><p class="soon__item-text">Issuing with tax-authority validation, CUFE and automatic delivery to the customer.</p></div></li><li class="soon__item tone--rose"><span class="icon-tile"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg></span><div><h3 class="soon__item-title">Public QR menu</h3><p class="soon__item-text">Your menu online so guests can order from the table on their own phone.</p></div></li></ul>
+  </div>
+</div></section>
+<section class="section section--tinted" id="how"><div class="container">
+  <div class="section__head">
+      <p class="eyebrow" data-reveal>Getting started</p>
+      <h2 class="section__title" data-reveal data-split>Up and running in three steps</h2>
+      <p class="section__lede" data-reveal>No servers, no installs and no pause in service. It runs in any browser.</p>
+    </div>
+  <ol class="steps" data-stagger><li class="step tone--amber"><span class="step__marker" aria-hidden="true">1</span><div><h3 class="step__title">We set up your menu</h3><p class="step__text">We load products, categories, recipes, tables and taxes. If your data is already in a spreadsheet, we migrate it for you.</p></div></li><li class="step tone--violet"><span class="step__marker" aria-hidden="true">2</span><div><h3 class="step__title">We train your team</h3><p class="step__text">One short session per role: servers, kitchen, cashier and management. The interface is designed to be learned in a single shift.</p></div></li><li class="step tone--mint"><span class="step__marker" aria-hidden="true">3</span><div><h3 class="step__title">You open and measure</h3><p class="step__text">From the very first service you get real reports on sales, costs and cash so you can decide with data.</p></div></li></ol>
+  <div class="stats" style="margin-top:clamp(3rem,2rem+4vw,4.5rem)" data-reveal><div class="stat tone--amber"><div class="stat__num" data-count="6">6</div><div class="stat__label">Integrated modules</div></div><div class="stat tone--rose"><div class="stat__num" data-count="3">3</div><div class="stat__label">Seconds from table to kitchen</div></div><div class="stat tone--violet"><div class="stat__num" data-count="1">1</div><div class="stat__label">Single source of truth</div></div><div class="stat tone--cyan"><div class="stat__num" data-count="0">0</div><div class="stat__label">Installs on your machines</div></div></div>
+</div></section>
+<section class="section" id="pricing"><div class="container">
+  <div class="section__head">
+      <p class="eyebrow" data-reveal>Plans</p>
+      <h2 class="section__title" data-reveal data-split>Clear pricing, no fine print</h2>
+      <p class="section__lede" data-reveal>Every plan includes updates, backups and support. Cancel whenever you want.</p>
+    </div>
+  <div class="pricing__switch" data-reveal>
+    <div class="segmented" role="tablist" data-billing>
+      <span class="segmented__thumb" data-billing-thumb aria-hidden="true"></span>
+      <button type="button" role="tab" class="segmented__option" data-billing-option="monthly" aria-selected="true">Monthly</button>
+      <button type="button" role="tab" class="segmented__option" data-billing-option="yearly" aria-selected="false">Annual</button>
+    </div>
+    <span class="chip chip--accent">Save 20%</span>
+  </div>
+  <div class="pricing__grid" data-stagger><article class="plan ">
+          <header><h3 class="plan__name">Essential</h3>
+          <p class="plan__desc">For restaurants getting started</p></header>
+          <div class="plan__price"><span class="plan__amount " data-price data-monthly="$29" data-yearly="$23">$29</span><span class="plan__period" data-period-label data-monthly="/ month" data-yearly="/ month, billed annually">/ month</span></div>
+          <ul class="plan__features"><li class="plan__feature"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg>Table ordering and register</li><li class="plan__feature"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg>Kitchen display</li><li class="plan__feature"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg>Daily cash closing</li><li class="plan__feature"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg>Up to 5 users</li></ul>
+          <div class="plan__cta"><a class="btn btn--outline btn--block" href="#contact">Get started</a></div>
+        </article><article class="plan plan--featured"><span class="plan__flag">Most chosen</span>
+          <header><h3 class="plan__name">Professional</h3>
+          <p class="plan__desc">For growing operations</p></header>
+          <div class="plan__price"><span class="plan__amount " data-price data-monthly="$59" data-yearly="$47">$59</span><span class="plan__period" data-period-label data-monthly="/ month" data-yearly="/ month, billed annually">/ month</span></div>
+          <ul class="plan__features"><li class="plan__feature"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg>Everything in Essential</li><li class="plan__feature"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg>Inventory with recipes and costs</li><li class="plan__feature"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg>Catalogue with recipes and variants</li><li class="plan__feature"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg>Reports by date range</li><li class="plan__feature"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg>Unlimited users</li></ul>
+          <div class="plan__cta"><a class="btn btn--primary btn--block" href="#contact">Book a demo</a></div>
+        </article><article class="plan ">
+          <header><h3 class="plan__name">Multi-location</h3>
+          <p class="plan__desc">For chains and franchises</p></header>
+          <div class="plan__price"><span class="plan__amount " data-price data-monthly="Custom" data-yearly="Custom">Custom</span></div>
+          <ul class="plan__features"><li class="plan__feature"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg>Everything in Professional</li><li class="plan__feature"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg>Consolidated multi-location view</li><li class="plan__feature"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg>Custom reports</li><li class="plan__feature"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg>Priority support</li></ul>
+          <div class="plan__cta"><a class="btn btn--outline btn--block" href="#contact">Talk to sales</a></div>
+        </article></div>
+  <p class="pricing__note" data-reveal>Prices in USD per location. Multiple locations or a franchise? Let’s talk about a tailored plan.</p>
+</div></section>
+<section class="section section--tinted" id="faq"><div class="container"><div class="faq">
+  <div class="faq__aside">
+    <div class="section__head section__head--start">
+      <p class="eyebrow" data-reveal>FAQ</p>
+      <h2 class="section__title" data-reveal data-split>What people usually ask us</h2>
+      <p class="section__lede" data-reveal>Still have a question? Write to us and we answer the same day.</p>
+    </div>
+    <a class="btn btn--soft" href="#contact">Ask something else<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" class="btn__arrow"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
+  </div>
+  <div class="accordion" data-accordion data-stagger><details class="qa" open><summary class="qa__summary">Do I need to install anything or buy hardware?<span class="qa__icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" style="width:.85rem;height:.85rem"><path d="M5 12h14"/><path d="M12 5v14"/></svg></span></summary><div class="qa__body"><p>No. RestroLogic runs in the browser, so it works on the cashier computer, a tablet or your servers’ phones. All you need is an internet connection.</p></div></details><details class="qa"><summary class="qa__summary">What happens if the internet drops mid-service?<span class="qa__icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" style="width:.85rem;height:.85rem"><path d="M5 12h14"/><path d="M12 5v14"/></svg></span></summary><div class="qa__body"><p>The app keeps the session alive and retries synchronisation automatically. When the connection returns, pending orders are sent without losing information.</p></div></details><details class="qa"><summary class="qa__summary">Can I control what each employee sees?<span class="qa__icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" style="width:.85rem;height:.85rem"><path d="M5 12h14"/><path d="M12 5v14"/></svg></span></summary><div class="qa__body"><p>Yes. The system handles role-based permissions: you define exactly which modules, reports and actions each person can use, and who authorises voids or discounts.</p></div></details><details class="qa"><summary class="qa__summary">Does inventory deplete automatically?<span class="qa__icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" style="width:.85rem;height:.85rem"><path d="M5 12h14"/><path d="M12 5v14"/></svg></span></summary><div class="qa__body"><p>Yes, whenever a dish has a recipe. When you sell an item, the system deducts its ingredients according to the recipe and updates the cost, so you see your real margin per dish.</p></div></details><details class="qa"><summary class="qa__summary">Can I manage multiple locations?<span class="qa__icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" style="width:.85rem;height:.85rem"><path d="M5 12h14"/><path d="M12 5v14"/></svg></span></summary><div class="qa__body"><p>Yes. Each location runs its own register, inventory and staff, and from the admin dashboard you see the consolidated view and can compare performance across locations.</p></div></details><details class="qa"><summary class="qa__summary">How long does implementation take?<span class="qa__icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" style="width:.85rem;height:.85rem"><path d="M5 12h14"/><path d="M12 5v14"/></svg></span></summary><div class="qa__body"><p>It depends on the size of your menu, but a standard restaurant is live within a few days. We load products and recipes with you before you go live.</p></div></details></div>
+</div></div></section>
+<section class="section cta" id="contact"><div class="container">
+  <div class="cta__panel" data-reveal>
+    <div class="cta__glow" aria-hidden="true"></div>
+    <div class="cta__glow cta__glow--alt" aria-hidden="true"></div>
+    <div class="cta__copy">
+      <p class="eyebrow">Free demo</p>
+      <h2 class="cta__title" data-split>Let’s see how it works with your own menu</h2>
+      <p class="cta__text">Book a 30-minute demo. We walk through the full flow using products from your own restaurant and answer your questions live.</p>
+      <ul class="cta__perks"><li class="cta__perk"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg>Personalised demo, no commitment</li><li class="cta__perk"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg>Menu migration included</li><li class="cta__perk"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg>Hands-on help during rollout</li></ul>
+    </div>
+    <form class="cta__form">
+      <div class="cta__row"><div class="field"><label class="field__label" for="name">Name</label>
+          <input class="input" type="text" id="name" name="name" placeholder="Your name"></div><div class="field"><label class="field__label" for="restaurant">Restaurant</label>
+          <input class="input" type="text" id="restaurant" name="restaurant" placeholder="Restaurant name"></div></div>
+      <div class="cta__row"><div class="field"><label class="field__label" for="email">Email</label>
+          <input class="input" type="email" id="email" name="email" placeholder="you@restaurant.com"></div><div class="field"><label class="field__label" for="phone">Phone</label>
+          <input class="input" type="tel" id="phone" name="phone" placeholder="+1 555 000 0000"></div></div>
+      <div class="field"><label class="field__label" for="message">Tell us about your operation</label>
+        <textarea class="textarea" id="message" placeholder="How many tables and locations do you run? What is hardest for you today?"></textarea></div>
+      <button type="submit" class="btn btn--primary btn--lg btn--block" data-magnetic>Request my demo<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" class="btn__arrow"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></button>
+      <p class="field__hint" style="text-align:center">We only use your details to contact you. No spam, ever.</p>
+    </form>
+  </div>
+</div></section></main>
+<footer class="footer"><div class="container">
+  <div class="footer__grid">
+    <div>
+      <a class="brand" href="#top"><svg class="brand__mark" width="34" height="34" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+<defs><linearGradient id="rl-logo-footer" x1="4" y1="4" x2="28" y2="28" gradientUnits="userSpaceOnUse">
+<stop stop-color="var(--rl-amber-300)"/><stop offset="0.55" stop-color="var(--rl-amber-500)"/><stop offset="1" stop-color="var(--rl-rose-500)"/>
+</linearGradient></defs>
+<rect x="2.5" y="24" width="27" height="3.2" rx="1.6" fill="url(#rl-logo-footer)"/>
+<path d="M5 24a11 11 0 0 1 22 0" stroke="url(#rl-logo-footer)" stroke-width="2.4" stroke-linecap="round"/>
+<circle cx="16" cy="10.4" r="1.9" fill="url(#rl-logo-footer)"/>
+<path d="M10.5 21.5l3.4-3.6 2.7 2.2 4.9-5.1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.9"/>
+</svg><span class="brand__name">Restro<em>Logic</em></span></a>
+      <p class="footer__tagline">Management software for restaurants, bars and chains. Built alongside operators who live the service every single day.</p>
+    </div>
+    <nav><h2 class="footer__coltitle">Product</h2><div class="footer__links"><a class="footer__link" href="#features">Features</a><a class="footer__link" href="#modules">Modules</a><a class="footer__link" href="#how">How it works</a><a class="footer__link" href="#pricing">Pricing</a><a class="footer__link" href="#faq">FAQ</a></div></nav>
+    <nav><h2 class="footer__coltitle">Company</h2><div class="footer__links">
+      <a class="footer__link" href="#contact">Contact</a>
+      <a class="footer__link" href="#">About us</a></div></nav>
+    <nav><h2 class="footer__coltitle">Legal</h2><div class="footer__links">
+      <a class="footer__link" href="#">Privacy policy</a>
+      <a class="footer__link" href="#">Terms of service</a></div></nav>
+  </div>
+  <div class="footer__bottom">
+    <p>© 2026 RestroLogic. All rights reserved. Built by <a href="#" style="color:var(--brand-ink)">Luis Acuña</a>.</p>
+    <ul class="social">
+      <li><a class="social__link" href="#"><span class="sr-only">GitHub</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .5a12 12 0 0 0-3.8 23.4c.6.1.8-.2.8-.6v-2.1c-3.4.7-4.1-1.6-4.1-1.6-.5-1.3-1.1-1.7-1.1-1.7-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.6 2.4 1.1 3 .9.1-.7.3-1.1.6-1.4-2.7-.3-5.4-1.3-5.4-6 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.6.1-3.3 0 0 1-.3 3.3 1.3a11.6 11.6 0 0 1 6.1 0c2.2-1.6 3.3-1.3 3.3-1.3.6 1.7.2 3 .1 3.3.8.8 1.2 1.8 1.2 3.1 0 4.6-2.7 5.6-5.4 5.9.4.4.7 1 .7 2.1v3.1c0 .4.2.8.8.6A12 12 0 0 0 12 .5z"/></svg></a></li>
+      <li><a class="social__link" href="#"><span class="sr-only">LinkedIn</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.98 3.5A2.5 2.5 0 1 0 5 8.5a2.5 2.5 0 0 0-.02-5zM3 9h4v12H3zM9 9h3.8v1.7h.1c.5-.9 1.8-1.8 3.7-1.8 4 0 4.7 2.6 4.7 6V21h-4v-5.3c0-1.3 0-3-1.8-3s-2.1 1.4-2.1 2.9V21H9z"/></svg></a></li>
+    </ul>
+  </div>
+</div></footer>
+<script>
+/**
+ * Preview-only motion engine.
+ *
+ * The production site uses GSAP + ScrollTrigger (src/scripts/scenes.ts). GSAP
+ * could not be downloaded in the sandbox this preview was built in, so this
+ * file reproduces the same scenes with ~200 lines of vanilla JS against the
+ * same data attributes. It exists so the scroll behaviour can be *seen* before
+ * running the real site; it is not shipped and is not a fallback.
+ *
+ * Scene parity with scenes.ts:
+ *   heroScene · heroScrollScene · scrollProgressScene · orbScene ·
+ *   headingScene · revealScene · staggerScene · counterScene ·
+ *   pipelineScene · moduleScene · marqueeScene · sectionEdgeScene ·
+ *   magneticScene · spotlightScene
+ */
+(function () {
+  'use strict';
+
+  var root = document.documentElement;
+
+  // Opt out for reduced-motion users, and for the screenshot harness — a
+  // headless render advances virtual time without advancing CSS transitions,
+  // so a moving page cannot be captured in its resting state.
+  var staticMode =
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
+    /[?&]static/.test(location.search) ||
+    root.hasAttribute('data-static');
+
+  if (staticMode) {
+    root.dataset.motion = 'off';
+    return;
+  }
+
+  root.dataset.motion = 'on';
+
+  // Failsafe, mirroring the production one in ThemeScript.astro: if anything
+  // below throws, reveal every animated element rather than leaving the page
+  // blank. Cleared once the engine has finished wiring itself up.
+  var failsafe = window.setTimeout(function () {
+    document
+      .querySelectorAll('[data-reveal],[data-stagger] > *,[data-pipeline-step],[data-float],[data-split]')
+      .forEach(function (el) {
+        el.style.opacity = '1';
+        el.style.transform = 'none';
+      });
+    root.dataset.motion = 'off';
+  }, 3000);
+
+  var lerp = function (a, b, t) {
+    return a + (b - a) * t;
+  };
+  var clamp = function (v, min, max) {
+    return Math.min(Math.max(v, min), max);
+  };
+  var easeOutExpo = function (t) {
+    return t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
+  };
+
+  /* ---------------------------------------------------------------- split -- */
+  // Wrap each word in a mask so headings can rise line by line.
+  function splitWords(el) {
+    if (el.childElementCount > 0 || el.dataset.split === 'done') return [];
+    var text = (el.textContent || '').trim();
+    if (!text) return [];
+
+    var frag = document.createDocumentFragment();
+    var inners = [];
+    text.split(/\s+/).forEach(function (word, i, arr) {
+      var outer = document.createElement('span');
+      outer.className = 'word';
+      var inner = document.createElement('span');
+      inner.className = 'word__inner';
+      inner.textContent = word;
+      outer.appendChild(inner);
+      frag.appendChild(outer);
+      inners.push(inner);
+      if (i < arr.length - 1) frag.appendChild(document.createTextNode(' '));
+    });
+
+    el.textContent = '';
+    el.appendChild(frag);
+    el.dataset.split = 'done';
+    return inners;
+  }
+
+  document.querySelectorAll('[data-split]').forEach(function (h) {
+    if (h.closest('[data-hero]')) return;
+    var words = splitWords(h);
+    h.style.opacity = '1';
+    words.forEach(function (w, i) {
+      w.style.transform = 'translateY(112%)';
+      w.style.transition =
+        'transform .85s cubic-bezier(.16,1,.3,1) ' + i * 0.045 + 's';
+    });
+  });
+
+  /* --------------------------------------------------------------- reveal -- */
+  var revealables = [];
+  document.querySelectorAll('[data-reveal]').forEach(function (el) {
+    if (el.closest('[data-hero]')) return;
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(26px)';
+    el.style.transition =
+      'opacity .7s cubic-bezier(.22,1,.36,1), transform .7s cubic-bezier(.22,1,.36,1)';
+    revealables.push(el);
+  });
+
+  document.querySelectorAll('[data-stagger]').forEach(function (group) {
+    Array.prototype.forEach.call(group.children, function (child, i) {
+      child.style.opacity = '0';
+      child.style.transform = 'translateY(30px)';
+      child.style.transition =
+        'opacity .7s cubic-bezier(.22,1,.36,1) ' + i * 0.08 + 's, ' +
+        'transform .7s cubic-bezier(.22,1,.36,1) ' + i * 0.08 + 's';
+      revealables.push(child);
+    });
+  });
+
+  document.querySelectorAll('[data-pipeline-step]').forEach(function (el, i) {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(34px)';
+    el.style.transition =
+      'opacity .7s cubic-bezier(.22,1,.36,1) ' + i * 0.14 + 's, ' +
+      'transform .7s cubic-bezier(.22,1,.36,1) ' + i * 0.14 + 's';
+    revealables.push(el);
+  });
+
+  var io = new IntersectionObserver(
+    function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        var el = entry.target;
+        el.style.opacity = '1';
+        el.style.transform = 'translateY(0)';
+        el.querySelectorAll &&
+          el.querySelectorAll('.word__inner').forEach(function (w) {
+            w.style.transform = 'translateY(0)';
+          });
+        io.unobserve(el);
+      });
+    },
+    { rootMargin: '0px 0px -12% 0px' },
+  );
+
+  revealables.forEach(function (el) {
+    io.observe(el);
+  });
+
+  document.querySelectorAll('[data-split]').forEach(function (h) {
+    if (h.closest('[data-hero]')) return;
+    new IntersectionObserver(
+      function (entries, obs) {
+        entries.forEach(function (e) {
+          if (!e.isIntersecting) return;
+          e.target.querySelectorAll('.word__inner').forEach(function (w) {
+            w.style.transform = 'translateY(0)';
+          });
+          obs.disconnect();
+        });
+      },
+      { rootMargin: '0px 0px -14% 0px' },
+    ).observe(h);
+  });
+
+  /* -------------------------------------------------------------- counters -- */
+  document.querySelectorAll('[data-count]').forEach(function (el) {
+    var target = parseFloat((el.dataset.count || '').replace(/[^\d.-]/g, ''));
+    if (!isFinite(target)) return;
+    new IntersectionObserver(
+      function (entries, obs) {
+        entries.forEach(function (e) {
+          if (!e.isIntersecting) return;
+          var start = performance.now();
+          (function tick(now) {
+            var t = clamp((now - start) / 1600, 0, 1);
+            el.textContent = String(Math.round(target * easeOutExpo(t)));
+            if (t < 1) requestAnimationFrame(tick);
+          })(start);
+          obs.disconnect();
+        });
+      },
+      { rootMargin: '0px 0px -10% 0px' },
+    ).observe(el);
+  });
+
+  /* ----------------------------------------------------------------- hero -- */
+  var heroTargets = [
+    ['[data-hero-badge]', 0],
+    ['[data-hero-lede]', 0.55],
+    ['[data-hero-actions]', 0.68],
+  ];
+  heroTargets.forEach(function (pair) {
+    var el = document.querySelector(pair[0]);
+    if (!el) return;
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    requestAnimationFrame(function () {
+      el.style.transition =
+        'opacity .7s cubic-bezier(.16,1,.3,1) ' + pair[1] + 's, ' +
+        'transform .7s cubic-bezier(.16,1,.3,1) ' + pair[1] + 's';
+      el.style.opacity = '1';
+      el.style.transform = 'translateY(0)';
+    });
+  });
+
+  document.querySelectorAll('[data-hero-line] > span').forEach(function (l, i) {
+    l.style.transform = 'translateY(118%)';
+    requestAnimationFrame(function () {
+      l.style.transition =
+        'transform .95s cubic-bezier(.16,1,.3,1) ' + (0.12 + i * 0.09) + 's';
+      l.style.transform = 'translateY(0)';
+    });
+  });
+
+  document.querySelectorAll('[data-hero-proof] > *').forEach(function (el, i) {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(18px)';
+    requestAnimationFrame(function () {
+      el.style.transition =
+        'opacity .7s cubic-bezier(.16,1,.3,1) ' + (0.8 + i * 0.08) + 's, ' +
+        'transform .7s cubic-bezier(.16,1,.3,1) ' + (0.8 + i * 0.08) + 's';
+      el.style.opacity = '1';
+      el.style.transform = 'translateY(0)';
+    });
+  });
+
+  var mock = document.querySelector('[data-hero-mock]');
+  if (mock) {
+    mock.style.opacity = '0';
+    mock.style.transform = 'translateY(46px) scale(.96)';
+    requestAnimationFrame(function () {
+      mock.style.transition =
+        'opacity 1.15s cubic-bezier(.16,1,.3,1) .35s, transform 1.15s cubic-bezier(.16,1,.3,1) .35s';
+      mock.style.opacity = '1';
+      mock.style.transform = 'translateY(0) scale(1)';
+    });
+  }
+
+  document.querySelectorAll('[data-float]').forEach(function (el, i) {
+    el.style.opacity = '0';
+    requestAnimationFrame(function () {
+      el.style.transition = 'opacity .7s ease ' + (0.9 + i * 0.12) + 's';
+      el.style.opacity = '1';
+    });
+  });
+
+  /* --------------------------------------------------------- scroll engine -- */
+  var mockEl = document.querySelector('.mock');
+  var heroSection = document.querySelector('[data-hero]');
+  var heroCopy = document.querySelector('.hero__copy');
+  var orbs = Array.prototype.slice.call(
+    document.querySelectorAll('[data-parallax-orb]'),
+  );
+  var shots = Array.prototype.slice.call(
+    document.querySelectorAll('[data-parallax] .module__frame'),
+  );
+  var rail = document.querySelector('[data-pipeline-rail]');
+  var pipeline = document.querySelector('[data-pipeline]');
+  var bar = document.querySelector('[data-scrollbar]');
+  var fill = document.querySelector('[data-scroll-progress]');
+  var wide = window.matchMedia('(min-width: 68rem)').matches;
+
+  var smooth = { progress: 0 };
+
+  function frame() {
+    var vh = window.innerHeight;
+    var doc = document.documentElement;
+    var max = doc.scrollHeight - vh;
+    var progress = max > 0 ? clamp(window.scrollY / max, 0, 1) : 0;
+
+    smooth.progress = lerp(smooth.progress, progress, 0.14);
+
+    /* scrollProgressScene */
+    if (fill && bar) {
+      fill.style.setProperty('--scroll-progress', smooth.progress.toFixed(4));
+      bar.dataset.visible = String(progress > 0.005);
+    }
+
+    /* heroScrollScene */
+    if (heroSection) {
+      var heroRect = heroSection.getBoundingClientRect();
+      var out = clamp(-heroRect.top / Math.max(heroRect.height, 1), 0, 1);
+
+      if (mockEl && wide) {
+        mockEl.style.transform =
+          'perspective(1600px) rotateY(' + (-9 + 9 * out) + 'deg) rotateX(' +
+          (4 - 4 * out) + 'deg) translateY(' + -40 * out + 'px)';
+      }
+      if (heroCopy) {
+        var fade = clamp((out - 0.35) / 0.65, 0, 1);
+        heroCopy.style.transform = 'translateY(' + -60 * fade + 'px)';
+        heroCopy.style.opacity = String(1 - 0.75 * fade);
+      }
+    }
+
+    /* orbScene */
+    orbs.forEach(function (orb) {
+      var rate = parseFloat(orb.dataset.parallaxOrb || '0.2');
+      var host = orb.closest('section') || orb.parentElement;
+      if (!host) return;
+      var r = host.getBoundingClientRect();
+      var p = clamp((vh - r.top) / (vh + r.height), 0, 1);
+      orb.style.transform = 'translateY(' + rate * 100 * (p - 0.5) * 2 + '%)';
+    });
+
+    /* moduleScene — parallax half */
+    shots.forEach(function (frameEl) {
+      var r = frameEl.getBoundingClientRect();
+      if (r.bottom < -200 || r.top > vh + 200) return;
+      var p = clamp((vh - r.top) / (vh + r.height), 0, 1);
+      frameEl.style.transform = 'translateY(' + (5 - 10 * p) + '%)';
+    });
+
+    /* pipelineScene — rail draw */
+    if (rail && pipeline) {
+      var pr = pipeline.getBoundingClientRect();
+      var railP = clamp((vh * 0.7 - pr.top) / Math.max(pr.height * 0.75, 1), 0, 1);
+      rail.style.setProperty('--rail-progress', railP.toFixed(4));
+    }
+
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+
+  /* ------------------------------------------------------------- marquee -- */
+  var track = document.querySelector('.marquee__track');
+  if (track) {
+    track.style.animation = 'none';
+    var half = track.scrollWidth / 2;
+    var offset = 0;
+    var scale = 1;
+    var targetScale = 1;
+    var lastY = window.scrollY;
+    var lastT = performance.now();
+
+    window.addEventListener(
+      'scroll',
+      function () {
+        var now = performance.now();
+        var dt = Math.max(now - lastT, 1);
+        var velocity = ((window.scrollY - lastY) / dt) * 1000;
+        lastY = window.scrollY;
+        lastT = now;
+        targetScale =
+          (1 + Math.min(Math.abs(velocity) / 900, 3.5)) *
+          (velocity >= 0 ? 1 : -1);
+      },
+      { passive: true },
+    );
+
+    (function marquee() {
+      targetScale = lerp(targetScale, targetScale >= 0 ? 1 : -1, 0.03);
+      scale = lerp(scale, targetScale, 0.08);
+      offset -= (half / 38 / 60) * scale;
+      if (offset <= -half) offset += half;
+      if (offset > 0) offset -= half;
+      track.style.transform = 'translateX(' + offset + 'px)';
+      requestAnimationFrame(marquee);
+    })();
+  }
+
+  /* ---------------------------------------------------- magnetic + spotlight */
+  if (window.matchMedia('(pointer: fine)').matches) {
+    document.querySelectorAll('[data-magnetic]').forEach(function (el) {
+      el.addEventListener('pointermove', function (e) {
+        var r = el.getBoundingClientRect();
+        el.style.transform =
+          'translate(' + (e.clientX - r.left - r.width / 2) * 0.28 + 'px,' +
+          (e.clientY - r.top - r.height / 2) * 0.4 + 'px)';
+      });
+      el.addEventListener('pointerleave', function () {
+        el.style.transition = 'transform .4s cubic-bezier(.22,1,.36,1)';
+        el.style.transform = 'translate(0,0)';
+        setTimeout(function () {
+          el.style.transition = '';
+        }, 400);
+      });
+    });
+
+    document.querySelectorAll('.card--spotlight').forEach(function (card) {
+      card.addEventListener('pointermove', function (e) {
+        var r = card.getBoundingClientRect();
+        card.style.setProperty('--mx', e.clientX - r.left + 'px');
+        card.style.setProperty('--my', e.clientY - r.top + 'px');
+      });
+    });
+  }
+
+  /* --------------------------------------------------------- section edges -- */
+  document.querySelectorAll('.cta__panel, .stats').forEach(function (panel) {
+    panel.style.setProperty('--edge-progress', '0');
+    new IntersectionObserver(
+      function (entries, obs) {
+        entries.forEach(function (e) {
+          if (!e.isIntersecting) return;
+          var start = performance.now();
+          (function tick(now) {
+            var t = clamp((now - start) / 1300, 0, 1);
+            panel.style.setProperty('--edge-progress', easeOutExpo(t).toFixed(4));
+            if (t < 1) requestAnimationFrame(tick);
+          })(start);
+          obs.disconnect();
+        });
+      },
+      { rootMargin: '0px 0px -18% 0px' },
+    ).observe(panel);
+  });
+
+  // Everything wired successfully — stand the failsafe down.
+  window.clearTimeout(failsafe);
+})();
+
+</script>
+<script>
+/* Preview-only interactivity. The real site uses src/scripts/*.ts + GSAP. */
+(function () {
+  var root = document.documentElement;
+  document.querySelectorAll('[data-theme-toggle]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    });
+  });
+  document.querySelectorAll('[data-dropdown]').forEach(function (d) {
+    var trigger = d.querySelector('[data-dropdown-trigger]');
+    trigger && trigger.addEventListener('click', function (e) {
+      e.stopPropagation();
+      d.dataset.open = d.dataset.open === 'true' ? 'false' : 'true';
+    });
+  });
+  var burger = document.querySelector('[data-drawer-toggle]');
+  var drawer = document.querySelector('[data-drawer]');
+  burger && burger.addEventListener('click', function () {
+    var open = drawer.dataset.open !== 'true';
+    drawer.dataset.open = String(open);
+    root.dataset.drawerOpen = String(open);
+  });
+  var header = document.querySelector('[data-header]');
+  window.addEventListener('scroll', function () {
+    header.dataset.stuck = String(window.scrollY > 8);
+  }, { passive: true });
+  var seg = document.querySelector('[data-billing]');
+  if (seg) {
+    var opts = Array.prototype.slice.call(seg.querySelectorAll('[data-billing-option]'));
+    var thumb = seg.querySelector('[data-billing-thumb]');
+    function move(el) {
+      thumb.style.width = el.offsetWidth + 'px';
+      thumb.style.transform = 'translateX(' + (el.offsetLeft - opts[0].offsetLeft) + 'px)';
+    }
+    opts.forEach(function (o) {
+      o.addEventListener('click', function () {
+        var p = o.dataset.billingOption;
+        opts.forEach(function (x) { x.setAttribute('aria-selected', String(x === o)); });
+        move(o);
+        document.querySelectorAll('[data-price],[data-period-label]').forEach(function (n) {
+          if (n.dataset[p]) n.textContent = n.dataset[p];
+        });
+      });
+    });
+    requestAnimationFrame(function () { move(opts[0]); });
+  }
+})();
+</script>
+</body>
+</html>

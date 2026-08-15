@@ -1,0 +1,1482 @@
+/* ==========================================================================
+   RestroLogic — Section-scoped styles
+   Each block owns a single root class. Nothing here leaks outside its block.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   HERO
+   -------------------------------------------------------------------------- */
+
+.hero {
+  position: relative;
+  padding-block: clamp(7rem, 5rem + 9vw, 11rem) var(--section-py);
+  /* Clip horizontally only: the decorative orbs must not create a sideways
+     scrollbar, but the float cards hang below the mock and need vertical room. */
+  overflow-x: clip;
+}
+
+.hero__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.hero__orb-1 {
+  inline-size: 34rem;
+  block-size: 34rem;
+  inset-block-start: -12rem;
+  inset-inline-start: -10rem;
+  opacity: 0.42;
+}
+
+.hero__orb-2 {
+  inline-size: 28rem;
+  block-size: 28rem;
+  inset-block-start: 2rem;
+  inset-inline-end: -9rem;
+  opacity: 0.36;
+}
+
+.hero__orb-3 {
+  inline-size: 22rem;
+  block-size: 22rem;
+  inset-block-end: -8rem;
+  inset-inline-start: 34%;
+  opacity: 0.26;
+}
+
+.hero__inner {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: clamp(3rem, 2rem + 5vw, 4.5rem);
+  align-items: center;
+}
+
+.hero__copy {
+  max-inline-size: 38rem;
+}
+
+.hero__title {
+  font-size: var(--text-6xl);
+  margin-block: 1.25rem 1.25rem;
+}
+
+.hero__lede {
+  font-size: var(--text-lg);
+  line-height: var(--leading-relaxed);
+  color: var(--text-muted);
+  max-inline-size: 34rem;
+}
+
+.hero__actions {
+  margin-block-start: 2rem;
+  --cluster-gap: 0.75rem;
+}
+
+.hero__proof {
+  margin-block-start: 2rem;
+  padding-block-start: 1.6rem;
+  border-block-start: 1px solid var(--hairline);
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.hero__proof-item {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.hero__proof-num {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: 700;
+  letter-spacing: var(--tracking-tight);
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+.hero__proof-label {
+  font-size: var(--text-2xs);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--text-subtle);
+}
+
+.hero__visual {
+  position: relative;
+  perspective: 1600px;
+}
+
+@media (width >= 68rem) {
+  .hero__inner {
+    grid-template-columns: minmax(0, 1.02fr) minmax(0, 1fr);
+    gap: clamp(2rem, 1rem + 4vw, 4rem);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   APP MOCK — hand-built product UI. No screenshot, no image weight.
+   -------------------------------------------------------------------------- */
+
+.mock {
+  position: relative;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-xl);
+  background: var(--surface);
+  box-shadow: var(--shadow-xl);
+  overflow: hidden;
+  transform-style: preserve-3d;
+}
+
+/* Gentle 3D presentation angle on wide screens only. */
+@media (width >= 68rem) {
+  .mock {
+    rotate: y -9deg;
+    transform: rotateX(4deg);
+  }
+}
+
+.mock__bar {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.7rem 0.9rem;
+  border-block-end: 1px solid var(--border);
+  background: var(--surface-2);
+}
+
+.mock__lights {
+  display: flex;
+  gap: 0.35rem;
+}
+
+.mock__lights i {
+  inline-size: 0.6rem;
+  block-size: 0.6rem;
+  border-radius: 50%;
+  background: var(--border-strong);
+}
+
+.mock__lights i:first-child {
+  background: color-mix(in oklab, var(--rl-rose-500) 70%, transparent);
+}
+.mock__lights i:nth-child(2) {
+  background: color-mix(in oklab, var(--rl-amber-400) 80%, transparent);
+}
+.mock__lights i:nth-child(3) {
+  background: color-mix(in oklab, var(--rl-mint-400) 75%, transparent);
+}
+
+.mock__url {
+  flex: 1;
+  padding: 0.28rem 0.7rem;
+  border-radius: var(--radius-full);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  color: var(--text-subtle);
+  text-align: center;
+}
+
+.mock__body {
+  display: grid;
+  grid-template-columns: 3.25rem minmax(0, 1fr);
+  min-block-size: 20rem;
+}
+
+.mock__rail {
+  display: grid;
+  align-content: start;
+  gap: 0.4rem;
+  padding: 0.75rem 0.5rem;
+  border-inline-end: 1px solid var(--border);
+  background: var(--surface-2);
+}
+
+.mock__railitem {
+  display: grid;
+  place-items: center;
+  block-size: 2.2rem;
+  border-radius: var(--radius-sm);
+  color: var(--text-subtle);
+}
+
+.mock__railitem svg {
+  inline-size: 1.05rem;
+  block-size: 1.05rem;
+}
+
+.mock__railitem[data-active="true"] {
+  background: var(--brand-soft);
+  color: var(--brand-ink);
+}
+
+.mock__main {
+  padding: 1rem;
+  display: grid;
+  gap: 0.85rem;
+  align-content: start;
+}
+
+.mock__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.mock__h {
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: 680;
+  letter-spacing: var(--tracking-tight);
+}
+
+.mock__sub {
+  font-size: var(--text-2xs);
+  color: var(--text-subtle);
+}
+
+/* KPI row */
+.mock__kpis {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+.mock__kpi {
+  padding: 0.6rem 0.65rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+}
+
+.mock__kpi-label {
+  font-size: 0.5625rem;
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--text-subtle);
+}
+
+.mock__kpi-val {
+  margin-block-start: 0.15rem;
+  font-family: var(--font-display);
+  font-size: var(--text-md);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: var(--tracking-tight);
+}
+
+.mock__kpi-trend {
+  font-size: 0.5625rem;
+  font-weight: 620;
+  color: var(--status-success);
+}
+
+/* Sparkline strip */
+.mock__chart {
+  block-size: 4.25rem;
+  padding: 0.5rem 0.65rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+}
+
+.mock__chart svg {
+  inline-size: 100%;
+  block-size: 100%;
+  overflow: visible;
+}
+
+.mock__spark-line {
+  fill: none;
+  stroke: var(--brand);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.mock__spark-fill {
+  fill: url(#rl-spark-grad);
+  stroke: none;
+}
+
+/* Floorplan — the "mesas" grid, the most restaurant-specific visual. */
+.mock__floor {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 0.35rem;
+}
+
+.mock__table {
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  border-radius: var(--radius-xs);
+  border: 1px solid var(--border);
+  background: var(--bg);
+  font-family: var(--font-mono);
+  font-size: 0.5625rem;
+  font-weight: 600;
+  color: var(--text-subtle);
+}
+
+.mock__table[data-state="busy"] {
+  border-color: var(--brand-soft-border);
+  background: var(--brand-soft);
+  color: var(--brand-ink);
+}
+
+.mock__table[data-state="ready"] {
+  border-color: color-mix(in oklab, var(--accent) 40%, transparent);
+  background: var(--accent-soft);
+  color: var(--accent-ink);
+}
+
+/* Live ticket list */
+.mock__tickets {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.mock__ticket {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0.6rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  font-size: 0.625rem;
+}
+
+.mock__ticket-name {
+  font-weight: 620;
+  color: var(--text);
+}
+
+.mock__ticket-meta {
+  color: var(--text-subtle);
+}
+
+.mock__ticket-state {
+  margin-inline-start: auto;
+  padding: 0.15rem 0.45rem;
+  border-radius: var(--radius-full);
+  font-size: 0.5625rem;
+  font-weight: 660;
+  letter-spacing: 0.02em;
+}
+
+.mock__ticket-state[data-s="kitchen"] {
+  background: var(--brand-soft);
+  color: var(--brand-ink);
+}
+
+.mock__ticket-state[data-s="ready"] {
+  background: var(--accent-soft);
+  color: var(--accent-ink);
+}
+
+.mock__ticket-state[data-s="paid"] {
+  background: color-mix(in oklab, var(--text) 9%, transparent);
+  color: var(--text-muted);
+}
+
+/* Floating cards orbiting the mock */
+.floatcard {
+  position: absolute;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.65rem 0.85rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--glass-strong);
+  backdrop-filter: blur(14px) saturate(170%);
+  -webkit-backdrop-filter: blur(14px) saturate(170%);
+  box-shadow: var(--shadow-lg);
+  font-size: var(--text-xs);
+  white-space: nowrap;
+}
+
+.floatcard__body {
+  display: grid;
+  gap: 0.1rem;
+  min-inline-size: 0;
+}
+
+.floatcard__title {
+  font-weight: 660;
+  color: var(--text);
+  font-size: var(--text-xs);
+  line-height: 1.25;
+}
+
+.floatcard__meta {
+  color: var(--text-subtle);
+  font-size: var(--text-2xs);
+  line-height: 1.25;
+}
+
+/* Cards hang off the mock's corners and edges. Anchoring them outside the
+   frame keeps the product UI itself readable — a notification that covers the
+   feature it is advertising is worse than no notification. */
+.floatcard--kds {
+  inset-block-start: -1.5rem;
+  inset-inline-start: -2.5rem;
+}
+
+.floatcard--stock {
+  inset-block-start: 44%;
+  inset-inline-end: -2.75rem;
+}
+
+.floatcard--cash {
+  inset-block-end: -1.75rem;
+  inset-inline-start: -1.5rem;
+}
+
+/* Below the two-column breakpoint the mock spans the full width, so there is
+   no gutter for cards to hang in. Keep only the strongest one and tuck it
+   inside the frame rather than letting the rest push past the viewport. */
+@media (width < 68rem) {
+  .floatcard--stock,
+  .floatcard--cash {
+    display: none;
+  }
+
+  .floatcard--kds {
+    inset-block-start: -1rem;
+    inset-inline-start: 0.75rem;
+    inset-inline-end: 0.75rem;
+    scale: 0.94;
+  }
+}
+
+/* On the narrowest phones the card's own text is the constraint. */
+@media (width < 26rem) {
+  .floatcard {
+    white-space: normal;
+  }
+
+  .floatcard--kds {
+    scale: 0.9;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   MARQUEE — trust strip
+   -------------------------------------------------------------------------- */
+
+.marquee {
+  position: relative;
+  overflow: hidden;
+  padding-block: var(--space-lg);
+  border-block: 1px solid var(--hairline);
+  mask-image: linear-gradient(
+    90deg,
+    transparent,
+    #000 12%,
+    #000 88%,
+    transparent
+  );
+}
+
+.marquee__track {
+  display: flex;
+  align-items: center;
+  gap: 3.5rem;
+  width: max-content;
+  animation: rl-marquee 38s linear infinite;
+}
+
+.marquee:hover .marquee__track {
+  animation-play-state: paused;
+}
+
+.marquee__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--font-display);
+  font-size: var(--text-md);
+  font-weight: 620;
+  letter-spacing: var(--tracking-tight);
+  color: var(--text-subtle);
+  opacity: 0.75;
+  transition: color var(--dur-fast) var(--ease-out-soft), opacity var(--dur-fast);
+}
+
+.marquee__item:hover {
+  color: var(--text);
+  opacity: 1;
+}
+
+.marquee__item svg {
+  inline-size: 1.35rem;
+  block-size: 1.35rem;
+  color: var(--tone, var(--brand));
+}
+
+/* --------------------------------------------------------------------------
+   PIPELINE — order lifecycle
+   -------------------------------------------------------------------------- */
+
+.pipeline {
+  position: relative;
+}
+
+.pipeline__track {
+  position: relative;
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: 1fr;
+  counter-reset: step;
+}
+
+.pipeline__rail {
+  display: none;
+}
+
+.pipeline__step {
+  position: relative;
+  padding: 1.5rem 1.35rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+  transition: border-color var(--dur-base) var(--ease-out-soft),
+    box-shadow var(--dur-base) var(--ease-out-soft),
+    transform var(--dur-base) var(--ease-out-soft);
+}
+
+.pipeline__step::before {
+  content: "";
+  position: absolute;
+  inset-block: 1.15rem;
+  inset-inline-start: 0;
+  inline-size: 3px;
+  border-radius: 0 3px 3px 0;
+  background: var(--tone, var(--brand));
+  opacity: 0.9;
+}
+
+.pipeline__step:hover {
+  transform: translateY(-4px);
+  border-color: var(--border-brand);
+  box-shadow: var(--shadow-lg);
+}
+
+.pipeline__num {
+  display: inline-grid;
+  place-items: center;
+  inline-size: 1.9rem;
+  block-size: 1.9rem;
+  border-radius: 50%;
+  /* Solid tone rather than the brand ramp: each step owns a hue, and
+     --tone-strong is guaranteed to clear contrast against --tone-on. */
+  background: var(--tone-strong, var(--brand-strong));
+  color: var(--tone-on, var(--text-on-brand));
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  font-weight: 700;
+  box-shadow: var(--shadow-brand);
+}
+
+.pipeline__title {
+  margin-block: 0.85rem 0.4rem;
+  font-size: var(--text-md);
+  font-weight: 660;
+}
+
+.pipeline__text {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  line-height: var(--leading-relaxed);
+}
+
+.pipeline__time {
+  margin-block-start: 0.9rem;
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  color: var(--brand-ink);
+  letter-spacing: var(--tracking-wide);
+}
+
+@media (width >= 56rem) {
+  .pipeline__track {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  /* The connecting rail sits behind the cards and is drawn by GSAP. */
+  .pipeline__rail {
+    display: block;
+    position: absolute;
+    inset-inline: 8%;
+    inset-block-start: -1.75rem;
+    block-size: 2px;
+    background: var(--border);
+    overflow: hidden;
+  }
+
+  .pipeline__rail::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: var(--grad-spectrum);
+    transform-origin: left center;
+    /* Fully drawn by default; the scroll scene scrubs it from 0 only once
+       motion is confirmed active, so no-JS still sees a complete rail. */
+    scale: 1 1;
+    transition: scale 120ms linear;
+  }
+
+  [data-motion="on"] .pipeline__rail::after {
+    scale: var(--rail-progress, 0) 1;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   FEATURES
+   -------------------------------------------------------------------------- */
+
+.features__grid {
+  --grid-min: 17.5rem;
+  --grid-gap: 1.15rem;
+}
+
+.feature {
+  gap: 1rem;
+}
+
+.feature__head {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.feature__tag {
+  margin-inline-start: auto;
+}
+
+.feature__list {
+  display: grid;
+  gap: 0.45rem;
+  margin-block-start: auto;
+  padding-block-start: 1rem;
+  border-block-start: 1px solid var(--hairline);
+}
+
+.feature__li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+.feature__li svg {
+  flex: none;
+  inline-size: 0.95rem;
+  block-size: 0.95rem;
+  margin-block-start: 0.12rem;
+  color: var(--accent);
+}
+
+/* --------------------------------------------------------------------------
+   MODULES — alternating screenshot rows
+   -------------------------------------------------------------------------- */
+
+.module {
+  display: grid;
+  gap: clamp(2rem, 1.4rem + 3vw, 3.5rem);
+  align-items: center;
+  padding-block: clamp(2.5rem, 2rem + 3vw, 4.5rem);
+}
+
+.module + .module {
+  border-block-start: 1px solid var(--hairline);
+}
+
+.module__copy {
+  max-inline-size: 34rem;
+}
+
+.module__title {
+  margin-block: 1rem 0.85rem;
+  font-size: var(--text-3xl);
+}
+
+.module__text {
+  font-size: var(--text-md);
+  line-height: var(--leading-relaxed);
+  color: var(--text-muted);
+}
+
+.module__points {
+  display: grid;
+  gap: 0.65rem;
+  margin-block-start: 1.5rem;
+}
+
+.module__point {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+.module__point svg {
+  flex: none;
+  inline-size: 1.1rem;
+  block-size: 1.1rem;
+  margin-block-start: 0.12rem;
+  color: var(--tone, var(--brand));
+}
+
+/* Screenshot frame — a browser-ish plate with a warm glow behind it. */
+.module__shot {
+  position: relative;
+  border-radius: var(--radius-xl);
+}
+
+.module__shot::before {
+  content: "";
+  position: absolute;
+  inset: 8% 6%;
+  border-radius: var(--radius-2xl);
+  background: var(--tone, var(--brand));
+  filter: blur(52px);
+  opacity: 0.3;
+  z-index: 0;
+}
+
+.module__frame {
+  position: relative;
+  z-index: 1;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow-xl);
+  overflow: hidden;
+  transition: transform var(--dur-slow) var(--ease-out-soft);
+}
+
+.module__shot:hover .module__frame {
+  transform: translateY(-6px);
+}
+
+.module__frame img {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  /* Real product captures, all within 2.079–2.096. Letting them keep their
+     natural ratio means no cropping and no letterboxing. */
+}
+
+@media (width >= 60rem) {
+  /* Real 2:1 product captures need the width more than the copy does — an
+     even split renders them too small to read what's on screen. */
+  .module {
+    grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
+  }
+
+  .module--reverse {
+    grid-template-columns: minmax(0, 1.18fr) minmax(0, 0.82fr);
+  }
+
+  .module--reverse .module__copy {
+    order: 2;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   STATS
+   -------------------------------------------------------------------------- */
+
+.stats {
+  display: grid;
+  gap: 1px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  background: var(--border);
+  overflow: hidden;
+}
+
+.stat {
+  padding: clamp(1.5rem, 1.2rem + 1.2vw, 2.25rem);
+  background: var(--surface);
+  text-align: center;
+}
+
+.stat {
+  position: relative;
+}
+
+/* Each stat carries its own hue via a .tone-- class on the tile. */
+.stat::before {
+  content: "";
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline: 0;
+  block-size: 3px;
+  background: var(--tone, var(--brand));
+  transform-origin: left center;
+  scale: var(--edge-progress, 1) 1;
+}
+
+.stat__num {
+  font-family: var(--font-display);
+  font-size: var(--text-4xl);
+  font-weight: 720;
+  letter-spacing: var(--tracking-tighter);
+  font-variant-numeric: tabular-nums;
+  color: var(--tone-ink, var(--brand-ink));
+}
+
+.stat__label {
+  margin-block-start: 0.35rem;
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+@media (width >= 52rem) {
+  .stats {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+/* --------------------------------------------------------------------------
+   HOW IT WORKS
+   -------------------------------------------------------------------------- */
+
+.steps {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.step {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 1.25rem;
+  align-items: start;
+}
+
+.step__marker {
+  position: relative;
+  display: grid;
+  place-items: center;
+  inline-size: 2.75rem;
+  block-size: 2.75rem;
+  flex: none;
+  border-radius: 50%;
+  border: 1px solid var(--tone-border, var(--border-brand));
+  background: var(--tone-soft, var(--surface));
+  color: var(--tone-ink, var(--brand-ink));
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--text-sm);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Vertical connector between markers. */
+.step:not(:last-child) .step__marker::after {
+  content: "";
+  position: absolute;
+  inset-block-start: 100%;
+  inset-inline-start: 50%;
+  translate: -50% 0;
+  inline-size: 1px;
+  block-size: calc(100% + 1.5rem);
+  background: linear-gradient(var(--border-brand), transparent);
+}
+
+.step__title {
+  font-size: var(--text-lg);
+  font-weight: 640;
+  margin-block-end: 0.35rem;
+}
+
+.step__text {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  line-height: var(--leading-relaxed);
+}
+
+@media (width >= 56rem) {
+  .steps {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 2.5rem;
+  }
+
+  .step {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .step:not(:last-child) .step__marker::after {
+    inset-block-start: 50%;
+    inset-inline-start: 100%;
+    translate: 0 -50%;
+    inline-size: calc(100% + 2.5rem);
+    block-size: 1px;
+    background: linear-gradient(90deg, var(--border-brand), transparent);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   PRICING
+   -------------------------------------------------------------------------- */
+
+.pricing__switch {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.75rem;
+  margin-block-end: 2.5rem;
+}
+
+.pricing__grid {
+  display: grid;
+  gap: 1.25rem;
+  align-items: start;
+}
+
+.plan {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+  padding: clamp(1.5rem, 1.2rem + 1vw, 2.15rem);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--dur-base) var(--ease-out-soft),
+    box-shadow var(--dur-base) var(--ease-out-soft),
+    border-color var(--dur-base) var(--ease-out-soft);
+}
+
+.plan:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--border-strong);
+}
+
+.plan--featured {
+  border-color: var(--border-brand);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Animated conic ring on the featured plan. */
+.plan--featured::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: conic-gradient(
+    from var(--ring-angle, 0deg),
+    transparent 0deg,
+    var(--brand) 70deg,
+    var(--rl-amber-400) 120deg,
+    transparent 200deg,
+    transparent 360deg
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  animation: rl-ring 6s linear infinite;
+  pointer-events: none;
+}
+
+.plan__flag {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 50%;
+  translate: -50% -50%;
+  padding: 0.3rem 0.85rem;
+  border-radius: var(--radius-full);
+  /* Carries text -> must use the text-safe ramp. */
+  background: var(--grad-brand-strong);
+  color: var(--text-on-brand);
+  font-size: var(--text-2xs);
+  font-weight: 700;
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  box-shadow: var(--shadow-brand);
+  white-space: nowrap;
+}
+
+.plan__name {
+  font-size: var(--text-lg);
+  font-weight: 680;
+}
+
+.plan__desc {
+  font-size: var(--text-xs);
+  color: var(--text-subtle);
+  margin-block-start: 0.25rem;
+}
+
+.plan__price {
+  display: flex;
+  align-items: baseline;
+  gap: 0.35rem;
+}
+
+.plan__amount {
+  font-family: var(--font-display);
+  font-size: var(--text-4xl);
+  font-weight: 720;
+  letter-spacing: var(--tracking-tighter);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+/* A word ("Custom", "A medida") reads as shouting at numeral scale. */
+.plan__amount--word {
+  font-size: var(--text-3xl);
+}
+
+.plan__period {
+  font-size: var(--text-xs);
+  color: var(--text-subtle);
+}
+
+.plan__features {
+  display: grid;
+  gap: 0.6rem;
+  padding-block-start: 1.15rem;
+  border-block-start: 1px solid var(--hairline);
+}
+
+.plan__feature {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+.plan__feature svg {
+  flex: none;
+  inline-size: 1.05rem;
+  block-size: 1.05rem;
+  margin-block-start: 0.15rem;
+  color: var(--accent);
+}
+
+.plan__cta {
+  margin-block-start: auto;
+}
+
+.pricing__note {
+  margin-block-start: 1.75rem;
+  text-align: center;
+  font-size: var(--text-xs);
+  color: var(--text-subtle);
+}
+
+@media (width >= 56rem) {
+  .pricing__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .plan--featured {
+    transform: scale(1.035);
+  }
+
+  .plan--featured:hover {
+    transform: scale(1.035) translateY(-4px);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   FAQ
+   -------------------------------------------------------------------------- */
+
+.faq {
+  display: grid;
+  gap: clamp(2rem, 1.5rem + 2.5vw, 3.5rem);
+}
+
+@media (width >= 60rem) {
+  .faq {
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    align-items: start;
+  }
+
+  .faq__aside {
+    position: sticky;
+    top: 7rem;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   CTA / CONTACT
+   -------------------------------------------------------------------------- */
+
+.cta {
+  position: relative;
+  overflow: clip;
+}
+
+.cta__panel {
+  position: relative;
+  display: grid;
+  gap: clamp(2rem, 1.5rem + 3vw, 3.5rem);
+  padding: clamp(2rem, 1.5rem + 3vw, 3.5rem);
+  border: 1px solid var(--border-brand);
+  border-radius: var(--radius-2xl);
+  background: var(--surface);
+  box-shadow: var(--shadow-xl);
+  overflow: hidden;
+}
+
+.cta__glow {
+  position: absolute;
+  inset-block-start: -40%;
+  inset-inline-start: -10%;
+  inline-size: 30rem;
+  block-size: 30rem;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--hue-amber), transparent 65%);
+  opacity: 0.18;
+  filter: blur(50px);
+  pointer-events: none;
+}
+
+/* A second glow in a contrasting hue keeps the panel from reading as a
+   single-colour block. */
+.cta__glow--alt {
+  inset-block-start: auto;
+  inset-block-end: -45%;
+  inset-inline-start: auto;
+  inset-inline-end: -12%;
+  inline-size: 26rem;
+  block-size: 26rem;
+  background: radial-gradient(circle, var(--hue-cyan), transparent 65%);
+  opacity: 0.16;
+}
+
+/* Spectrum edge along the top of the CTA panel, drawn in on scroll. */
+.cta__panel::before {
+  content: "";
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline: 0;
+  block-size: 3px;
+  background: var(--grad-spectrum);
+  transform-origin: left center;
+  scale: var(--edge-progress, 1) 1;
+}
+
+.cta__copy {
+  position: relative;
+  z-index: 1;
+}
+
+.cta__title {
+  font-size: var(--text-3xl);
+  margin-block: 0.85rem 0.85rem;
+}
+
+.cta__text {
+  font-size: var(--text-md);
+  line-height: var(--leading-relaxed);
+  color: var(--text-muted);
+}
+
+.cta__perks {
+  display: grid;
+  gap: 0.65rem;
+  margin-block-start: 1.75rem;
+}
+
+.cta__perk {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+.cta__perk svg {
+  flex: none;
+  inline-size: 1.05rem;
+  block-size: 1.05rem;
+  color: var(--accent);
+}
+
+.cta__form {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 1rem;
+  align-content: start;
+}
+
+.cta__row {
+  display: grid;
+  gap: 1rem;
+}
+
+@media (width >= 40rem) {
+  .cta__row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (width >= 62rem) {
+  .cta__panel {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+    align-items: center;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   SCREEN GALLERY — tabbed viewer for the remaining product screens
+   -------------------------------------------------------------------------- */
+
+/* The section root exists so the block has a named owner even though the
+   shell carries the visuals. */
+.gallery {
+  scroll-margin-block-start: 6.5rem;
+}
+
+.gallery__shell {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-2xl);
+  background: var(--surface);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+}
+
+.gallery__tabs {
+  display: flex;
+  gap: 0.25rem;
+  padding: 0.6rem;
+  border-block-end: 1px solid var(--border);
+  background: var(--surface-2);
+  /* Tabs outgrow narrow screens; scrolling beats wrapping into two rows. */
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.gallery__tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.gallery__tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: none;
+  padding: 0.6rem 0.95rem;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--text-muted);
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color var(--dur-fast) var(--ease-out-soft),
+    color var(--dur-fast) var(--ease-out-soft),
+    border-color var(--dur-fast) var(--ease-out-soft);
+}
+
+.gallery__tab svg {
+  inline-size: 1.05rem;
+  block-size: 1.05rem;
+  color: var(--tone, var(--brand));
+}
+
+.gallery__tab:hover {
+  background: var(--surface);
+  color: var(--text);
+}
+
+.gallery__tab[aria-selected='true'] {
+  background: var(--tone-soft, var(--brand-soft));
+  border-color: var(--tone-border, var(--brand-soft-border));
+  color: var(--tone-ink, var(--brand-ink));
+}
+
+.gallery__stage {
+  position: relative;
+  padding: clamp(1rem, 0.7rem + 1.4vw, 1.75rem);
+}
+
+.gallery__panel[hidden] {
+  display: none;
+}
+
+.gallery__panel {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.gallery__figure {
+  position: relative;
+  margin: 0;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--surface-2);
+  box-shadow: var(--shadow-md);
+}
+
+.gallery__figure::after {
+  content: "";
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline: 0;
+  block-size: 3px;
+  background: var(--tone, var(--brand));
+}
+
+.gallery__figure img {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+}
+
+.gallery__caption {
+  max-inline-size: 44rem;
+}
+
+.gallery__title {
+  font-size: var(--text-lg);
+  font-weight: 660;
+  margin-block-end: 0.3rem;
+}
+
+.gallery__text {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  line-height: var(--leading-relaxed);
+}
+
+/* Panels cross-fade when motion is available. */
+[data-motion='on'] .gallery__panel[data-active='true'] {
+  animation: rl-panel-in var(--dur-slow) var(--ease-out-expo) both;
+}
+
+@keyframes rl-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-motion='on'] .gallery__panel[data-active='true'] {
+    animation: none;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   COMING SOON
+   -------------------------------------------------------------------------- */
+
+.soon {
+  display: grid;
+  gap: clamp(1.75rem, 1.4rem + 2vw, 3rem);
+  padding: clamp(1.75rem, 1.4rem + 2vw, 2.75rem);
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-2xl);
+  background: var(--surface-2);
+}
+
+.soon__head {
+  max-inline-size: 34rem;
+}
+
+.soon__title {
+  font-size: var(--text-2xl);
+  margin-block: 0.75rem 0.5rem;
+}
+
+.soon__lede {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  line-height: var(--leading-relaxed);
+}
+
+.soon__list {
+  display: grid;
+  gap: 1.15rem;
+}
+
+.soon__item {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.9rem;
+  align-items: start;
+}
+
+.soon__item .icon-tile {
+  inline-size: 2.5rem;
+  block-size: 2.5rem;
+  /* Muted: these are not shipped capability. */
+  opacity: 0.85;
+}
+
+.soon__item .icon-tile svg {
+  inline-size: 1.2rem;
+  block-size: 1.2rem;
+}
+
+.soon__item-title {
+  font-size: var(--text-md);
+  font-weight: 640;
+  margin-block-end: 0.2rem;
+}
+
+.soon__item-text {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  line-height: var(--leading-relaxed);
+}
+
+@media (width >= 56rem) {
+  .soon {
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.4fr);
+    align-items: center;
+  }
+
+  .soon__list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.5rem;
+  }
+
+  .soon__item {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+}
+
+@media (width >= 60rem) {
+  .gallery__panel {
+    grid-template-columns: minmax(0, 1.9fr) minmax(0, 1fr);
+    gap: 1.75rem;
+    align-items: center;
+  }
+}

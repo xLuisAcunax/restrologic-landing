@@ -1,0 +1,131 @@
+---
+import Button from '../ui/Button.astro';
+import Icon from '../ui/Icon.astro';
+import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+
+const t = useTranslations(getLangFromUrl(Astro.url));
+
+const perks = [t('cta.perk.1'), t('cta.perk.2'), t('cta.perk.3')];
+---
+
+<section class="section cta" id="contact">
+  <div class="container">
+    <div class="cta__panel" data-reveal>
+      <div class="cta__glow" aria-hidden="true"></div>
+      <div class="cta__glow cta__glow--alt" aria-hidden="true"></div>
+
+      <div class="cta__copy">
+        <p class="eyebrow">{t('cta.eyebrow')}</p>
+        <h2 class="cta__title" data-split>{t('cta.title')}</h2>
+        <p class="cta__text">{t('cta.text')}</p>
+
+        <ul class="cta__perks">
+          {
+            perks.map((perk) => (
+              <li class="cta__perk">
+                <Icon name="check" />
+                {perk}
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <!--
+        Posts to Formspree by default so the form works the moment the site is
+        deployed. Swap the action for your own endpoint when the backend is
+        ready; no other markup needs to change.
+      -->
+      <form
+        class="cta__form"
+        method="POST"
+        action="https://formspree.io/f/your-form-id"
+      >
+        <div class="cta__row">
+          <div class="field">
+            <label class="field__label" for="name">{t('form.name')}</label>
+            <input
+              class="input"
+              type="text"
+              id="name"
+              name="name"
+              autocomplete="name"
+              placeholder={t('form.name.placeholder')}
+              required
+            />
+          </div>
+
+          <div class="field">
+            <label class="field__label" for="restaurant">
+              {t('form.restaurant')}
+            </label>
+            <input
+              class="input"
+              type="text"
+              id="restaurant"
+              name="restaurant"
+              autocomplete="organization"
+              placeholder={t('form.restaurant.placeholder')}
+            />
+          </div>
+        </div>
+
+        <div class="cta__row">
+          <div class="field">
+            <label class="field__label" for="email">{t('form.email')}</label>
+            <input
+              class="input"
+              type="email"
+              id="email"
+              name="email"
+              autocomplete="email"
+              placeholder={t('form.email.placeholder')}
+              required
+            />
+          </div>
+
+          <div class="field">
+            <label class="field__label" for="phone">{t('form.phone')}</label>
+            <input
+              class="input"
+              type="tel"
+              id="phone"
+              name="phone"
+              autocomplete="tel"
+              placeholder={t('form.phone.placeholder')}
+            />
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="message">{t('form.message')}</label>
+          <textarea
+            class="textarea"
+            id="message"
+            name="message"
+            placeholder={t('form.message.placeholder')}
+          ></textarea>
+        </div>
+
+        <!-- Honeypot: bots fill it, humans never see it. -->
+        <div class="sr-only" aria-hidden="true">
+          <label for="company-website">Website</label>
+          <input
+            id="company-website"
+            type="text"
+            name="_gotcha"
+            tabindex="-1"
+            autocomplete="off"
+          />
+        </div>
+
+        <Button type="submit" variant="primary" size="lg" block magnetic>
+          {t('form.submit')}
+          <Icon name="arrowRight" class="btn__arrow" />
+        </Button>
+
+        <p class="field__hint" style="text-align:center">{t('form.privacy')}</p>
+      </form>
+    </div>
+  </div>
+</section>

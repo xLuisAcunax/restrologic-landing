@@ -1,0 +1,106 @@
+---
+import Logo from './Logo.astro';
+import ThemeToggle from './ThemeToggle.astro';
+import LanguagePicker from './LanguagePicker.astro';
+import Button from '../ui/Button.astro';
+import { navItems } from '../../lib/content';
+import {
+  getLangFromUrl,
+  useTranslations,
+  useTranslatedPath,
+} from '../../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const translatePath = useTranslatedPath(lang);
+---
+
+<header class="header" data-header data-stuck="false">
+  <div class="container header__inner">
+    <a class="brand" href={translatePath('/')}>
+      <Logo class="brand__mark" id="header" />
+      <span class="brand__name">Restro<em>Logic</em></span>
+    </a>
+
+    <nav class="nav" aria-label={t('nav.menu')}>
+      <ul class="nav__list">
+        {
+          navItems.map((item) => (
+            <li>
+              <a
+                class="nav__link"
+                href={translatePath(item.href)}
+                data-nav-link
+                aria-current="false"
+              >
+                {t(item.labelKey)}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div class="header__actions">
+      <LanguagePicker />
+      <ThemeToggle />
+
+      <Button
+        href={translatePath('/#contact')}
+        variant="primary"
+        size="sm"
+        class="header__cta"
+      >
+        {t('nav.contact')}
+      </Button>
+
+      <button
+        type="button"
+        class="iconbtn burger"
+        data-drawer-toggle
+        aria-expanded="false"
+        aria-controls="site-drawer"
+      >
+        <span class="sr-only">{t('nav.menu')}</span>
+        <span class="burger__box" aria-hidden="true">
+          <span class="burger__bar"></span>
+          <span class="burger__bar"></span>
+          <span class="burger__bar"></span>
+        </span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- Scroll progress. Decorative: it mirrors the scrollbar, which already
+     conveys position to assistive tech. -->
+<div class="scrollbar" data-scrollbar aria-hidden="true">
+  <span class="scrollbar__fill" data-scroll-progress></span>
+</div>
+
+<!-- Mobile navigation -->
+<div
+  class="drawer"
+  id="site-drawer"
+  data-drawer
+  data-open="false"
+  aria-label={t('nav.menu')}
+>
+  <nav class="drawer__list">
+    {
+      navItems.map((item, index) => (
+        <a class="drawer__link" href={translatePath(item.href)}>
+          <span>{String(index + 1).padStart(2, '0')}</span>
+          {t(item.labelKey)}
+        </a>
+      ))
+    }
+  </nav>
+
+  <div class="drawer__foot">
+    <Button href={translatePath('/#contact')} variant="primary">
+      {t('nav.contact')}
+    </Button>
+    <LanguagePicker />
+  </div>
+</div>

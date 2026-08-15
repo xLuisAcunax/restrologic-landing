@@ -1,0 +1,40 @@
+---
+/**
+ * The eyebrow + title + lede block that opens most sections.
+ * Centred by default; `align="start"` for split layouts.
+ */
+interface Props {
+  eyebrow?: string;
+  title: string;
+  lede?: string;
+  align?: 'center' | 'start';
+  /** Heading level — keeps the document outline correct per placement. */
+  as?: 'h2' | 'h3';
+  id?: string;
+  class?: string;
+}
+
+const {
+  eyebrow,
+  title,
+  lede,
+  align = 'center',
+  as: Tag = 'h2',
+  id,
+  class: className,
+} = Astro.props;
+
+const classes = [
+  'section__head',
+  align === 'start' && 'section__head--start',
+  className,
+]
+  .filter(Boolean)
+  .join(' ');
+---
+
+<div class={classes}>
+  {eyebrow && <p class="eyebrow" data-reveal>{eyebrow}</p>}
+  <Tag class="section__title" id={id} data-reveal data-split>{title}</Tag>
+  {lede && <p class="section__lede" data-reveal>{lede}</p>}
+</div>

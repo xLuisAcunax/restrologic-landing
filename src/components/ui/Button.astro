@@ -1,0 +1,57 @@
+---
+/**
+ * Button / link button.
+ *
+ * Renders an <a> when `href` is present and a <button> otherwise, so the
+ * semantics always match the behaviour. Variant and size are closed unions,
+ * which keeps the visual language enforceable at compile time.
+ */
+import type { HTMLAttributes } from 'astro/types';
+
+type Variant = 'primary' | 'outline' | 'soft' | 'ghost';
+type Size = 'sm' | 'md' | 'lg';
+
+interface Props extends Omit<HTMLAttributes<'a'>, 'type' | 'size'> {
+  href?: string;
+  variant?: Variant;
+  size?: Size;
+  block?: boolean;
+  type?: 'button' | 'submit' | 'reset';
+  /** Adds a magnetic hover effect (progressively enhanced by GSAP). */
+  magnetic?: boolean;
+  class?: string;
+}
+
+const {
+  href,
+  variant = 'primary',
+  size = 'md',
+  block = false,
+  type = 'button',
+  magnetic = false,
+  class: className,
+  ...rest
+} = Astro.props;
+
+const classes = [
+  'btn',
+  `btn--${variant}`,
+  size !== 'md' && `btn--${size}`,
+  block && 'btn--block',
+  className,
+]
+  .filter(Boolean)
+  .join(' ');
+
+const Tag = href ? 'a' : 'button';
+---
+
+<Tag
+  class={classes}
+  href={href}
+  type={href ? undefined : type}
+  data-magnetic={magnetic ? '' : undefined}
+  {...rest}
+>
+  <slot />
+</Tag>

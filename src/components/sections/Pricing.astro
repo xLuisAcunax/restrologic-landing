@@ -1,0 +1,131 @@
+---
+import SectionHeading from '../ui/SectionHeading.astro';
+import Button from '../ui/Button.astro';
+import Icon from '../ui/Icon.astro';
+import { plans } from '../../lib/content';
+import {
+  getLangFromUrl,
+  useTranslations,
+  useTranslatedPath,
+  getLocaleTag,
+} from '../../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const translatePath = useTranslatedPath(lang);
+
+/**
+ * Prices are formatted at build time for the active locale, so the markup
+ * ships correct for both billing periods and the client switch only swaps
+ * pre-rendered strings. No currency logic runs in the browser.
+ */
+const currency = new Intl.NumberFormat(getLocaleTag(lang), {
+  style: 'currency',
+  currency: 'USD',
+  maximumFractionDigits: 0,
+});
+---
+
+<section class="section" id="pricing">
+  <div class="container">
+    <SectionHeading
+      eyebrow={t('pricing.eyebrow')}
+      title={t('pricing.title')}
+      lede={t('pricing.lede')}
+    />
+
+    <div class="pricing__switch" data-reveal>
+      <div class="segmented" role="tablist" aria-label={t('pricing.eyebrow')} data-billing>
+        <span class="segmented__thumb" data-billing-thumb aria-hidden="true"></span>
+        <button
+          type="button"
+          role="tab"
+          class="segmented__option"
+          data-billing-option="monthly"
+          aria-selected="true"
+        >
+          {t('pricing.monthly')}
+        </button>
+        <button
+          type="button"
+          role="tab"
+          class="segmented__option"
+          data-billing-option="yearly"
+          aria-selected="false"
+        >
+          {t('pricing.yearly')}
+        </button>
+      </div>
+      <span class="chip chip--accent">{t('pricing.save')}</span>
+    </div>
+
+    <div class="pricing__grid" data-stagger>
+      {
+        plans.map((plan) => {
+          // Narrowing on the numeric fields keeps this free of assertions.
+          const customLabel = plan.customPriceKey ? t(plan.customPriceKey) : '—';
+          const monthlyLabel =
+            plan.monthly === null ? customLabel : currency.format(plan.monthly);
+          const yearlyLabel =
+            plan.yearly === null ? customLabel : currency.format(plan.yearly);
+          const isCustom = plan.monthly === null;
+
+          return (
+            <article class={`plan ${plan.featured ? 'plan--featured' : ''}`}>
+              {plan.featured && (
+                <span class="plan__flag">{t('pricing.popular')}</span>
+              )}
+
+              <header>
+                <h3 class="plan__name">{t(plan.nameKey)}</h3>
+                <p class="plan__desc">{t(plan.descKey)}</p>
+              </header>
+
+              <div class="plan__price">
+                <span
+                  class={`plan__amount ${isCustom ? 'plan__amount--word' : ''}`}
+                  data-price
+                  data-monthly={monthlyLabel}
+                  data-yearly={yearlyLabel}
+                >
+                  {monthlyLabel}
+                </span>
+                {!isCustom && (
+                  <span
+                    class="plan__period"
+                    data-period-label
+                    data-monthly={t('pricing.period.month')}
+                    data-yearly={t('pricing.period.year')}
+                  >
+                    {t('pricing.period.month')}
+                  </span>
+                )}
+              </div>
+
+              <ul class="plan__features">
+                {plan.featureKeys.map((key) => (
+                  <li class="plan__feature">
+                    <Icon name="check" />
+                    {t(key)}
+                  </li>
+                ))}
+              </ul>
+
+              <div class="plan__cta">
+                <Button
+                  href={translatePath(plan.href)}
+                  variant={plan.featured ? 'primary' : 'outline'}
+                  block
+                >
+                  {t(plan.ctaKey)}
+                </Button>
+              </div>
+            </article>
+          );
+        })
+      }
+    </div>
+
+    <p class="pricing__note" data-reveal>{t('pricing.note')}</p>
+  </div>
+</section>

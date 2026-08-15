@@ -1,0 +1,46 @@
+---
+import SectionHeading from '../ui/SectionHeading.astro';
+import Icon from '../ui/Icon.astro';
+import { features } from '../../lib/content';
+import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+
+const t = useTranslations(getLangFromUrl(Astro.url));
+---
+
+<section class="section" id="features">
+  <div class="container">
+    <SectionHeading
+      eyebrow={t('features.eyebrow')}
+      title={t('features.title')}
+      lede={t('features.lede')}
+    />
+
+    <div class="grid-auto features__grid" data-stagger>
+      {
+        features.map((feature) => (
+          <article
+            class={`card card--interactive card--spotlight feature tone--${feature.tone}`}
+          >
+            <div class="feature__head">
+              <span class="icon-tile">
+                <Icon name={feature.icon} />
+              </span>
+              <h3 class="card__title">{t(feature.titleKey)}</h3>
+            </div>
+
+            <p class="card__text">{t(feature.textKey)}</p>
+
+            <ul class="feature__list">
+              {feature.bulletKeys.map((key) => (
+                <li class="feature__li">
+                  <Icon name="check" />
+                  {t(key)}
+                </li>
+              ))}
+            </ul>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</section>

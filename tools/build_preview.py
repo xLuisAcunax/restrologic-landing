@@ -733,7 +733,7 @@ def main() -> int:
         "dual CTA glow": 'cta__glow--alt',
         "screen gallery": 'data-gallery-tab',
         "coming soon strip": 'soon__list',
-        "real dashboard screen": 'screens/dashboard.webp',
+        "real dashboard screen": 'screens/dashboard-n.webp',
     }
     missing = [name for name, marker in required.items() if marker not in html]
     if missing:

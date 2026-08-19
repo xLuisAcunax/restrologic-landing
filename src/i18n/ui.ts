@@ -243,7 +243,6 @@ const es = {
   'modules.reports.call.2': 'Ver el detalle de cualquier orden',
   'modules.reports.alt':
     'Reporte de órdenes de RestroLogic con fecha, cliente, mesero, subtotal, propina, total y estado de cada orden',
-    'Reporte de órdenes de RestroLogic con fecha, cliente, mesero, subtotal, propina, total y estado de cada orden',
 
   /* --------------------------------------------------------------- galería */
   'gallery.eyebrow': 'Más pantallas',
@@ -285,7 +284,6 @@ const es = {
     'IVA, INC u otros cargos, incluidos en el precio de carta o sumados al total de la cuenta.',
   'gallery.taxes.alt':
     'Configuración de impuestos de RestroLogic con el formulario para crear un nuevo impuesto y su tipo de cálculo',
-    'Reporte de caja de RestroLogic con el resumen consolidado de cobros, propinas y saldo del período',
 
   /* ---------------------------------------------------------- próximamente */
   'soon.badge': 'Próximamente',
@@ -655,7 +653,6 @@ const en: Dictionary = {
   'modules.reports.call.2': 'Open the detail of any order',
   'modules.reports.alt':
     'RestroLogic order report with date, customer, server, subtotal, tip, total and state for every order',
-    'RestroLogic order report showing date, customer, server, subtotal, tip, total and status for each order',
 
   /* --------------------------------------------------------------- gallery */
   'gallery.eyebrow': 'More screens',
@@ -697,7 +694,6 @@ const en: Dictionary = {
     'VAT, excise or any other charge, either included in the menu price or added to the bill total.',
   'gallery.taxes.alt':
     'RestroLogic tax settings with the form to create a new tax and its calculation type',
-    'RestroLogic cash report showing the consolidated summary of takings, tips and period balance',
 
   /* ----------------------------------------------------------- coming soon */
   'soon.badge': 'Coming soon',

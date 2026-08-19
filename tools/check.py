@@ -4,7 +4,86 @@ ui = (SRC/"i18n"/"ui.ts").read_text(encoding="utf-8")
 KV = re.compile(r"'([a-zA-Z0-9._]+)':\s*(?:'(?:[^'\\]|\\.)*'|\"(?:[^\"\\]|\\.)*\")", re.S)
 def block(a_,b_):
     a=ui.index(a_); b=ui.index(b_,a); return [m.group(1) for m in KV.finditer(ui[a:b])]
-es=block("const es = {","} as const;"); en=block("const en: Dictionary = {","\n};")
+# Structural parse of each dictionary body.
+#
+# The key-regex scan below happily skips anything it does not recognise, which
+# is how a stray duplicated value line once sailed through every check here and
+# only failed at esbuild — in a deploy. This walks the body token by token and
+# insists it is nothing but `'key': 'value',` pairs and comments, so a
+# malformed literal fails locally instead.
+def parse_dict(open_marker, close_marker, label):
+    a = ui.index(open_marker) + len(open_marker)
+    b = ui.index(close_marker, a)
+    body, i, keys, n = ui[a:b], 0, [], len(ui[a:b])
+
+    def skip_trivia(i):
+        while i < n:
+            if body[i] in " \t\r\n,":
+                i += 1
+            elif body.startswith("/*", i):
+                i = body.index("*/", i) + 2
+            elif body.startswith("//", i):
+                i = body.find("\n", i)
+                if i == -1:
+                    return n
+            else:
+                return i
+        return i
+
+    def read_string(i):
+        """Read one single- or double-quoted literal, honouring escapes."""
+        quote = body[i]
+        if quote not in "'\"":
+            raise ValueError(
+                f"{label}: expected a quoted string at "
+                f"line {ui.count(chr(10), 0, a + i) + 1}, found {body[i:i+40]!r}"
+            )
+        j = i + 1
+        while j < n:
+            if body[j] == "\\":
+                j += 2
+                continue
+            if body[j] == quote:
+                return j + 1
+            j += 1
+        raise ValueError(f"{label}: unterminated string near line "
+                         f"{ui.count(chr(10), 0, a + i) + 1}")
+
+    while True:
+        i = skip_trivia(i)
+        if i >= n:
+            break
+        start = i
+        i = read_string(i)
+        key = body[start + 1:i - 1]
+        i = skip_trivia(i)
+        if i >= n or body[i] != ":":
+            raise ValueError(
+                f"{label}: key {key!r} is not followed by ':' "
+                f"(line {ui.count(chr(10), 0, a + start) + 1}) — this is what a "
+                f"stray value line looks like"
+            )
+        i = skip_trivia(i + 1)
+        # Values may be a single literal or several concatenated with '+'.
+        i = read_string(i)
+        while True:
+            j = skip_trivia(i)
+            if j < n and body[j] == "+":
+                i = read_string(skip_trivia(j + 1))
+            else:
+                break
+        keys.append(key)
+    return keys
+
+try:
+    es = parse_dict("const es = {", "} as const;", "es")
+    en = parse_dict("const en: Dictionary = {", "\n};", "en")
+    print(f"i18n structure   es and en parse cleanly")
+except ValueError as exc:
+    print(f"i18n structure   MALFORMED — {exc}")
+    fail.append(str(exc))
+    es = block("const es = {", "} as const;")
+    en = block("const en: Dictionary = {", "\n};")
 es_set,en_set=set(es),set(en)
 print(f"i18n parity      es={len(es)}  en={len(en)}  identical={es_set==en_set}")
 if es_set!=en_set: fail.append(f"key mismatch es-only={sorted(es_set-en_set)} en-only={sorted(en_set-es_set)}")

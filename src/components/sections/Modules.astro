@@ -64,14 +64,39 @@ function screenFor(name: string): ImageMetadata {
 
           <div class="module__shot" data-parallax data-reveal>
             <div class="module__frame">
-              <Image
-                src={screenFor(module.image)}
-                alt={t(module.altKey)}
-                widths={[480, 800, 1200]}
-                sizes="(min-width: 60rem) 46vw, 92vw"
-                loading="lazy"
-                decoding="async"
-              />
+              <div class="module__chrome" aria-hidden="true">
+                <span class="module__lights"><i /><i /><i /></span>
+              </div>
+
+              {/* The canvas is the positioning context for annotations, so
+                  their coordinates are percentages of the capture itself and
+                  not of the frame — otherwise the chrome bar's height would
+                  skew every y value. */}
+              <div class="module__canvas">
+                <Image
+                  src={screenFor(module.image)}
+                  alt={t(module.altKey)}
+                  widths={[480, 800, 1200]}
+                  sizes="(min-width: 60rem) 46vw, 92vw"
+                  loading="lazy"
+                  decoding="async"
+                />
+
+                {/* Decorative: every point they make is already in the bullet
+                    list beside the image. */}
+                {module.callouts?.map((callout) => (
+                  <span
+                    class="callout"
+                    data-callout
+                    data-anchor={callout.anchor}
+                    style={`--x:${callout.x}%;--y:${callout.y}%`}
+                    aria-hidden="true"
+                  >
+                    <span class="callout__dot" />
+                    <span class="callout__label">{t(callout.labelKey)}</span>
+                  </span>
+                ))}
+              </div>
             </div>
           </div>
         </article>

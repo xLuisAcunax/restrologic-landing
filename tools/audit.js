@@ -76,7 +76,7 @@
     ['primary button label', 'var(--text-on-brand)', 'var(--brand-strong)', 4.5],
     ['plan badge label', 'var(--text-on-brand)', 'var(--brand-strong)', 4.5],
     ['pipeline number', 'var(--text-on-brand)', 'var(--brand-strong)', 4.5],
-    ['headline gradient lightest stop', 'var(--rl-amber-700)', 'var(--bg)', 3.0],
+    ['headline gradient lightest stop', 'var(--grad-text-floor)', 'var(--bg)', 3.0],
     ['success text on surface', 'var(--status-success)', 'var(--surface)', 4.5],
     ['accent icon on surface', 'var(--accent)', 'var(--surface)', 3.0],
     ['brand icon on surface', 'var(--brand)', 'var(--surface)', 3.0],
@@ -88,7 +88,7 @@
   // Every hue in the accent system, checked the same three ways it is used:
   // as label text on the page, as label text inside its own soft chip, and as
   // the fill under a label on a toned badge.
-  var HUES = ['amber', 'cyan', 'mint', 'indigo', 'rose', 'violet', 'teal'];
+  var HUES = ['clay', 'honey', 'olive', 'indigo', 'rust', 'plum'];
 
   HUES.forEach(function (h) {
     PAIRS.push([

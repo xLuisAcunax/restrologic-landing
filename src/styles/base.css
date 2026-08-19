@@ -27,7 +27,7 @@ body {
   font-family: var(--font-body);
   font-size: var(--text-base);
   line-height: var(--leading-normal);
-  font-synthesis-weight: none;
+  font-synthesis: none;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
@@ -75,6 +75,9 @@ button {
 
 /* Typography ---------------------------------------------------------- */
 
+/* Caprasimo ships a single weight. Declaring 400 everywhere and turning off
+   synthesis is what stops the browser faux-bolding it into mush — hierarchy
+   comes from size and colour instead. */
 h1,
 h2,
 h3,
@@ -82,23 +85,20 @@ h4,
 h5,
 h6 {
   font-family: var(--font-display);
-  font-weight: 640;
-  line-height: var(--leading-snug);
-  letter-spacing: var(--tracking-tight);
+  font-weight: 400;
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-display);
   text-wrap: balance;
   color: var(--text);
 }
 
 h1 {
   font-size: var(--text-5xl);
-  line-height: var(--leading-tight);
-  letter-spacing: var(--tracking-tighter);
-  font-weight: 680;
+  line-height: var(--leading-display);
 }
 
 h2 {
   font-size: var(--text-4xl);
-  letter-spacing: var(--tracking-tighter);
 }
 
 h3 {
@@ -120,7 +120,7 @@ p {
 
 strong,
 b {
-  font-weight: 640;
+  font-weight: 700;
   color: var(--text);
 }
 

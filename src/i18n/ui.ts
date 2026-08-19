@@ -56,23 +56,50 @@ const es = {
   'hero.proof.3.label': 'En la nube',
 
   /* ------------------------------------------------- hero: app mock chrome */
-  'mock.url': 'app.restrologic.com/dashboard',
-  'mock.title': 'Servicio de hoy',
-  'mock.subtitle': 'Sede Centro · Turno noche',
-  'mock.kpi.1': 'Ventas',
-  'mock.kpi.2': 'Órdenes',
-  'mock.kpi.3': 'Ticket prom.',
-  'mock.floor': 'Salón',
-  'mock.tickets': 'En curso',
-  'mock.state.kitchen': 'Cocina',
-  'mock.state.ready': 'Listo',
-  'mock.state.paid': 'Pagado',
-  'mock.card.kds.title': 'Mesa 12 · Listo para servir',
-  'mock.card.kds.meta': '2 platos · 6 min en cocina',
-  'mock.card.stock.title': 'Stock bajo: Lomo de res',
-  'mock.card.stock.meta': 'Quedan 2.4 kg · alerta automática',
-  'mock.card.cash.title': 'Cierre de caja cuadrado',
-  'mock.card.cash.meta': 'Sin diferencias · 21:40',
+  /* App shell replica — mirrors the product's own chrome and Caja screen. */
+  'shell.url': 'app.restrologic.com/caja',
+  'shell.group.service': 'Servicio',
+  'shell.group.manage': 'Gestión',
+  'shell.group.system': 'Sistema',
+  'shell.nav.pos': 'Punto de venta',
+  'shell.nav.kitchen': 'Cocina',
+  'shell.nav.cash': 'Caja',
+  'shell.nav.products': 'Productos',
+  'shell.nav.inventory': 'Inventario',
+  'shell.nav.reports': 'Reportes',
+  'shell.nav.dashboard': 'Dashboard',
+  'shell.nav.settings': 'Configuración',
+  'shell.logout': 'Cerrar sesión',
+  'shell.branch': 'Bodegas',
+  'shell.shift': 'Caja abierta · turno 6h 3m',
+  'shell.date': 'Mié, 19 de ago',
+  'shell.user.name': 'Ana Restrepo',
+  'shell.user.role': 'Administrador',
+  'shell.kpi.sales': 'Ventas y cobros',
+  'shell.kpi.sales.foot': 'Efectivo $ 99.000 · Digitales $ 259.000',
+  'shell.kpi.moves': 'Ajustes',
+  'shell.kpi.moves.foot': 'Ingresos + $ 0 · Egresos − $ 0',
+  'shell.kpi.control': 'Propinas',
+  'shell.kpi.control.foot': 'Ef. $ 9.900 · Dig. $ 25.900',
+  'shell.kpi.expected': 'Efectivo esperado',
+  'shell.kpi.expected.foot': 'Base $ 100.000 · Ef. venta $ 108.900',
+  'shell.moves.title': 'Movimientos de efectivo',
+  'shell.moves.meta': 'Sesión iniciada 8:06 AM',
+  'shell.moves.type': 'Pago comanda',
+  'shell.move.1': 'Pago final (Nequi) · cliente M-8',
+  'shell.move.2': 'Pago final (Transferencia) · cliente M-3',
+  'shell.move.3': 'Pago final (Tarjeta Crédito) · cliente M-2',
+  'shell.move.4': 'Pago final (Tarjeta Débito) · cliente M-11',
+  'shell.ticket.table': 'Mesa M-8',
+  'shell.ticket.pending': 'Pendiente',
+  'shell.ticket.cooking': 'Cocinando',
+  'shell.ticket.ready': 'Listo',
+  'shell.ticket.title': 'Diavola · Lasagna Pollo · Tamarindo',
+  'shell.ticket.meta': '3 platos · en cocina',
+  'shell.card.stock.title': 'Stock crítico: Salsa pomodoro',
+  'shell.card.stock.meta': 'Quedan 3 uds · alerta automática',
+  'shell.card.cash.title': 'Arqueo sin diferencias',
+  'shell.card.cash.meta': 'Cuadrado al centavo · 21:40',
 
   /* ------------------------------------------------------------- marquee */
   'marquee.label': 'Todo lo que tu operación necesita',
@@ -162,40 +189,60 @@ const es = {
     'Capturas del producto funcionando, no maquetas. Cada módulo está pensado para usarse en medio del servicio.',
   'modules.tag': 'Módulo',
 
-  'modules.admin.title': 'Dashboard administrativo',
-  'modules.admin.text':
-    'El estado del negocio en una pantalla: ventas del día, estado de caja, mesas ocupadas y la cola de cocina, todo en tiempo real.',
-  'modules.admin.1': 'Ventas, caja y mesas en vivo',
-  'modules.admin.2': 'Cola de cocina y servicio al instante',
-  'modules.admin.3': 'Selector de sede en la barra superior',
-  'modules.admin.alt':
-    'Dashboard administrativo de RestroLogic con ventas del día, estado de caja, mesas ocupadas y la cola de cocina en tiempo real',
-
   'modules.pos.title': 'Punto de venta y mesas',
   'modules.pos.text':
-    'El monitor del salón con el estado de cada mesa: disponible, ocupada, reservada o bloqueada, con su tiempo y su comanda.',
-  'modules.pos.1': 'Estados de mesa en tiempo real',
-  'modules.pos.2': 'Tiempo transcurrido y número de comanda',
-  'modules.pos.3': 'Órdenes activas con cobro en un clic',
+    'El plano del salón con el estado de cada mesa — disponible, ocupada, reservada o bloqueada — y la comanda abierta al lado, lista para enviar a cocina.',
+  'modules.pos.1': 'Estado y tiempo de cada mesa en vivo',
+  'modules.pos.2': 'Comanda con subtotal, impuestos y propina',
+  'modules.pos.3': 'Envío a cocina en un clic',
+  'modules.pos.call.1': 'Mesa servida · 288 min',
+  'modules.pos.call.2': 'Propina calculada sola',
   'modules.pos.alt':
-    'Monitor de mesas de RestroLogic mostrando el estado, el tiempo y la comanda de cada mesa del salón',
+    'Punto de venta de RestroLogic mostrando el plano del salón y la comanda abierta de la mesa M-2 con su total estimado',
+
+  'modules.kitchen.title': 'Cocina en pantalla',
+  'modules.kitchen.text':
+    'Las comandas activas en orden de llegada, plato por plato. Cada uno avanza por separado de Preparar a Listo, y el pase ve al instante qué sale.',
+  'modules.kitchen.1': 'Cada plato avanza por separado',
+  'modules.kitchen.2': 'Tiempo en cocina y promedio del turno',
+  'modules.kitchen.3': 'Modo pantalla completa para el pase',
+  'modules.kitchen.call.1': 'Plato listo, comanda aún no',
+  'modules.kitchen.call.2': 'Listas para servir',
+  'modules.kitchen.alt':
+    'Pantalla de cocina de RestroLogic con las comandas activas, el estado de cada plato y la columna de listas para servir',
+
+  'modules.cash.title': 'Caja y arqueo del turno',
+  'modules.cash.text':
+    'Todo lo que entró en el turno, separado por medio de pago, con las propinas aparte y el efectivo que deberías tener en el cajón antes de contarlo.',
+  'modules.cash.1': 'Efectivo y digitales separados',
+  'modules.cash.2': 'Propinas por medio de pago',
+  'modules.cash.3': 'Arqueo y cierre con reporte en PDF',
+  'modules.cash.call.1': 'Lo que debe haber en el cajón',
+  'modules.cash.call.2': 'Cada cobro con su medio de pago',
+  'modules.cash.alt':
+    'Módulo de caja de RestroLogic con ventas netas, ajustes, propinas, efectivo esperado y los movimientos de la sesión',
 
   'modules.inventory.title': 'Inventario y materias primas',
   'modules.inventory.text':
-    'Cada insumo con su costo unitario y sus existencias, ajustables en un clic desde la misma pantalla.',
+    'Cada insumo con su costo unitario y sus existencias, ajustables sin salir de la lista. Lo que baja del mínimo se marca solo.',
   'modules.inventory.1': 'Costo unitario y existencias por insumo',
-  'modules.inventory.2': 'Ajuste rápido de stock',
-  'modules.inventory.3': 'Alta y edición sin salir de la lista',
+  'modules.inventory.2': 'Ajuste de stock desde la misma tarjeta',
+  'modules.inventory.3': 'Stock crítico y agotados marcados solos',
+  'modules.inventory.call.1': 'Valor total del almacén',
+  'modules.inventory.call.2': 'Ajuste sin abrir otra pantalla',
   'modules.inventory.alt':
-    'Módulo de inventario de RestroLogic mostrando materias primas con su costo unitario, existencias y el formulario de edición',
+    'Módulo de inventario de RestroLogic mostrando materias primas con su costo unitario, existencias y estado de disponibilidad',
 
   'modules.reports.title': 'Reportes y auditoría',
   'modules.reports.text':
-    'El historial completo de órdenes y movimientos de caja en el rango de fechas que elijas, exportable a Excel.',
+    'El historial completo de órdenes y movimientos de caja en el rango que elijas, con el detalle de cada orden y quién la tocó, exportable a Excel.',
   'modules.reports.1': 'Filtro por rango de fechas',
   'modules.reports.2': 'Detalle por orden, mesero y estado',
-  'modules.reports.3': 'Exportación a Excel',
+  'modules.reports.3': 'Exportación a Excel y PDF',
+  'modules.reports.call.1': 'Ticket promedio del periodo',
+  'modules.reports.call.2': 'Ver el detalle de cualquier orden',
   'modules.reports.alt':
+    'Reporte de órdenes de RestroLogic con fecha, cliente, mesero, subtotal, propina, total y estado de cada orden',
     'Reporte de órdenes de RestroLogic con fecha, cliente, mesero, subtotal, propina, total y estado de cada orden',
 
   /* --------------------------------------------------------------- galería */
@@ -203,25 +250,41 @@ const es = {
   'gallery.title': 'El resto del producto',
   'gallery.lede':
     'Explora las demás pantallas con las que tu equipo trabaja todos los días.',
+  'gallery.dashboard.title': 'Dashboard del negocio',
+  'gallery.dashboard.text':
+    'Ventas del día, estado de caja, órdenes y mesas ocupadas en una sola pantalla, en tiempo real.',
+  'gallery.dashboard.alt':
+    'Dashboard de RestroLogic con ventas del día, estado de caja, órdenes y resumen de salón en tiempo real',
   'gallery.products.title': 'Catálogo de productos',
   'gallery.products.text':
     'Platos, bebidas y variantes de precio por tamaño, cada uno con su receta y su categoría.',
   'gallery.products.alt':
     'Catálogo de productos de RestroLogic con platos, categorías y variantes de precio por tamaño',
-  'gallery.orders.title': 'Órdenes activas',
-  'gallery.orders.text':
-    'Seguimiento de cada comanda en curso: qué se prepara, qué está listo y cuánto suma la cuenta.',
-  'gallery.orders.alt':
-    'Pantalla de órdenes activas de RestroLogic mostrando el estado de cada comanda y el total a cobrar',
-  'gallery.cash.title': 'Caja y arqueo diario',
-  'gallery.cash.text':
-    'Ventas por medio de pago, ajustes, propinas y el efectivo esperado antes de cerrar el turno.',
-  'gallery.cash.alt':
-    'Pantalla de caja y arqueo diario de RestroLogic con ventas netas, propinas y efectivo esperado',
-  'gallery.cashreport.title': 'Reporte de caja',
-  'gallery.cashreport.text':
-    'El consolidado del período: cobros en efectivo y digitales, propinas y saldo estimado.',
-  'gallery.cashreport.alt':
+  'gallery.kds.title': 'Cocina a pantalla completa',
+  'gallery.kds.text':
+    'El mismo tablero sin la navegación, pensado para la pantalla que vive colgada en el pase.',
+  'gallery.kds.alt':
+    'Pantalla de cocina de RestroLogic en modo completo, sin navegación, mostrando todas las comandas activas',
+  'gallery.orderdetail.title': 'Detalle y trazabilidad',
+  'gallery.orderdetail.text':
+    'Cada orden con sus ítems, su cobro y el ciclo de vida completo: quién la tomó, cuándo entró a cocina y cuándo se pagó.',
+  'gallery.orderdetail.alt':
+    'Detalle de una orden de RestroLogic con el registro de pago y la línea de tiempo de auditoría de la comanda',
+  'gallery.alerts.title': 'Insumos que requieren atención',
+  'gallery.alerts.text':
+    'Un filtro que deja a la vista sólo lo que está en stock crítico o agotado, antes de que falte en servicio.',
+  'gallery.alerts.alt':
+    'Filtro de inventario de RestroLogic mostrando los insumos en stock crítico y agotados',
+  'gallery.roles.title': 'Roles y accesos',
+  'gallery.roles.text':
+    'Qué módulos puede abrir cada rol del personal, definido por ti y aplicado en todas las sedes.',
+  'gallery.roles.alt':
+    'Configuración de roles de RestroLogic mostrando qué módulos puede abrir cada rol del personal',
+  'gallery.taxes.title': 'Impuestos y tasas',
+  'gallery.taxes.text':
+    'IVA, INC u otros cargos, incluidos en el precio de carta o sumados al total de la cuenta.',
+  'gallery.taxes.alt':
+    'Configuración de impuestos de RestroLogic con el formulario para crear un nuevo impuesto y su tipo de cálculo',
     'Reporte de caja de RestroLogic con el resumen consolidado de cobros, propinas y saldo del período',
 
   /* ---------------------------------------------------------- próximamente */
@@ -405,23 +468,50 @@ const en: Dictionary = {
   'hero.proof.3.label': 'Cloud based',
 
   /* ------------------------------------------------- hero: app mock chrome */
-  'mock.url': 'app.restrologic.com/dashboard',
-  'mock.title': "Today's service",
-  'mock.subtitle': 'Downtown · Evening shift',
-  'mock.kpi.1': 'Sales',
-  'mock.kpi.2': 'Orders',
-  'mock.kpi.3': 'Avg. ticket',
-  'mock.floor': 'Floor',
-  'mock.tickets': 'In progress',
-  'mock.state.kitchen': 'Kitchen',
-  'mock.state.ready': 'Ready',
-  'mock.state.paid': 'Paid',
-  'mock.card.kds.title': 'Table 12 · Ready to serve',
-  'mock.card.kds.meta': '2 dishes · 6 min in kitchen',
-  'mock.card.stock.title': 'Low stock: Beef loin',
-  'mock.card.stock.meta': '2.4 kg left · automatic alert',
-  'mock.card.cash.title': 'Register closed clean',
-  'mock.card.cash.meta': 'No discrepancies · 9:40 pm',
+  /* App shell replica — mirrors the product's own chrome and Caja screen. */
+  'shell.url': 'app.restrologic.com/caja',
+  'shell.group.service': 'Service',
+  'shell.group.manage': 'Management',
+  'shell.group.system': 'System',
+  'shell.nav.pos': 'Point of sale',
+  'shell.nav.kitchen': 'Kitchen',
+  'shell.nav.cash': 'Register',
+  'shell.nav.products': 'Products',
+  'shell.nav.inventory': 'Inventory',
+  'shell.nav.reports': 'Reports',
+  'shell.nav.dashboard': 'Dashboard',
+  'shell.nav.settings': 'Settings',
+  'shell.logout': 'Sign out',
+  'shell.branch': 'Bodegas',
+  'shell.shift': 'Register open · 6h 3m shift',
+  'shell.date': 'Wed, 19 Aug',
+  'shell.user.name': 'Ana Restrepo',
+  'shell.user.role': 'Administrator',
+  'shell.kpi.sales': 'Sales and payments',
+  'shell.kpi.sales.foot': 'Cash $ 99.000 · Digital $ 259.000',
+  'shell.kpi.moves': 'Adjustments',
+  'shell.kpi.moves.foot': 'In + $ 0 · Out − $ 0',
+  'shell.kpi.control': 'Tips',
+  'shell.kpi.control.foot': 'Cash $ 9.900 · Dig. $ 25.900',
+  'shell.kpi.expected': 'Expected cash',
+  'shell.kpi.expected.foot': 'Float $ 100.000 · Cash sales $ 108.900',
+  'shell.moves.title': 'Cash movements',
+  'shell.moves.meta': 'Session opened 8:06 AM',
+  'shell.moves.type': 'Order payment',
+  'shell.move.1': 'Final payment (Nequi) · customer M-8',
+  'shell.move.2': 'Final payment (Transfer) · customer M-3',
+  'shell.move.3': 'Final payment (Credit card) · customer M-2',
+  'shell.move.4': 'Final payment (Debit card) · customer M-11',
+  'shell.ticket.table': 'Table M-8',
+  'shell.ticket.pending': 'Pending',
+  'shell.ticket.cooking': 'Cooking',
+  'shell.ticket.ready': 'Ready',
+  'shell.ticket.title': 'Diavola · Chicken lasagna · Tamarindo',
+  'shell.ticket.meta': '3 dishes · in the kitchen',
+  'shell.card.stock.title': 'Critical stock: Pomodoro sauce',
+  'shell.card.stock.meta': '3 units left · automatic alert',
+  'shell.card.cash.title': 'Count balanced',
+  'shell.card.cash.meta': 'Down to the cent · 9:40 pm',
 
   /* ------------------------------------------------------------- marquee */
   'marquee.label': 'Everything your operation needs',
@@ -511,40 +601,60 @@ const en: Dictionary = {
     'Captures of the product running, not mockups. Every module is designed to be used in the middle of service.',
   'modules.tag': 'Module',
 
-  'modules.admin.title': 'Admin dashboard',
-  'modules.admin.text':
-    'The state of the business on one screen: today’s sales, register status, occupied tables and the kitchen queue, all live.',
-  'modules.admin.1': 'Live sales, cash and tables',
-  'modules.admin.2': 'Kitchen and service queue at a glance',
-  'modules.admin.3': 'Location switcher in the top bar',
-  'modules.admin.alt':
-    'RestroLogic admin dashboard showing today’s sales, register status, occupied tables and the live kitchen queue',
-
-  'modules.pos.title': 'Point of sale & tables',
+  'modules.pos.title': 'Point of sale and tables',
   'modules.pos.text':
-    'The floor monitor with every table’s status — free, occupied, reserved or blocked — plus elapsed time and its open ticket.',
-  'modules.pos.1': 'Live table states',
-  'modules.pos.2': 'Elapsed time and ticket number',
-  'modules.pos.3': 'Active orders, one-click payment',
+    'The floor plan with every table\u2019s state \u2014 free, seated, reserved or blocked \u2014 and the open order beside it, ready to fire to the kitchen.',
+  'modules.pos.1': 'Live state and timer on every table',
+  'modules.pos.2': 'Order with subtotal, tax and tip',
+  'modules.pos.3': 'Fire to the kitchen in one click',
+  'modules.pos.call.1': 'Served · 288 min',
+  'modules.pos.call.2': 'Tip calculated for you',
   'modules.pos.alt':
-    'RestroLogic table monitor showing the status, elapsed time and ticket for every table on the floor',
+    'RestroLogic point of sale showing the floor plan and the open order for table M-2 with its estimated total',
 
-  'modules.inventory.title': 'Inventory & raw materials',
+  'modules.kitchen.title': 'Kitchen display',
+  'modules.kitchen.text':
+    'Active tickets in the order they arrived, dish by dish. Each one moves from Prepare to Ready on its own, so the pass sees exactly what is going out.',
+  'modules.kitchen.1': 'Every dish advances on its own',
+  'modules.kitchen.2': 'Time in the kitchen and shift average',
+  'modules.kitchen.3': 'Full-screen mode for the pass',
+  'modules.kitchen.call.1': 'Dish ready, ticket is not',
+  'modules.kitchen.call.2': 'Ready to serve',
+  'modules.kitchen.alt':
+    'RestroLogic kitchen display with active tickets, the state of each dish and the ready-to-serve column',
+
+  'modules.cash.title': 'Register and shift count',
+  'modules.cash.text':
+    'Everything the shift took in, split by payment method, tips kept separate, and the cash that should be in the drawer before anyone counts it.',
+  'modules.cash.1': 'Cash and digital kept apart',
+  'modules.cash.2': 'Tips by payment method',
+  'modules.cash.3': 'Count and close with a PDF report',
+  'modules.cash.call.1': 'What should be in the drawer',
+  'modules.cash.call.2': 'Every payment with its method',
+  'modules.cash.alt':
+    'RestroLogic register module with net sales, adjustments, tips, expected cash and the session\u2019s movements',
+
+  'modules.inventory.title': 'Inventory and raw materials',
   'modules.inventory.text':
-    'Every ingredient with its unit cost and stock on hand, adjustable in one click from the same screen.',
+    'Every ingredient with its unit cost and stock on hand, adjustable without leaving the list. Anything under its minimum flags itself.',
   'modules.inventory.1': 'Unit cost and stock per ingredient',
-  'modules.inventory.2': 'Quick stock adjustment',
-  'modules.inventory.3': 'Create and edit without leaving the list',
+  'modules.inventory.2': 'Adjust stock from the card itself',
+  'modules.inventory.3': 'Critical and out-of-stock flagged automatically',
+  'modules.inventory.call.1': 'Total value on hand',
+  'modules.inventory.call.2': 'Adjust without opening another screen',
   'modules.inventory.alt':
-    'RestroLogic inventory module showing raw materials with unit cost, stock on hand and the edit form',
+    'RestroLogic inventory module showing raw materials with unit cost, stock on hand and availability state',
 
-  'modules.reports.title': 'Reports & audit',
+  'modules.reports.title': 'Reports and audit trail',
   'modules.reports.text':
-    'The full history of orders and cash movements over any date range you choose, exportable to Excel.',
+    'The full history of orders and cash movements over any date range, with the detail of each order and who touched it, exportable to Excel.',
   'modules.reports.1': 'Filter by date range',
-  'modules.reports.2': 'Detail per order, server and status',
-  'modules.reports.3': 'Export to Excel',
+  'modules.reports.2': 'Detail by order, server and state',
+  'modules.reports.3': 'Export to Excel and PDF',
+  'modules.reports.call.1': 'Average ticket for the period',
+  'modules.reports.call.2': 'Open the detail of any order',
   'modules.reports.alt':
+    'RestroLogic order report with date, customer, server, subtotal, tip, total and state for every order',
     'RestroLogic order report showing date, customer, server, subtotal, tip, total and status for each order',
 
   /* --------------------------------------------------------------- gallery */
@@ -552,25 +662,41 @@ const en: Dictionary = {
   'gallery.title': 'The rest of the product',
   'gallery.lede':
     'Browse the other screens your team works with every day.',
+  'gallery.dashboard.title': 'Business dashboard',
+  'gallery.dashboard.text':
+    'Today\u2019s sales, register state, orders and occupied tables on one screen, in real time.',
+  'gallery.dashboard.alt':
+    'RestroLogic dashboard with today\u2019s sales, register state, orders and floor summary in real time',
   'gallery.products.title': 'Product catalogue',
   'gallery.products.text':
-    'Dishes, drinks and per-size price variants, each with its own recipe and category.',
+    'Dishes, drinks and price variants by size, each with its recipe and category.',
   'gallery.products.alt':
-    'RestroLogic product catalogue showing dishes, categories and per-size price variants',
-  'gallery.orders.title': 'Active orders',
-  'gallery.orders.text':
-    'Track every open ticket: what is being prepared, what is ready, and what the check adds up to.',
-  'gallery.orders.alt':
-    'RestroLogic active orders screen showing the status of each ticket and the total to charge',
-  'gallery.cash.title': 'Cash & daily count',
-  'gallery.cash.text':
-    'Sales by payment method, adjustments, tips and expected cash before closing the shift.',
-  'gallery.cash.alt':
-    'RestroLogic cash and daily count screen showing net sales, tips and expected cash',
-  'gallery.cashreport.title': 'Cash report',
-  'gallery.cashreport.text':
-    'The consolidated period view: cash and digital takings, tips and estimated balance.',
-  'gallery.cashreport.alt':
+    'RestroLogic product catalogue with dishes, categories and price variants by size',
+  'gallery.kds.title': 'Kitchen, full screen',
+  'gallery.kds.text':
+    'The same board without the navigation, built for the screen that hangs over the pass.',
+  'gallery.kds.alt':
+    'RestroLogic kitchen display in full-screen mode, without navigation, showing every active ticket',
+  'gallery.orderdetail.title': 'Detail and traceability',
+  'gallery.orderdetail.text':
+    'Every order with its items, its payment and the full life cycle: who took it, when it hit the kitchen, when it was paid.',
+  'gallery.orderdetail.alt':
+    'RestroLogic order detail with the payment record and the ticket\u2019s audit timeline',
+  'gallery.alerts.title': 'Stock that needs attention',
+  'gallery.alerts.text':
+    'A filter that leaves only what is critical or out of stock in view, before it runs out mid-service.',
+  'gallery.alerts.alt':
+    'RestroLogic inventory filter showing ingredients at critical stock and out of stock',
+  'gallery.roles.title': 'Roles and access',
+  'gallery.roles.text':
+    'Which modules each staff role can open, defined by you and enforced across every branch.',
+  'gallery.roles.alt':
+    'RestroLogic role settings showing which modules each staff role can open',
+  'gallery.taxes.title': 'Taxes and rates',
+  'gallery.taxes.text':
+    'VAT, excise or any other charge, either included in the menu price or added to the bill total.',
+  'gallery.taxes.alt':
+    'RestroLogic tax settings with the form to create a new tax and its calculation type',
     'RestroLogic cash report showing the consolidated summary of takings, tips and period balance',
 
   /* ----------------------------------------------------------- coming soon */

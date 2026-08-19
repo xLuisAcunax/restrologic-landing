@@ -185,6 +185,17 @@ export function counterScene(): void {
     const prefix = el.dataset.countPrefix ?? '';
     const suffix = el.dataset.countSuffix ?? '';
     const decimals = Number(el.dataset.countDecimals ?? 0);
+    // Currency figures inside the app replica are grouped the way the product
+    // groups them. Without this the counter lands on "358000" beside a card
+    // whose static markup said "358.000".
+    const grouped = el.dataset.countGroup === 'true';
+    const format = (value: number) =>
+      grouped
+        ? value.toLocaleString('es-CO', {
+            minimumFractionDigits: decimals,
+            maximumFractionDigits: decimals,
+          })
+        : value.toFixed(decimals);
     const counter = { value: 0 };
 
     gsap.to(counter, {
@@ -193,7 +204,7 @@ export function counterScene(): void {
       ease: 'power2.out',
       scrollTrigger: { trigger: el, start: 'top 90%', once: true },
       onUpdate() {
-        el.textContent = `${prefix}${counter.value.toFixed(decimals)}${suffix}`;
+        el.textContent = `${prefix}${format(counter.value)}${suffix}`;
       },
     });
   });
@@ -346,53 +357,155 @@ export function spotlightScene(): void {
 /* Live ticket rotation inside the hero mock                                   */
 /* -------------------------------------------------------------------------- */
 
-export function mockScene(): void {
-  const tables = gsap.utils.toArray<HTMLElement>('[data-mock-table]');
-  if (!tables.length) return;
+export function shellScene(): void {
+  const shell = document.querySelector<HTMLElement>('[data-shell]');
+  if (!shell) return;
 
-  // Occasionally flip a free table to "busy" and back, so the floor map feels
-  // like a live service rather than a static screenshot.
-  const cycle = gsap.timeline({ repeat: -1, repeatDelay: 2.2, delay: 2 });
+  /* --- Assembly ---------------------------------------------------------
+     The replica builds itself once, in the order a person would read it:
+     chrome, then the sidebar top to bottom, then the control cards, then the
+     movement rows. Everything is a `from`, so if the scene never runs the
+     shell is already in its final state. */
+  const navItems = shell.querySelectorAll<HTMLElement>('[data-shell-nav]');
+  const kpis = shell.querySelectorAll<HTMLElement>('[data-shell-kpi]');
+  const rows = shell.querySelectorAll<HTMLElement>('[data-shell-row]');
 
-  tables.slice(0, 4).forEach((table, index) => {
-    cycle
-      .call(
-        () => {
-          table.dataset.state = index % 2 === 0 ? 'busy' : 'ready';
-        },
-        undefined,
-        index * 1.1,
-      )
-      .call(
-        () => {
-          table.dataset.state = '';
-        },
-        undefined,
-        index * 1.1 + 2.4,
-      );
+  const build = gsap.timeline({
+    delay: 0.55,
+    defaults: { ease: ease.outExpo, duration: duration.base },
   });
 
-  // Draw the sparkline by animating its own dash offset — no paid plugin
-  // needed, and it degrades to a fully drawn line if the scene never runs.
-  const spark = document.querySelector<SVGPathElement>('[data-mock-spark]');
-  if (spark && typeof spark.getTotalLength === 'function') {
-    const length = spark.getTotalLength();
+  if (navItems.length) {
+    build.from(navItems, { opacity: 0, x: -12, stagger: 0.045 }, 0);
+  }
+  if (kpis.length) {
+    build.from(kpis, { opacity: 0, y: 16, stagger: 0.07 }, 0.18);
+  }
+  if (rows.length) {
+    build.from(rows, { opacity: 0, y: 10, stagger: 0.06 }, 0.42);
+  }
 
-    gsap.fromTo(
-      spark,
-      { strokeDasharray: length, strokeDashoffset: length },
-      {
-        strokeDashoffset: 0,
-        duration: 1.6,
-        ease: ease.out,
-        delay: 0.8,
-        onComplete() {
-          // Clear the dash so the line stays crisp at any zoom level.
-          spark.style.strokeDasharray = '';
-          spark.style.strokeDashoffset = '';
-        },
+  /* --- The shift clock ---------------------------------------------------
+     One minute per four seconds. Slow enough to read as a clock rather than a
+     stopwatch, fast enough that a visitor who lingers sees it move. */
+  const clock = shell.querySelector<HTMLElement>('[data-shell-clock]');
+  if (clock) {
+    const state = { minutes: 14 * 60 + 10 };
+    gsap.to(state, {
+      minutes: state.minutes + 90,
+      duration: 90 * 4,
+      ease: 'none',
+      repeat: -1,
+      onUpdate() {
+        const total = Math.floor(state.minutes) % (24 * 60);
+        const hh = String(Math.floor(total / 60)).padStart(2, '0');
+        const mm = String(total % 60).padStart(2, '0');
+        clock.textContent = `${hh}:${mm}`;
       },
-    );
+    });
+  }
+
+  /* --- A comanda moving through the kitchen ------------------------------
+     The three state chips are all in the DOM; exactly one is lit at a time,
+     which is what makes the card read as one ticket advancing rather than
+     three separate badges. The progress bar fills across the whole cycle. */
+  const chips = shell.parentElement?.querySelectorAll<HTMLElement>(
+    '[data-ticket-state]',
+  );
+  const bar = document.querySelector<HTMLElement>('[data-ticket-bar]');
+
+  if (chips && chips.length) {
+    const light = (index: number) => {
+      chips.forEach((chip, i) => {
+        if (i === index) chip.dataset.on = 'true';
+        else delete chip.dataset.on;
+      });
+    };
+
+    const ticket = gsap.timeline({ repeat: -1, delay: 2.4, repeatDelay: 1.6 });
+
+    chips.forEach((_, index) => {
+      ticket.call(() => light(index), undefined, index * 2.6);
+      if (bar) {
+        ticket.to(
+          bar,
+          {
+            width: `${((index + 1) / chips.length) * 100}%`,
+            duration: 2.2,
+            ease: ease.out,
+          },
+          index * 2.6,
+        );
+      }
+    });
+
+    // Reset for the next pass, or the bar would start full.
+    ticket.call(() => light(0), undefined, chips.length * 2.6);
+    if (bar) {
+      ticket.set(bar, { width: '8%' }, chips.length * 2.6);
+    }
+  }
+
+  /* --- Cash movements streaming in ---------------------------------------
+     A payment lands, the row list shifts down, and the sales figure grows by
+     that payment. Tying the two together is the point: it is the same event,
+     which is exactly the claim the section makes. */
+  const list = shell.querySelector<HTMLElement>('.shell__rows');
+  const salesFigure = shell.querySelector<HTMLElement>(
+    '[data-shell-kpi] [data-count]',
+  );
+
+  if (list && rows.length > 1) {
+    const payments = [11400, 38500, 24900, 45100, 19800];
+    let index = 0;
+    let sales = Number(salesFigure?.dataset.count ?? 0);
+
+    const format = (value: number) =>
+      value.toLocaleString('es-CO', { maximumFractionDigits: 0 });
+
+    gsap
+      .timeline({ repeat: -1, delay: 4.5, repeatDelay: 3.4 })
+      .call(() => {
+        const payment = payments[index % payments.length];
+        index += 1;
+
+        // Recycle the last row to the top rather than cloning, so the DOM
+        // never grows however long the page is left open.
+        const last = list.lastElementChild as HTMLElement | null;
+        const first = list.firstElementChild as HTMLElement | null;
+        if (!last || !first) return;
+
+        const amount = last.querySelector<HTMLElement>('.shell__row-amount');
+        if (amount) amount.textContent = `+ $ ${format(payment)}`;
+
+        list.insertBefore(last, first);
+
+        gsap.fromTo(
+          last,
+          { opacity: 0, y: -14, backgroundColor: 'rgba(200,115,59,0.10)' },
+          {
+            opacity: 1,
+            y: 0,
+            backgroundColor: 'rgba(200,115,59,0)',
+            duration: duration.slow,
+            ease: ease.outExpo,
+          },
+        );
+
+        if (salesFigure) {
+          const from = sales;
+          sales += payment;
+          const counter = { value: from };
+          gsap.to(counter, {
+            value: sales,
+            duration: 1.1,
+            ease: ease.out,
+            onUpdate() {
+              salesFigure.textContent = format(Math.round(counter.value));
+            },
+          });
+        }
+      });
   }
 }
 
@@ -584,7 +697,7 @@ const scenes = [
   sectionEdgeScene,
   magneticScene,
   spotlightScene,
-  mockScene,
+  shellScene,
 ];
 
 /** Runs every scene. Individual failures are contained, never fatal. */

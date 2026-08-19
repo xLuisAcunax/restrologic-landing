@@ -135,7 +135,7 @@
 }
 
 .text-accent {
-  font-family: var(--font-accent);
+  font-family: var(--font-display);
   font-style: italic;
   font-weight: 500;
   letter-spacing: -0.01em;
@@ -190,24 +190,24 @@
   opacity: 0.55;
 }
 
-.orb--amber {
-  background: radial-gradient(circle, var(--hue-amber), transparent 68%);
+.orb--clay {
+  background: radial-gradient(circle, var(--hue-clay), transparent 68%);
 }
 
-.orb--cyan {
-  background: radial-gradient(circle, var(--hue-cyan), transparent 68%);
+.orb--indigo {
+  background: radial-gradient(circle, var(--hue-indigo), transparent 68%);
 }
 
-.orb--violet {
-  background: radial-gradient(circle, var(--hue-violet), transparent 68%);
+.orb--plum {
+  background: radial-gradient(circle, var(--hue-plum), transparent 68%);
 }
 
-.orb--mint {
-  background: radial-gradient(circle, var(--hue-mint), transparent 68%);
+.orb--olive {
+  background: radial-gradient(circle, var(--hue-olive), transparent 68%);
 }
 
-.orb--rose {
-  background: radial-gradient(circle, var(--hue-rose), transparent 68%);
+.orb--rust {
+  background: radial-gradient(circle, var(--hue-rust), transparent 68%);
 }
 
 /* A hairline painted with the full brand spectrum. Used to cap sections so

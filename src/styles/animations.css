@@ -152,8 +152,14 @@
   .steam,
   .shimmer,
   .plan--featured::before,
+  .callout__dot::after,
   .dot--pulse::after {
     animation: none !important;
+  }
+
+  /* Without its pulse the ring is just a stray circle around the dot. */
+  .callout__dot::after {
+    display: none;
   }
 
   /* A static marquee must not clip its content off-screen. */
@@ -170,5 +176,19 @@
 
   .steam {
     display: none;
+  }
+}
+
+/* Callout ring — a single expanding pulse, not a strobe. Long enough between
+   cycles that a page full of callouts does not read as an alarm. */
+@keyframes callout-ping {
+  0% {
+    opacity: 0.55;
+    scale: 0.7;
+  }
+  55%,
+  100% {
+    opacity: 0;
+    scale: 1.5;
   }
 }

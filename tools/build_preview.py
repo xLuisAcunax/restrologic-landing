@@ -53,8 +53,8 @@ def load_dict(lang: str) -> dict[str, str]:
 
 
 def load_icons() -> dict[str, str]:
-    """Pull the icon path data out of Icon.astro."""
-    text = (SRC / "components" / "ui" / "Icon.astro").read_text(encoding="utf-8")
+    """Pull the icon path data out of icons.ts."""
+    text = (SRC / "components" / "ui" / "icons.ts").read_text(encoding="utf-8")
     start = text.index("export const iconPaths = {")
     end = text.index("} as const;", start)
     block = text[start:end]
@@ -106,47 +106,57 @@ NAV = [
 ]
 
 FEATURES = [
-    ("utensils", "orders", "amber"),
-    ("chefHat", "kitchen", "rose"),
-    ("package", "inventory", "mint"),
-    ("receipt", "cash", "cyan"),
-    ("sliders", "products", "violet"),
-    ("chart", "reports", "indigo"),
+    ("utensils", "orders", "clay"),
+    ("chefHat", "kitchen", "rust"),
+    ("package", "inventory", "olive"),
+    ("receipt", "cash", "indigo"),
+    ("sliders", "products", "plum"),
+    ("chart", "reports", "honey"),
 ]
 
-PIPELINE_TONES = ["amber", "rose", "mint", "cyan"]
-STAT_TONES = ["amber", "rose", "violet", "cyan"]
-HOW_TONES = ["amber", "violet", "mint"]
+PIPELINE_TONES = ["clay", "rust", "olive", "indigo"]
+STAT_TONES = ["clay", "rust", "plum", "indigo"]
+HOW_TONES = ["clay", "plum", "olive"]
 
 MARQUEE = [
-    ("utensils", "marquee.1", "amber"),
-    ("chefHat", "marquee.2", "rose"),
-    ("package", "marquee.3", "mint"),
-    ("flame", "marquee.4", "violet"),
-    ("receipt", "marquee.5", "cyan"),
-    ("bike", "marquee.6", "indigo"),
-    ("chart", "marquee.7", "teal"),
-    ("shield", "marquee.8", "rose"),
+    ("utensils", "marquee.1", "clay"),
+    ("chefHat", "marquee.2", "rust"),
+    ("package", "marquee.3", "olive"),
+    ("flame", "marquee.4", "plum"),
+    ("receipt", "marquee.5", "indigo"),
+    ("bike", "marquee.6", "honey"),
+    ("chart", "marquee.7", "olive"),
+    ("shield", "marquee.8", "rust"),
 ]
 
+# icon, id, screen basename, tone, [(callout key suffix, x, y, anchor)]
 MODULES = [
-    ("dashboard", "admin", "dashboard", "indigo"),
-    ("utensils", "pos", "pos-mesas", "amber"),
-    ("package", "inventory", "inventario", "mint"),
-    ("chart", "reports", "reportes-ordenes", "violet"),
+    ("utensils", "pos", "pos-mesas", "clay",
+     [("call.1", 38, 58, None), ("call.2", 80, 77, "end")]),
+    ("chefHat", "kitchen", "cocina", "honey",
+     [("call.1", 61, 69, "end"), ("call.2", 87, 48, "end")]),
+    ("banknote", "cash", "caja", "olive",
+     [("call.1", 89, 23, "end"), ("call.2", 53, 65, None)]),
+    ("package", "inventory", "inventario", "indigo",
+     [("call.1", 60, 19, "end"), ("call.2", 42, 68, None)]),
+    ("chart", "reports", "reportes-ordenes", "plum",
+     [("call.1", 83, 34, "end"), ("call.2", 94, 60, "end")]),
 ]
 
 GALLERY = [
-    ("sliders", "products", "productos", "violet"),
-    ("chefHat", "orders", "pos-ordenes", "rose"),
-    ("receipt", "cash", "caja", "cyan"),
-    ("fileText", "cashreport", "reportes-caja", "teal"),
+    ("dashboard", "dashboard", "dashboard", "clay"),
+    ("sliders", "products", "productos", "plum"),
+    ("chefHat", "kds", "cocina-full", "honey"),
+    ("fileText", "orderdetail", "orden-auditoria", "indigo"),
+    ("package", "alerts", "inventario-alertas", "rust"),
+    ("shield", "roles", "roles", "olive"),
+    ("receipt", "taxes", "impuestos", "indigo"),
 ]
 
 SOON = [
-    ("bike", "delivery", "violet"),
-    ("fileText", "invoicing", "cyan"),
-    ("globe", "menu", "rose"),
+    ("bike", "delivery", "plum"),
+    ("fileText", "invoicing", "indigo"),
+    ("globe", "menu", "rust"),
 ]
 
 PLANS = [
@@ -220,7 +230,7 @@ def logo(uid: str, cls: str) -> str:
     gid = f"rl-logo-{uid}"
     return f"""<svg class="{cls}" width="34" height="34" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
 <defs><linearGradient id="{gid}" x1="4" y1="4" x2="28" y2="28" gradientUnits="userSpaceOnUse">
-<stop stop-color="var(--rl-amber-300)"/><stop offset="0.55" stop-color="var(--rl-amber-500)"/><stop offset="1" stop-color="var(--rl-rose-500)"/>
+<stop stop-color="var(--rl-clay-300)"/><stop offset="0.55" stop-color="var(--rl-clay-500)"/><stop offset="1" stop-color="var(--rl-rust-500)"/>
 </linearGradient></defs>
 <rect x="2.5" y="24" width="27" height="3.2" rx="1.6" fill="url(#{gid})"/>
 <path d="M5 24a11 11 0 0 1 22 0" stroke="url(#{gid})" stroke-width="2.4" stroke-linecap="round"/>
@@ -229,72 +239,154 @@ def logo(uid: str, cls: str) -> str:
 </svg>"""
 
 
-def app_mock() -> str:
-    active_attr = ' data-active="true"'
-    rail = "".join(
-        '<span class="mock__railitem"{}>{}</span>'.format(
-            active_attr if i == 0 else "", icon(n)
+def app_shell() -> str:
+    """Python mirror of components/sections/AppShell.astro."""
+    groups = [
+        ("shell.group.service", [
+            ("utensils", "shell.nav.pos", False, None),
+            ("chefHat", "shell.nav.kitchen", False, "4"),
+            ("banknote", "shell.nav.cash", True, None),
+        ]),
+        ("shell.group.manage", [
+            ("sliders", "shell.nav.products", False, None),
+            ("package", "shell.nav.inventory", False, None),
+            ("fileText", "shell.nav.reports", False, None),
+            ("chart", "shell.nav.dashboard", False, None),
+        ]),
+        ("shell.group.system", [
+            ("settings", "shell.nav.settings", False, None),
+        ]),
+    ]
+
+    nav = ""
+    for label, items in groups:
+        rows = ""
+        for name, key, active, badge in items:
+            rows += (
+                '<span class="shell__navitem" data-shell-nav{}>{}'
+                '<span class="shell__navtext">{}</span>{}</span>'
+            ).format(
+                ' data-active="true"' if active else "",
+                icon(name),
+                t(key),
+                f'<span class="shell__navbadge">{badge}</span>' if badge else "",
+            )
+        nav += (
+            f'<div class="shell__navgroup">'
+            f'<span class="shell__navlabel">{t(label)}</span>{rows}</div>'
         )
-        for i, n in enumerate(RAIL)
-    )
-    floor = "".join(
-        '<span class="mock__table" data-mock-table{}>{}</span>'.format(
-            ' data-state="{}"'.format(state) if state else "", tid
+
+    cards = [
+        ("clay", "chart", "shell.kpi.sales", "$ ", 358000, "shell.kpi.sales.foot", False),
+        ("olive", "trendingUp", "shell.kpi.moves", "+ $ ", 0, "shell.kpi.moves.foot", False),
+        ("indigo", "receipt", "shell.kpi.control", "$ ", 35800, "shell.kpi.control.foot", False),
+        ("honey", "banknote", "shell.kpi.expected", "$ ", 208900, "shell.kpi.expected.foot", True),
+    ]
+
+    kpis = ""
+    for tone, ic, label, prefix, count, foot, featured in cards:
+        pretty = f"{count:,}".replace(",", ".")
+        feat_attr = ' data-featured="true"' if featured else ""
+        kpis += (
+            f'<div class="shell__kpi tone--{tone}" data-shell-kpi'
+            f'{feat_attr}>'
+            f'<div class="shell__kpi-head">'
+            f'<span class="shell__kpi-label">{t(label)}</span>'
+            f'<span class="shell__kpi-icon">{icon(ic)}</span></div>'
+            f'<div class="shell__kpi-val"><span class="shell__kpi-prefix">{prefix}</span>'
+            f'<span data-count="{count}" data-count-group="true">{pretty}</span></div>'
+            f'<div class="shell__kpi-foot">{t(foot)}</div></div>'
         )
-        for tid, state in TABLES
-    )
-    tickets = "".join(
-        f'<div class="mock__ticket"><span class="mock__ticket-name">Mesa {tb}</span>'
-        f'<span class="mock__ticket-meta">{it} · {mn} min</span>'
-        f'<span class="mock__ticket-state" data-s="{st}">{t("mock.state." + st)}</span></div>'
-        for tb, it, mn, st in TICKETS
-    )
-    spark = "M0 45 L20 38 L40 42 L60 28 L80 32 L100 20 L120 26 L140 14 L160 18 L180 8 L200 12"
+
+    moves = [
+        ("2:10PM", "shell.move.1", "+ $ 94.600"),
+        ("2:10PM", "shell.move.2", "+ $ 45.100"),
+        ("2:10PM", "shell.move.3", "+ $ 51.700"),
+        ("2:09PM", "shell.move.4", "+ $ 44.000"),
+    ]
+    rows = ""
+    for index, (time_, key, amount) in enumerate(moves):
+        fresh_attr = ' data-fresh="true"' if index == 0 else ""
+        rows += (
+            f'<div class="shell__row" data-shell-row'
+            f'{fresh_attr}>'
+            f'<span class="shell__row-time">{time_}</span>'
+            f'<span class="shell__row-tag">{t("shell.moves.type")}</span>'
+            f'<span class="shell__row-desc">{t(key)}</span>'
+            f'<span class="shell__row-amount">{amount}</span></div>'
+        )
+
+    states = [
+        ("pending", "indigo", "shell.ticket.pending"),
+        ("cooking", "clay", "shell.ticket.cooking"),
+        ("ready", "olive", "shell.ticket.ready"),
+    ]
+    chips = ""
+    for index, (sid, tone, key) in enumerate(states):
+        on_attr = ' data-on="true"' if index == 0 else ""
+        chips += (
+            f'<span class="floatcard__state tone--{tone}" data-ticket-state="{sid}"'
+            f'{on_attr}>{t(key)}</span>'
+        )
+
     return f"""
-<div class="mock" aria-hidden="true">
-  <div class="mock__bar">
-    <div class="mock__lights"><i></i><i></i><i></i></div>
-    <div class="mock__url">{t('mock.url')}</div>
+<div class="shell" data-shell aria-hidden="true">
+  <div class="shell__chrome">
+    <div class="shell__lights"><i></i><i></i><i></i></div>
+    <div class="shell__url">{t('shell.url')}</div>
   </div>
-  <div class="mock__body">
-    <nav class="mock__rail">{rail}</nav>
-    <div class="mock__main">
-      <div class="mock__head">
-        <div><div class="mock__h">{t('mock.title')}</div><div class="mock__sub">{t('mock.subtitle')}</div></div>
-        <span class="chip chip--accent"><span class="dot dot--pulse"></span>Live</span>
+  <div class="shell__body">
+    <aside class="shell__side">
+      <div class="shell__brand">
+        <span class="shell__brand-mark"></span>
+        <span class="shell__brand-word">Restro<span class="shell__brand-word-alt">Logic</span></span>
       </div>
-      <div class="mock__kpis">
-        <div class="mock__kpi"><div class="mock__kpi-label">{t('mock.kpi.1')}</div><div class="mock__kpi-val">$4.82M</div><div class="mock__kpi-trend">+12.4%</div></div>
-        <div class="mock__kpi"><div class="mock__kpi-label">{t('mock.kpi.2')}</div><div class="mock__kpi-val">148</div><div class="mock__kpi-trend">+8.1%</div></div>
-        <div class="mock__kpi"><div class="mock__kpi-label">{t('mock.kpi.3')}</div><div class="mock__kpi-val">$32.5K</div><div class="mock__kpi-trend">+3.9%</div></div>
+      <div class="shell__nav">{nav}</div>
+      <span class="shell__navitem shell__navitem--muted">{icon('logOut')}<span class="shell__navtext">{t('shell.logout')}</span></span>
+    </aside>
+    <div class="shell__main">
+      <header class="shell__top">
+        <span class="shell__pill shell__pill--branch"><span class="dot"></span>{t('shell.branch')}{icon('chevronDown', cls='shell__caret')}</span>
+        <span class="shell__pill shell__pill--open">{icon('clock')}{t('shell.shift')}</span>
+        <span class="shell__spacer"></span>
+        <span class="shell__clock"><b data-shell-clock>14:10</b><em>{t('shell.date')}</em></span>
+        <span class="shell__user">
+          <span class="shell__user-text"><b>{t('shell.user.name')}</b><em>{t('shell.user.role')}</em></span>
+          <span class="shell__avatar">AR</span>
+        </span>
+      </header>
+      <div class="shell__content">
+        <div class="shell__kpis">{kpis}</div>
+        <div class="shell__panel">
+          <div class="shell__panel-head">
+            <span class="shell__panel-title">{t('shell.moves.title')}</span>
+            <span class="shell__panel-meta">{t('shell.moves.meta')}</span>
+          </div>
+          <div class="shell__rows">{rows}</div>
+        </div>
       </div>
-      <div class="mock__chart">
-        <svg viewBox="0 0 200 60" preserveAspectRatio="none">
-          <defs><linearGradient id="rl-spark-grad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="var(--brand)" stop-opacity="0.32"/>
-            <stop offset="100%" stop-color="var(--brand)" stop-opacity="0"/>
-          </linearGradient></defs>
-          <path class="mock__spark-fill" d="{spark} L200 60 L0 60 Z"/>
-          <path class="mock__spark-line" data-mock-spark d="{spark}"/>
-        </svg>
-      </div>
-      <div><div class="mock__kpi-label" style="margin-bottom:.35rem">{t('mock.floor')}</div><div class="mock__floor">{floor}</div></div>
-      <div><div class="mock__kpi-label" style="margin-bottom:.35rem">{t('mock.tickets')}</div><div class="mock__tickets">{tickets}</div></div>
     </div>
   </div>
 </div>
-<div class="floatcard floatcard--kds is-floating" data-float aria-hidden="true">
-  <span class="icon-tile icon-tile--accent" style="inline-size:2rem;block-size:2rem">{icon('chefHat')}</span>
-  <span class="floatcard__body"><span class="floatcard__title">{t('mock.card.kds.title')}</span><span class="floatcard__meta">{t('mock.card.kds.meta')}</span></span>
+
+<div class="floatcard floatcard--kds" data-float data-shell-ticket aria-hidden="true">
+  <span class="floatcard__row"><span class="floatcard__table">{t('shell.ticket.table')}</span>{chips}</span>
+  <span class="floatcard__body">
+    <span class="floatcard__title">{t('shell.ticket.title')}</span>
+    <span class="floatcard__meta"><span class="floatcard__bar"><i data-ticket-bar></i></span><span data-ticket-meta>{t('shell.ticket.meta')}</span></span>
+  </span>
 </div>
-<div class="floatcard floatcard--stock is-floating is-floating--slow" data-float aria-hidden="true">
+
+<div class="floatcard floatcard--stock is-floating is-floating--slow tone--rust" data-float aria-hidden="true">
   <span class="icon-tile" style="inline-size:2rem;block-size:2rem">{icon('package')}</span>
-  <span class="floatcard__body"><span class="floatcard__title">{t('mock.card.stock.title')}</span><span class="floatcard__meta">{t('mock.card.stock.meta')}</span></span>
+  <span class="floatcard__body"><span class="floatcard__title">{t('shell.card.stock.title')}</span><span class="floatcard__meta">{t('shell.card.stock.meta')}</span></span>
 </div>
-<div class="floatcard floatcard--cash is-floating is-floating--fast" data-float aria-hidden="true">
-  <span class="icon-tile icon-tile--accent" style="inline-size:2rem;block-size:2rem">{icon('receipt')}</span>
-  <span class="floatcard__body"><span class="floatcard__title">{t('mock.card.cash.title')}</span><span class="floatcard__meta">{t('mock.card.cash.meta')}</span></span>
-</div>"""
+
+<div class="floatcard floatcard--cash is-floating is-floating--fast tone--olive" data-float aria-hidden="true">
+  <span class="icon-tile" style="inline-size:2rem;block-size:2rem">{icon('check')}</span>
+  <span class="floatcard__body"><span class="floatcard__title">{t('shell.card.cash.title')}</span><span class="floatcard__meta">{t('shell.card.cash.meta')}</span></span>
+</div>
+"""
 
 
 def hero() -> str:
@@ -307,9 +399,9 @@ def hero() -> str:
 <section class="hero" data-hero id="top">
   <div class="hero__bg" aria-hidden="true">
     <div class="wash"></div>
-    <div class="orb orb--amber hero__orb-1" data-parallax-orb="0.18"></div>
-    <div class="orb orb--cyan hero__orb-2" data-parallax-orb="-0.26"></div>
-    <div class="orb orb--violet hero__orb-3" data-parallax-orb="0.34"></div>
+    <div class="orb orb--clay hero__orb-1" data-parallax-orb="0.18"></div>
+    <div class="orb orb--indigo hero__orb-2" data-parallax-orb="-0.26"></div>
+    <div class="orb orb--plum hero__orb-3" data-parallax-orb="0.34"></div>
     <div class="dotgrid" data-parallax-orb="0.08"></div>
   </div>
   <div class="container hero__inner">
@@ -326,7 +418,7 @@ def hero() -> str:
       </div>
       <div class="hero__proof" data-hero-proof>{proof}</div>
     </div>
-    <div class="hero__visual" data-hero-mock>{app_mock()}</div>
+    <div class="hero__visual" data-hero-mock>{app_shell()}</div>
   </div>
 </section>"""
 
@@ -387,11 +479,20 @@ def features() -> str:
 
 def modules() -> str:
     rows = ""
-    for i, (ic, mid, img, tone) in enumerate(MODULES):
+    for i, (ic, mid, img, tone, calls) in enumerate(MODULES):
         points = "".join(
             f'<li class="module__point">{icon("check")}{t(f"modules.{mid}.{n}")}</li>'
             for n in (1, 2, 3)
         )
+        callouts = ""
+        for suffix, x, y, anchor in calls:
+            anchor_attr = f' data-anchor="{anchor}"' if anchor else ""
+            callouts += (
+                f'<span class="callout" data-callout{anchor_attr} '
+                f'style="--x:{x}%;--y:{y}%" aria-hidden="true">'
+                f'<span class="callout__dot"></span>'
+                f'<span class="callout__label">{t(f"modules.{mid}.{suffix}")}</span></span>'
+            )
         rev = " module--reverse" if i % 2 else ""
         rows += f"""<article class="module tone--{tone}{rev}">
           <div class="module__copy" data-reveal>
@@ -402,7 +503,11 @@ def modules() -> str:
           </div>
           <div class="module__shot" data-parallax data-reveal>
             <div class="module__frame">
-              <img src="assets/screens/{img}.webp" alt="{t(f'modules.{mid}.alt')}" loading="lazy" decoding="async">
+              <div class="module__chrome" aria-hidden="true"><span class="module__lights"><i></i><i></i><i></i></span></div>
+              <div class="module__canvas">
+                <img src="assets/screens/{img}.webp" alt="{t(f'modules.{mid}.alt')}" loading="lazy" decoding="async">
+                {callouts}
+              </div>
             </div>
           </div>
         </article>"""
@@ -637,7 +742,7 @@ def build(lang: str, inline_css: bool) -> str:
 <meta name="description" content="{t('meta.description')}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300..800&family=Fraunces:ital,opsz,wght@1,9..144,400..600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caprasimo&family=Figtree:wght@400;500;600;700;800&display=swap">
 {css}
 </head>
 <body>
@@ -708,6 +813,12 @@ def main() -> int:
         action="store_true",
         help="Link the stylesheets instead of inlining them (dev only).",
     )
+    parser.add_argument(
+        "--inline-images",
+        action="store_true",
+        help="Embed the screenshots as data URIs, producing a single file that "
+             "can be opened or sent anywhere with nothing beside it.",
+    )
     args = parser.parse_args()
 
     global T, ICONS
@@ -715,6 +826,7 @@ def main() -> int:
     ICONS = load_icons()
 
     html = build(args.lang, inline_css=not args.link_css)
+
 
     # Self-check. This generator is a pile of string surgery, and a silently
     # mismatched anchor produces a page that looks *almost* right — which is
@@ -733,7 +845,9 @@ def main() -> int:
         "dual CTA glow": 'cta__glow--alt',
         "screen gallery": 'data-gallery-tab',
         "coming soon strip": 'soon__list',
-        "real dashboard screen": 'screens/dashboard-n.webp',
+        "real dashboard screen": 'screens/dashboard.webp',
+        "screenshot callouts": 'class="callout"',
+        "framed captures": 'module__chrome',
     }
     missing = [name for name, marker in required.items() if marker not in html]
     if missing:
@@ -741,11 +855,24 @@ def main() -> int:
         return 1
 
     # Every hue must actually appear, or a tone mapping has silently collapsed.
-    hues = ["amber", "cyan", "mint", "indigo", "rose", "violet", "teal"]
+    hues = ["clay", "indigo", "olive", "honey", "rust", "plum", "olive"]
     absent = [h for h in hues if f"tone--{h}" not in html]
     if absent:
         print("BUILD CHECK FAILED — unused hues:", ", ".join(absent), file=sys.stderr)
         return 1
+
+    # Inlining happens after the self-check: the check looks for literal
+    # asset paths, and a data URI would read as a missing screenshot.
+
+    if args.inline_images:
+        import base64
+
+        for shot in sorted((SRC / "assets" / "screens").glob("*.webp")):
+            ref = f"assets/screens/{shot.name}"
+            if ref not in html:
+                continue
+            data = base64.b64encode(shot.read_bytes()).decode("ascii")
+            html = html.replace(ref, f"data:image/webp;base64,{data}")
 
     out = ROOT / args.out
     out.parent.mkdir(parents=True, exist_ok=True)

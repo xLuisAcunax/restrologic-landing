@@ -5,9 +5,11 @@ Built with **Astro 5**, a hand-rolled CSS design-token system, and **GSAP** for
 scroll and timeline motion. Spanish is the default locale; English is served
 under `/en/`.
 
-The palette is taken from the product UI so the two read as one brand: indigo
-ink, amber for the brand and active states, cyan for actions, and mint / rose /
-violet / teal as functional accents on a cool blue-grey canvas.
+The palette is taken from the product UI so the two read as one brand: a warm
+cream canvas, espresso chrome, terracotta for the brand and every active
+state, and olive / denim / rust as the functional accents the app already uses
+on its status chips. Type is the product's own pairing — Caprasimo for display,
+Figtree for everything else.
 
 ---
 
@@ -72,20 +74,34 @@ Plain CSS, layered by escalating specificity, imported in order by
 | `animations.css` | Keyframes and ambient looping motion |
 
 **The token contract:** components consume *semantic* tokens (`--text`,
-`--surface`, `--brand`) and never primitives (`--rl-amber-500`). Themes are
+`--surface`, `--brand`) and never primitives (`--rl-clay-500`). Themes are
 pure overrides of the semantic layer, which is why no component branches on
 theme anywhere in the codebase.
 
 ### The tone system
 
-Seven hue ramps (`--hue-amber-*`, `--hue-cyan-*`, …) drive the multi-colour
+Six hue ramps (`--hue-clay-*`, `--hue-olive-*`, …) drive the multi-colour
 look. Each is a quintet: `base` / `ink` (text) / `soft` (fill) / `border` /
 `on` (label colour) — plus `strong`, the contrast-safe fill for any toned
 surface that carries a label.
 
+Five of the six are lifted from the product: **clay** is the terracotta of the
+active nav item, **olive** the ACTIVO / DISPONIBLE chip, **indigo** the
+PENDIENTE chip, **rust** the critical-stock badge, **honey** the warm end of
+the logo gradient. **Plum** is landing-only — a wine note that belongs in a
+warm restaurant palette and gives the system a sixth hue without pretending to
+be a colour the product ships.
+
+The ramps are **generated, not hand-picked**. `tools/ramp.py` interpolates each
+one in OKLab from an anchor sampled out of a real screenshot, so step 600 of
+one hue is as dark as step 600 of another and a card stays balanced when it
+swaps colours. Running it with no arguments measures every pairing the design
+system relies on; `--css` emits the block that lives in `tokens.css`, and
+`tools/check.py` fails the build if the two drift apart.
+
 The `.tone--*` classes re-point `--brand`, `--brand-ink`, `--brand-soft` and
 friends at one ramp for a subtree. Because every component already reads those
-semantic tokens, wrapping an element in `.tone--cyan` recolours its icon tile,
+semantic tokens, wrapping an element in `.tone--olive` recolours its icon tile,
 chip, border, hover glow and cursor spotlight **with no component CSS at all**:
 
 ```astro
@@ -100,10 +116,11 @@ re-colouring a section is a one-word data edit.
 1. Any brand-coloured surface that carries text uses `--grad-brand-strong` /
    `--brand-strong` (or a tone's `--tone-strong`), never `--grad-brand`. The
    decorative gradient is lighter than the 4.5:1 floor allows for label text.
-2. In light mode the primary button is **bright amber with near-black text**,
-   mirroring the app's active nav item. White-on-amber forced the fill so dark
-   it read as brown and still only scraped 4.7:1; the flip is both more vivid
-   and measures 8.9:1.
+2. `--brand` is one step deeper than the product's own `#c67139`. The app
+   fills its nav pill with the raw terracotta and sets white on it, which
+   measures **3.6:1** — under AA. Deepening the fill to `clay-600` keeps the
+   same terracotta reading and clears the floor at 5.09:1. The raw hex is still
+   available as `--brand-vivid` for fills that carry no text.
 
 Tailwind is still installed and available for one-off utility escape hatches,
 but the design system itself is plain CSS so it stays portable and readable.
@@ -129,6 +146,7 @@ Scroll-driven scenes:
 | `orbScene` | Three hero orbs drift at different rates |
 | `pipelineScene` | Connector rail draws itself left-to-right, scrubbed to scroll |
 | `moduleScene` | Screenshot parallax plus cursor tilt |
+| `shellScene` | The hero replica runs a live service: the shift clock ticks, a comanda advances Pendiente → Cocinando → Listo, and each payment that lands grows the sales figure by its own amount |
 | `marqueeScene` | Strip speed follows scroll velocity and reverses with direction |
 | `sectionEdgeScene` | Spectrum edges on the CTA panel and stats row draw in |
 | `headingScene` / `revealScene` / `staggerScene` / `counterScene` | Word-mask heading reveals, staggered grids, count-ups |
@@ -154,22 +172,41 @@ complete, readable page.
 Astro build. Not part of the site bundle.
 
 ```bash
-python3 tools/check.py                  # static checks (see below)
+python3 tools/check.py                   # static checks (see below)
+python3 tools/ramp.py                    # measure every palette pairing
+python3 tools/ramp.py --css              # regenerate the ramp block
 python3 tools/build_preview.py --lang es # -> preview/restrologic-preview.html
-./tools/shoot.sh mylabel                 # screenshots at 3 viewports
+python3 tools/shoot.py mylabel --viewport 390 --viewport 1440 --theme dark
+python3 tools/shoot.py --audit           # run tools/audit.js, print the report
 ```
+
+`tools/shoot.py` drives Chromium directly (replacing the old `shoot.sh`), so it
+can force a theme, freeze the motion engine for a clean capture, scroll to a
+fraction of the page, and run the audit in the same pass.
 
 `tools/check.py` asserts, with no build step: i18n key parity between locales,
 that every referenced translation key and icon exists, that no CSS variable or
-class is used without being defined, that every relative import resolves, and
-— most importantly — that **no shipped screenshot contains personal data**.
+class is used without being defined, that every relative import resolves, that
+the generated ramp block still matches `tools/ramp.py`, that the two copies of
+the dark palette (the `[data-theme]` block and the `prefers-color-scheme` one,
+which the cascade forces us to duplicate) are declaration-for-declaration
+identical, and — most importantly — that **no shipped screenshot contains
+personal data**.
 
 `tools/redact.py` produces the screenshots in `src/assets/screens/`. They are
-real captures from a live tenant, so the operator's name, avatar initials and
-email address are replaced with a neutral demo identity before publication.
+real captures from a live tenant, so every staff name, avatar disc and email
+address is replaced with a neutral demo identity before publication.
 Occurrences are located with OCR rather than hard-coded coordinates, so a
 re-capture at a different window size still redacts correctly; each output is
-re-OCR'd to confirm nothing survived.
+re-OCR'd to confirm nothing survived. Two things it learned the hard way: a
+single OCR line can hold several hits (a roster row carries both a name and
+that person's mailbox, and stopping at the first match shipped the second),
+and an initials disc has to follow the name it labels — "MF" beside "Ana
+Restrepo" both looks broken and leaks the original initials.
+
+It also accepts `.webp`, deliberately. A capture that arrives already
+converted is still a raw capture, and skipping it by extension is exactly how
+an unredacted screen reaches the public site.
 
 ```bash
 python3 tools/redact.py <raw-screenshot-dir> <output-dir> --verify
@@ -195,9 +232,9 @@ Append `?static=1` to the preview URL to freeze it for screenshots.
 
 Verified at 390 / 820 / 1440px in both themes:
 
-- **Contrast:** 112/112 pairings pass across both themes (AA 4.5:1 for text,
-  3:1 for meaningful graphics). Tightest text margin is 4.68:1; tightest
-  graphic margin is 3.05:1.
+- **Contrast:** 102/102 pairings pass across both themes (AA 4.5:1 for text,
+  3:1 for meaningful graphics). Tightest text margin is 5.09:1 — the primary
+  button label.
 - **Overflow:** zero horizontal overflow at every tested viewport.
 - **Targets:** all standalone interactive targets ≥24px (WCAG 2.2 SC 2.5.8).
   The one exception is the inline author credit in the footer, which falls

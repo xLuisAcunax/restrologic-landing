@@ -12,7 +12,7 @@ if len(es)!=len(es_set) or len(en)!=len(en_set): fail.append("duplicate keys")
 
 files=[f for f in list(SRC.rglob("*.astro"))+list(SRC.rglob("*.ts")) if f.name!="ui.ts"]
 used=set()
-KEYFIELDS = "titleKey|textKey|altKey|labelKey|descKey|ctaKey|numKey|timeKey|qKey|aKey|nameKey|customPriceKey"
+KEYFIELDS = "titleKey|textKey|altKey|labelKey|descKey|ctaKey|numKey|timeKey|qKey|aKey|nameKey|customPriceKey|footKey"
 for f in files:
     txt=f.read_text(encoding="utf-8")
     used |= set(re.findall(r"(?<![A-Za-z0-9_.])t\(\s*'([a-zA-Z0-9._]+)'\s*\)", txt))
@@ -27,15 +27,13 @@ print(f"i18n references  {len(used)} used  missing={missing or 'none'}  unused={
 if missing: fail.append(f"undefined keys: {missing}")
 if unused: fail.append(f"dead keys: {unused}")
 
-isrc=(SRC/"components"/"ui"/"Icon.astro").read_text(encoding="utf-8")
+isrc=(SRC/"components"/"ui"/"icons.ts").read_text(encoding="utf-8")
 a=isrc.index("export const iconPaths = {"); b=isrc.index("} as const;",a)
 icons=set(re.findall(r"^\s{2}([a-zA-Z]+):",isrc[a:b],re.M))
 ui_icons=set()
 for f in files:
     t_=f.read_text(encoding="utf-8")
     ui_icons |= set(re.findall(r'<Icon\s+name="([a-zA-Z]+)"',t_)) | set(re.findall(r"icon:\s*'([a-zA-Z]+)'",t_))
-r=re.search(r"const railIcons = \[(.*?)\]",(SRC/"components"/"sections"/"AppMock.astro").read_text(encoding="utf-8"),re.S)
-if r: ui_icons |= set(re.findall(r"'([a-zA-Z]+)'",r.group(1)))
 bad=sorted(ui_icons-icons)
 print(f"icons            {len(icons)} defined  {len(ui_icons)} used  undefined={bad or 'none'}  spare={sorted(icons-ui_icons)}")
 if bad: fail.append(f"undefined icons: {bad}")
@@ -46,7 +44,11 @@ css="".join((SRC/"styles"/n).read_text(encoding="utf-8") for n in
 # ever get a value from JS or from a parent component.
 defined = set(re.findall(r"^\s*(--[a-z0-9-]+):", css, re.M))
 defined |= set(re.findall(r"@property\s+(--[a-z0-9-]+)", css))
-defined |= {"--mx", "--my", "--flow", "--cluster-gap", "--grid-gap", "--grid-min",
+# Set from markup or JS, never declared in a stylesheet:
+#   --mx/--my   cursor position, written by the spotlight scene
+#   --x/--y     callout coordinates, written inline from the content model
+defined |= {"--mx", "--my", "--x", "--y",
+            "--flow", "--cluster-gap", "--grid-gap", "--grid-min",
             "--btn-bg", "--btn-fg", "--btn-border", "--btn-shadow",
             "--tone", "--tone-ink", "--tone-soft", "--tone-border", "--tone-on",
             "--tone-strong"}
@@ -87,6 +89,53 @@ try:
         fail.append(f"personal data in screenshots: {leaks}")
 except ImportError:
     print("screenshot PII   skipped (pytesseract/PIL not installed)")
+
+# The generated ramp block in tokens.css must still match what tools/ramp.py
+# emits. Hand-editing a step there would silently break the contrast
+# guarantees the whole palette rests on.
+try:
+    import subprocess
+    tokens = (SRC/"styles"/"tokens.css").read_text(encoding="utf-8")
+    a = tokens.index("/* BEGIN generated ramps"); a = tokens.index("\n", a) + 1
+    b = tokens.index("/* END generated ramps")
+    pasted = tokens[a:b].strip()
+    emitted = subprocess.run(
+        [sys.executable, "tools/ramp.py", "--css"],
+        capture_output=True, text=True, check=True,
+    ).stdout.strip()
+    norm = lambda t: [l.strip() for l in t.splitlines() if l.strip()]
+    match = norm(pasted) == norm(emitted)
+    print(f"ramp drift       generated block matches tools/ramp.py: {match}")
+    if not match:
+        fail.append("tokens.css ramp block is out of sync with tools/ramp.py --css")
+except Exception as exc:
+    print(f"ramp drift       skipped ({exc})")
+
+# The dark palette is declared twice — once under [data-theme="dark"] and once
+# under the prefers-color-scheme media query — because the cascade gives no way
+# to share them. Nothing stops the two drifting except this check.
+tokens = (SRC/"styles"/"tokens.css").read_text(encoding="utf-8")
+def decls(start_marker):
+    i = tokens.index(start_marker)
+    depth, j, out = 0, i, []
+    while j < len(tokens):
+        if tokens[j] == "{":
+            depth += 1
+        elif tokens[j] == "}":
+            depth -= 1
+            if depth == 0:
+                break
+        j += 1
+    return [ln.strip().rstrip(";") for ln in tokens[i:j].splitlines()
+            if ln.strip().startswith("--")]
+attr = decls('[data-theme="dark"] {')
+media = decls(':root:not([data-theme="light"]) {')
+same = attr == media
+print(f"dark parity      {len(attr)} vs {len(media)} declarations, identical={same}")
+if not same:
+    only_a = [d for d in attr if d not in media]
+    only_m = [d for d in media if d not in attr]
+    fail.append(f"dark theme blocks differ: attr-only={only_a[:4]} media-only={only_m[:4]}")
 
 print()
 if fail:

@@ -34,13 +34,12 @@ export const navItems: readonly NavItem[] = [
 
 /** The accent hues available to sections. Maps to `.tone--*` in tokens.css. */
 export type Tone =
-  | 'amber'
-  | 'cyan'
-  | 'mint'
+  | 'clay'
+  | 'honey'
+  | 'olive'
   | 'indigo'
-  | 'rose'
-  | 'violet'
-  | 'teal';
+  | 'rust'
+  | 'plum';
 
 export interface Feature {
   id: string;
@@ -55,7 +54,7 @@ export interface Feature {
 export const features: readonly Feature[] = [
   {
     id: 'orders',
-    tone: 'amber',
+    tone: 'clay',
     icon: 'utensils',
     titleKey: 'features.orders.title',
     textKey: 'features.orders.text',
@@ -63,7 +62,7 @@ export const features: readonly Feature[] = [
   },
   {
     id: 'kitchen',
-    tone: 'rose',
+    tone: 'rust',
     icon: 'chefHat',
     titleKey: 'features.kitchen.title',
     textKey: 'features.kitchen.text',
@@ -75,7 +74,7 @@ export const features: readonly Feature[] = [
   },
   {
     id: 'inventory',
-    tone: 'mint',
+    tone: 'olive',
     icon: 'package',
     titleKey: 'features.inventory.title',
     textKey: 'features.inventory.text',
@@ -87,7 +86,7 @@ export const features: readonly Feature[] = [
   },
   {
     id: 'cash',
-    tone: 'cyan',
+    tone: 'indigo',
     icon: 'receipt',
     titleKey: 'features.cash.title',
     textKey: 'features.cash.text',
@@ -95,7 +94,7 @@ export const features: readonly Feature[] = [
   },
   {
     id: 'products',
-    tone: 'violet',
+    tone: 'plum',
     icon: 'sliders',
     titleKey: 'features.products.title',
     textKey: 'features.products.text',
@@ -107,7 +106,7 @@ export const features: readonly Feature[] = [
   },
   {
     id: 'reports',
-    tone: 'indigo',
+    tone: 'honey',
     icon: 'chart',
     titleKey: 'features.reports.title',
     textKey: 'features.reports.text',
@@ -132,25 +131,25 @@ export interface PipelineStep {
 
 export const pipelineSteps: readonly PipelineStep[] = [
   {
-    tone: 'amber',
+    tone: 'clay',
     titleKey: 'pipeline.1.title',
     textKey: 'pipeline.1.text',
     timeKey: 'pipeline.1.time',
   },
   {
-    tone: 'rose',
+    tone: 'rust',
     titleKey: 'pipeline.2.title',
     textKey: 'pipeline.2.text',
     timeKey: 'pipeline.2.time',
   },
   {
-    tone: 'mint',
+    tone: 'olive',
     titleKey: 'pipeline.3.title',
     textKey: 'pipeline.3.text',
     timeKey: 'pipeline.3.time',
   },
   {
-    tone: 'cyan',
+    tone: 'indigo',
     titleKey: 'pipeline.4.title',
     textKey: 'pipeline.4.text',
     timeKey: 'pipeline.4.time',
@@ -160,6 +159,19 @@ export const pipelineSteps: readonly PipelineStep[] = [
 /* -------------------------------------------------------------------------- */
 /* Product modules (screenshot rows)                                           */
 /* -------------------------------------------------------------------------- */
+
+/**
+ * An annotation pinned over a screenshot. `x`/`y` are percentages of the
+ * frame, so a callout keeps its position when the image is re-captured at a
+ * different window size — and `anchor` decides which corner of the pill sits
+ * on that point, which is what keeps it inside the frame near an edge.
+ */
+export interface Callout {
+  labelKey: TranslationKey;
+  x: number;
+  y: number;
+  anchor?: 'start' | 'end';
+}
 
 export interface ProductModule {
   id: string;
@@ -171,32 +183,55 @@ export interface ProductModule {
   pointKeys: readonly TranslationKey[];
   /** Basename in `src/assets/screens/` — resolved through Astro's image pipeline. */
   image: string;
+  callouts?: readonly Callout[];
 }
 
 export const productModules: readonly ProductModule[] = [
   {
-    id: 'admin',
-    tone: 'indigo',
-    icon: 'dashboard',
-    titleKey: 'modules.admin.title',
-    textKey: 'modules.admin.text',
-    altKey: 'modules.admin.alt',
-    pointKeys: ['modules.admin.1', 'modules.admin.2', 'modules.admin.3'],
-    image: 'dashboard',
-  },
-  {
     id: 'pos',
-    tone: 'amber',
+    tone: 'clay',
     icon: 'utensils',
     titleKey: 'modules.pos.title',
     textKey: 'modules.pos.text',
     altKey: 'modules.pos.alt',
     pointKeys: ['modules.pos.1', 'modules.pos.2', 'modules.pos.3'],
     image: 'pos-mesas',
+    callouts: [
+      { labelKey: 'modules.pos.call.1', x: 38, y: 58 },
+      { labelKey: 'modules.pos.call.2', x: 80, y: 77, anchor: 'end' },
+    ],
+  },
+  {
+    id: 'kitchen',
+    tone: 'honey',
+    icon: 'chefHat',
+    titleKey: 'modules.kitchen.title',
+    textKey: 'modules.kitchen.text',
+    altKey: 'modules.kitchen.alt',
+    pointKeys: ['modules.kitchen.1', 'modules.kitchen.2', 'modules.kitchen.3'],
+    image: 'cocina',
+    callouts: [
+      { labelKey: 'modules.kitchen.call.1', x: 61, y: 69, anchor: 'end' },
+      { labelKey: 'modules.kitchen.call.2', x: 87, y: 48, anchor: 'end' },
+    ],
+  },
+  {
+    id: 'cash',
+    tone: 'olive',
+    icon: 'banknote',
+    titleKey: 'modules.cash.title',
+    textKey: 'modules.cash.text',
+    altKey: 'modules.cash.alt',
+    pointKeys: ['modules.cash.1', 'modules.cash.2', 'modules.cash.3'],
+    image: 'caja',
+    callouts: [
+      { labelKey: 'modules.cash.call.1', x: 89, y: 23, anchor: 'end' },
+      { labelKey: 'modules.cash.call.2', x: 53, y: 65 },
+    ],
   },
   {
     id: 'inventory',
-    tone: 'mint',
+    tone: 'indigo',
     icon: 'package',
     titleKey: 'modules.inventory.title',
     textKey: 'modules.inventory.text',
@@ -207,16 +242,24 @@ export const productModules: readonly ProductModule[] = [
       'modules.inventory.3',
     ],
     image: 'inventario',
+    callouts: [
+      { labelKey: 'modules.inventory.call.1', x: 60, y: 19, anchor: 'end' },
+      { labelKey: 'modules.inventory.call.2', x: 42, y: 68 },
+    ],
   },
   {
     id: 'reports',
-    tone: 'violet',
+    tone: 'plum',
     icon: 'chart',
     titleKey: 'modules.reports.title',
     textKey: 'modules.reports.text',
     altKey: 'modules.reports.alt',
     pointKeys: ['modules.reports.1', 'modules.reports.2', 'modules.reports.3'],
     image: 'reportes-ordenes',
+    callouts: [
+      { labelKey: 'modules.reports.call.1', x: 83, y: 34, anchor: 'end' },
+      { labelKey: 'modules.reports.call.2', x: 94, y: 60, anchor: 'end' },
+    ],
   },
 ] as const;
 
@@ -236,8 +279,17 @@ export interface GalleryScreen {
 
 export const galleryScreens: readonly GalleryScreen[] = [
   {
+    id: 'dashboard',
+    tone: 'clay',
+    icon: 'dashboard',
+    titleKey: 'gallery.dashboard.title',
+    textKey: 'gallery.dashboard.text',
+    altKey: 'gallery.dashboard.alt',
+    image: 'dashboard',
+  },
+  {
     id: 'products',
-    tone: 'violet',
+    tone: 'plum',
     icon: 'sliders',
     titleKey: 'gallery.products.title',
     textKey: 'gallery.products.text',
@@ -245,31 +297,49 @@ export const galleryScreens: readonly GalleryScreen[] = [
     image: 'productos',
   },
   {
-    id: 'orders',
-    tone: 'rose',
+    id: 'kds',
+    tone: 'honey',
     icon: 'chefHat',
-    titleKey: 'gallery.orders.title',
-    textKey: 'gallery.orders.text',
-    altKey: 'gallery.orders.alt',
-    image: 'pos-ordenes',
+    titleKey: 'gallery.kds.title',
+    textKey: 'gallery.kds.text',
+    altKey: 'gallery.kds.alt',
+    image: 'cocina-full',
   },
   {
-    id: 'cash',
-    tone: 'cyan',
-    icon: 'receipt',
-    titleKey: 'gallery.cash.title',
-    textKey: 'gallery.cash.text',
-    altKey: 'gallery.cash.alt',
-    image: 'caja',
-  },
-  {
-    id: 'cashreport',
-    tone: 'teal',
+    id: 'orderdetail',
+    tone: 'indigo',
     icon: 'fileText',
-    titleKey: 'gallery.cashreport.title',
-    textKey: 'gallery.cashreport.text',
-    altKey: 'gallery.cashreport.alt',
-    image: 'reportes-caja',
+    titleKey: 'gallery.orderdetail.title',
+    textKey: 'gallery.orderdetail.text',
+    altKey: 'gallery.orderdetail.alt',
+    image: 'orden-auditoria',
+  },
+  {
+    id: 'alerts',
+    tone: 'rust',
+    icon: 'package',
+    titleKey: 'gallery.alerts.title',
+    textKey: 'gallery.alerts.text',
+    altKey: 'gallery.alerts.alt',
+    image: 'inventario-alertas',
+  },
+  {
+    id: 'roles',
+    tone: 'olive',
+    icon: 'shield',
+    titleKey: 'gallery.roles.title',
+    textKey: 'gallery.roles.text',
+    altKey: 'gallery.roles.alt',
+    image: 'roles',
+  },
+  {
+    id: 'taxes',
+    tone: 'indigo',
+    icon: 'receipt',
+    titleKey: 'gallery.taxes.title',
+    textKey: 'gallery.taxes.text',
+    altKey: 'gallery.taxes.alt',
+    image: 'impuestos',
   },
 ] as const;
 
@@ -292,21 +362,21 @@ export interface SoonItem {
 export const soonItems: readonly SoonItem[] = [
   {
     id: 'delivery',
-    tone: 'violet',
+    tone: 'plum',
     icon: 'bike',
     titleKey: 'soon.delivery.title',
     textKey: 'soon.delivery.text',
   },
   {
     id: 'invoicing',
-    tone: 'cyan',
+    tone: 'indigo',
     icon: 'fileText',
     titleKey: 'soon.invoicing.title',
     textKey: 'soon.invoicing.text',
   },
   {
     id: 'menu',
-    tone: 'rose',
+    tone: 'rust',
     icon: 'globe',
     titleKey: 'soon.menu.title',
     textKey: 'soon.menu.text',
@@ -324,9 +394,9 @@ export interface HowStep {
 }
 
 export const howSteps: readonly HowStep[] = [
-  { titleKey: 'how.1.title', textKey: 'how.1.text', tone: 'amber' },
-  { titleKey: 'how.2.title', textKey: 'how.2.text', tone: 'violet' },
-  { titleKey: 'how.3.title', textKey: 'how.3.text', tone: 'mint' },
+  { titleKey: 'how.1.title', textKey: 'how.1.text', tone: 'clay' },
+  { titleKey: 'how.2.title', textKey: 'how.2.text', tone: 'plum' },
+  { titleKey: 'how.3.title', textKey: 'how.3.text', tone: 'olive' },
 ] as const;
 
 /* -------------------------------------------------------------------------- */
@@ -340,10 +410,10 @@ export interface Stat {
 }
 
 export const stats: readonly Stat[] = [
-  { numKey: 'stats.1.num', labelKey: 'stats.1.label', tone: 'amber' },
-  { numKey: 'stats.2.num', labelKey: 'stats.2.label', tone: 'rose' },
-  { numKey: 'stats.3.num', labelKey: 'stats.3.label', tone: 'violet' },
-  { numKey: 'stats.4.num', labelKey: 'stats.4.label', tone: 'cyan' },
+  { numKey: 'stats.1.num', labelKey: 'stats.1.label', tone: 'clay' },
+  { numKey: 'stats.2.num', labelKey: 'stats.2.label', tone: 'rust' },
+  { numKey: 'stats.3.num', labelKey: 'stats.3.label', tone: 'plum' },
+  { numKey: 'stats.4.num', labelKey: 'stats.4.label', tone: 'indigo' },
 ] as const;
 
 /* -------------------------------------------------------------------------- */
@@ -443,14 +513,14 @@ export const marqueeItems: readonly {
   labelKey: TranslationKey;
   tone: Tone;
 }[] = [
-  { icon: 'utensils', labelKey: 'marquee.1', tone: 'amber' },
-  { icon: 'chefHat', labelKey: 'marquee.2', tone: 'rose' },
-  { icon: 'package', labelKey: 'marquee.3', tone: 'mint' },
-  { icon: 'flame', labelKey: 'marquee.4', tone: 'violet' },
-  { icon: 'receipt', labelKey: 'marquee.5', tone: 'cyan' },
-  { icon: 'bike', labelKey: 'marquee.6', tone: 'indigo' },
-  { icon: 'chart', labelKey: 'marquee.7', tone: 'teal' },
-  { icon: 'shield', labelKey: 'marquee.8', tone: 'rose' },
+  { icon: 'utensils', labelKey: 'marquee.1', tone: 'clay' },
+  { icon: 'chefHat', labelKey: 'marquee.2', tone: 'rust' },
+  { icon: 'package', labelKey: 'marquee.3', tone: 'olive' },
+  { icon: 'flame', labelKey: 'marquee.4', tone: 'plum' },
+  { icon: 'receipt', labelKey: 'marquee.5', tone: 'indigo' },
+  { icon: 'bike', labelKey: 'marquee.6', tone: 'honey' },
+  { icon: 'chart', labelKey: 'marquee.7', tone: 'olive' },
+  { icon: 'shield', labelKey: 'marquee.8', tone: 'rust' },
 ] as const;
 
 /* -------------------------------------------------------------------------- */

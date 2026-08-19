@@ -2,15 +2,20 @@
    RestroLogic — Design Tokens
    --------------------------------------------------------------------------
    The palette is lifted from the RestroLogic product UI so the landing page
-   and the app read as one brand: indigo ink, amber for the brand and the
-   active state, cyan for actions, and mint / rose / violet / teal as
-   functional accents on a cool blue-grey canvas.
+   and the app read as one brand: a warm cream canvas, espresso chrome,
+   terracotta for the brand and every active state, and olive / denim / rust
+   as the functional accents the app already uses on its status chips.
 
    Layers:
      1. Primitives  (--rl-<hue>-<step>)  raw, theme-agnostic values
      2. Hue ramps   (--hue-<name>-*)     the multi-colour accent system
      3. Semantics   (--bg, --text, …)    meaning, theme-dependent
    Components MUST only consume semantic or hue tokens, never primitives.
+
+   The ramps in section 1 are generated — do not hand-edit them. Run
+   `python3 tools/ramp.py --css` to regenerate, and `python3 tools/ramp.py`
+   to re-measure every pairing the design system relies on. `tools/check.py`
+   asserts that what is pasted here still matches what the generator emits.
    ========================================================================== */
 
 :root {
@@ -18,110 +23,123 @@
      1. PRIMITIVES
      ===================================================================== */
 
-  /* Amber — the brand hue. The "Logic" in the wordmark, the active sidebar
-     item, the "saldo esperado" figure. */
-  --rl-amber-50: #fff8ec;
-  --rl-amber-100: #ffedd0;
-  --rl-amber-200: #fed9a4;
-  --rl-amber-300: #fdbc6d;
-  --rl-amber-400: #fba43f;
-  --rl-amber-500: #f59e0b;
-  --rl-amber-600: #d97d06;
-  --rl-amber-700: #96500a; /* AA on --bg and --bg-tint; #a85a08 was 3.98 */
-  --rl-amber-800: #82440a;
-  --rl-amber-900: #542b08;
+  /* -------------------------------------------------------------------
+     Anchors — sampled straight out of the product, never interpolated.
+     These four are the identity; everything else is derived.
+     ------------------------------------------------------------------- */
+  --rl-cream: #f9f4ed; /* the app canvas */
+  --rl-espresso: #2e2b25; /* the sidebar and every dark chrome surface */
+  --rl-ink: #201e1d; /* headings and figures */
+  --rl-terracotta: #c67139; /* the active nav item, as the app ships it */
 
-  /* Cyan — the app's action colour (Agregar, Guardar, Buscar Registros). */
-  --rl-cyan-50: #ecfbff;
-  --rl-cyan-100: #cff4fd;
-  --rl-cyan-200: #a3e9f9;
-  --rl-cyan-300: #67d8f2;
-  --rl-cyan-400: #2bbfe2;
-  --rl-cyan-500: #11a5c8;
-  --rl-cyan-600: #0c7f9f;
-  --rl-cyan-700: #0d6280;
-  --rl-cyan-800: #114f66;
-  --rl-cyan-900: #0f3547;
+  /* BEGIN generated ramps — tools/ramp.py --css */
 
-  /* Indigo — the ink. Headings, and the "Restro" in the wordmark. */
-  --rl-indigo-50: #eef1ff;
-  --rl-indigo-100: #dfe4ff;
-  --rl-indigo-200: #c3caff;
-  --rl-indigo-300: #a0a7fb;
-  --rl-indigo-400: #7c7ef2;
-  --rl-indigo-500: #5f5ae4;
-  --rl-indigo-600: #4a3fca;
-  --rl-indigo-700: #3a2f9c;
-  --rl-indigo-800: #2b2473;
-  --rl-indigo-900: #1e1a4f;
-  --rl-indigo-950: #140f33;
+  /* clay — anchored on #c67139 */
+  --rl-clay-50: #fff3eb;
+  --rl-clay-100: #ffe6d6;
+  --rl-clay-200: #ffcfb3;
+  --rl-clay-300: #f3b088;
+  --rl-clay-400: #df8e5c;
+  --rl-clay-500: #c8733b;
+  --rl-clay-600: #aa581c;
+  --rl-clay-700: #883f00;
+  --rl-clay-800: #652900;
+  --rl-clay-900: #431500;
+  --rl-clay-950: #2a0600;
 
-  /* Mint — availability, success, "DISPONIBLE". */
-  --rl-mint-50: #e7fbf2;
-  --rl-mint-100: #c8f5e1;
-  --rl-mint-200: #97ebc9;
-  --rl-mint-300: #56d9a9;
-  --rl-mint-400: #2bc189;
-  --rl-mint-500: #12a570;
-  --rl-mint-600: #0a7c55;
-  --rl-mint-700: #0a6144;
-  --rl-mint-800: #094a34;
-  --rl-mint-900: #063324;
+  /* honey — anchored on #d9a017 */
+  --rl-honey-50: #fff6e5;
+  --rl-honey-100: #fcebcc;
+  --rl-honey-200: #f4d7a1;
+  --rl-honey-300: #e4ba6b;
+  --rl-honey-400: #cf9b29;
+  --rl-honey-500: #b88100;
+  --rl-honey-600: #9c6500;
+  --rl-honey-700: #7b4b00;
+  --rl-honey-800: #5b3300;
+  --rl-honey-900: #3c1d00;
+  --rl-honey-950: #250d00;
 
-  /* Rose — alerts, occupied tables, destructive actions. */
-  --rl-rose-50: #fff0f3;
-  --rl-rose-100: #ffdde3;
-  --rl-rose-200: #ffc0cc;
-  --rl-rose-300: #fd8fa6;
-  --rl-rose-400: #f65f7f;
-  --rl-rose-500: #e63b60;
-  --rl-rose-600: #c31640;
-  --rl-rose-700: #9d1234;
-  --rl-rose-800: #781029;
-  --rl-rose-900: #4d0a1a;
+  /* olive — anchored on #76835a */
+  --rl-olive-50: #f5f8f1;
+  --rl-olive-100: #eaefe2;
+  --rl-olive-200: #d7dfc8;
+  --rl-olive-300: #bbc6a6;
+  --rl-olive-400: #9eab84;
+  --rl-olive-500: #859369;
+  --rl-olive-600: #6b784f;
+  --rl-olive-700: #515c38;
+  --rl-olive-800: #384124;
+  --rl-olive-900: #222811;
+  --rl-olive-950: #111605;
 
-  /* Violet — a sixth hue so no two feature cards repeat a colour. */
-  --rl-violet-50: #f6f1ff;
-  --rl-violet-100: #ebe1ff;
-  --rl-violet-200: #d9c6ff;
-  --rl-violet-300: #bf9dfc;
-  --rl-violet-400: #a273f6;
-  --rl-violet-500: #8a51e8;
-  --rl-violet-600: #7132c6;
-  --rl-violet-700: #5a279e;
-  --rl-violet-800: #431e77;
-  --rl-violet-900: #2c144f;
+  /* indigo — anchored on #4a5da8 */
+  --rl-indigo-50: #f2f6ff;
+  --rl-indigo-100: #e3ecff;
+  --rl-indigo-200: #cbd9ff;
+  --rl-indigo-300: #abbefc;
+  --rl-indigo-400: #8aa0eb;
+  --rl-indigo-500: #7187d6;
+  --rl-indigo-600: #576cb8;
+  --rl-indigo-700: #405194;
+  --rl-indigo-800: #2b386f;
+  --rl-indigo-900: #17214c;
+  --rl-indigo-950: #091031;
 
-  /* Teal — the "Cobrar / Pagar" buttons. */
-  --rl-teal-200: #a8e5dc;
-  --rl-teal-300: #5ed6c4;
-  --rl-teal-400: #2bbda9;
-  --rl-teal-500: #109e8c;
-  --rl-teal-600: #0b6f63;
-  --rl-teal-700: #0b5e54;
+  /* rust — anchored on #b32d1c */
+  --rl-rust-50: #fff0ec;
+  --rl-rust-100: #ffe1d8;
+  --rl-rust-200: #ffc5b7;
+  --rl-rust-300: #ffa08e;
+  --rl-rust-400: #f87965;
+  --rl-rust-500: #e25a46;
+  --rl-rust-600: #c23c2a;
+  --rl-rust-700: #9c2314;
+  --rl-rust-800: #750c02;
+  --rl-rust-900: #4f0000;
+  --rl-rust-950: #330000;
 
-  /* Slate — the neutral ramp. Cool blue-grey, matching the app chrome. */
-  --rl-slate-0: #ffffff;
-  --rl-slate-25: #fafbfd;
-  --rl-slate-50: #f3f6fa;
-  --rl-slate-100: #edf1f7;
-  --rl-slate-200: #dee4ee;
-  --rl-slate-300: #c3ccdb;
-  --rl-slate-400: #949fb0;
-  --rl-slate-500: #6b7490;
-  --rl-slate-600: #4b5270;
-  --rl-slate-700: #363c54;
-  --rl-slate-800: #272c40;
-  --rl-slate-850: #1e2233;
-  --rl-slate-900: #161a29;
-  --rl-slate-950: #0d101c;
+  /* plum — anchored on #8d4a63 */
+  --rl-plum-50: #fff3f7;
+  --rl-plum-100: #fee5ed;
+  --rl-plum-200: #f7cedb;
+  --rl-plum-300: #e7afc1;
+  --rl-plum-400: #d28ea5;
+  --rl-plum-500: #bb738c;
+  --rl-plum-600: #9e5972;
+  --rl-plum-700: #7d4057;
+  --rl-plum-800: #5c2a3d;
+  --rl-plum-900: #3c1625;
+  --rl-plum-950: #250814;
+
+  /* sand — anchored on #8c7c66 */
+  --rl-sand-50: #f9f6f3;
+  --rl-sand-100: #f0ece6;
+  --rl-sand-200: #e1dad0;
+  --rl-sand-300: #c9bfb2;
+  --rl-sand-400: #afa392;
+  --rl-sand-500: #978a79;
+  --rl-sand-600: #7c705f;
+  --rl-sand-700: #605546;
+  --rl-sand-800: #443c2f;
+  --rl-sand-900: #2b241b;
+  --rl-sand-950: #18130c;
+
+  /* END generated ramps */
+
+  /* White is its own token so a surface can never be "accidentally" white in
+     a theme where it should be espresso. */
+  --rl-white: #ffffff;
 
   /* -------------------------------------------------------------------
      Typography
+
+     Caprasimo and Figtree are the product's own faces. Caprasimo is a
+     single-weight retro display — it has no light or medium cut, so every
+     heading is set at 400 and hierarchy comes from size, never weight.
      ------------------------------------------------------------------- */
-  --font-display: "Outfit", "Segoe UI", system-ui, -apple-system, sans-serif;
-  --font-body: "Outfit", "Segoe UI", system-ui, -apple-system, sans-serif;
-  --font-accent: "Fraunces", "Iowan Old Style", Georgia, serif;
+  --font-display: "Caprasimo", "Bookman Old Style", Rockwell, Georgia, serif;
+  --font-body: "Figtree", "Segoe UI", system-ui, -apple-system, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
 
   /* Fluid type scale — clamp(min, preferred, max). */
@@ -138,13 +156,17 @@
   --text-5xl: clamp(2.15rem, 1.55rem + 2.7vw, 3.5rem);
   --text-6xl: clamp(2.5rem, 1.5rem + 3.9vw, 4.35rem);
 
-  --leading-tight: 1.06;
-  --leading-snug: 1.2;
-  --leading-normal: 1.5;
-  --leading-relaxed: 1.68;
+  /* Caprasimo is a heavy display face with tall x-height and short leading
+     tolerance; it needs tighter line-height than a sans would at the same
+     size, and a touch of negative tracking to close its generous sidebearings. */
+  --leading-display: 1.02;
+  --leading-tight: 1.08;
+  --leading-snug: 1.24;
+  --leading-normal: 1.55;
+  --leading-relaxed: 1.7;
 
-  --tracking-tighter: -0.035em;
-  --tracking-tight: -0.02em;
+  --tracking-display: -0.015em;
+  --tracking-tight: -0.01em;
   --tracking-normal: 0;
   --tracking-wide: 0.02em;
   --tracking-widest: 0.14em;
@@ -172,7 +194,8 @@
   --gutter: clamp(1.15rem, 0.6rem + 2.4vw, 2.5rem);
 
   /* -------------------------------------------------------------------
-     Radius
+     Radius — the app is generously rounded: cards at 16px, pills fully
+     round, and the sidebar's active item is a full-height capsule.
      ------------------------------------------------------------------- */
   --radius-xs: 0.375rem;
   --radius-sm: 0.5rem;
@@ -213,57 +236,69 @@
 [data-theme="light"] {
   color-scheme: light;
 
-  /* Surfaces — cool blue-grey canvas with white cards, as in the app. */
-  --bg: var(--rl-slate-100);
-  --bg-tint: var(--rl-slate-200);
-  --surface: var(--rl-slate-0);
-  --surface-2: var(--rl-slate-50);
-  --surface-sunken: var(--rl-slate-200);
-  --surface-inverse: var(--rl-slate-800);
+  /* Surfaces — the app's cream canvas with white cards sitting on it. */
+  --bg: var(--rl-cream);
+  --bg-tint: #f2ebe0;
+  --surface: var(--rl-white);
+  --surface-2: #fdfbf8;
+  --surface-sunken: #efe7da;
+  --surface-inverse: var(--rl-espresso);
 
-  --glass: rgb(255 255 255 / 0.74);
-  --glass-strong: rgb(255 255 255 / 0.92);
+  --glass: rgb(255 255 255 / 0.76);
+  --glass-strong: rgb(255 255 255 / 0.93);
   --glass-blur: 16px;
 
-  --border: rgb(30 26 79 / 0.12);
-  --border-strong: rgb(30 26 79 / 0.22);
-  --border-brand: rgb(217 125 6 / 0.4);
+  --border: rgb(32 30 29 / 0.11);
+  --border-strong: rgb(32 30 29 / 0.2);
+  --border-brand: rgb(200 115 59 / 0.42);
 
-  /* Text — deep indigo ink, matching the app's headings. */
-  --text: var(--rl-indigo-950);
-  --text-muted: var(--rl-slate-600);
-  --text-subtle: #5a6180;
-  --text-inverse: var(--rl-slate-50);
-  --text-on-brand: #241505;
+  /* Text — the app's near-black warm ink. */
+  --text: var(--rl-ink);
+  --text-muted: var(--rl-sand-700);
+  /* sand-600 measures 4.42:1 on the cream canvas — a hair under AA. This sits
+     between 600 and 700 and clears it while staying visibly lighter than
+     --text-muted, which is the only job this token has. */
+  --text-subtle: #6e6355;
+  --text-inverse: var(--rl-sand-50);
 
-  /* Brand (amber) */
-  --brand: var(--rl-amber-600);
-  --brand-hover: var(--rl-amber-700);
-  --brand-active: var(--rl-amber-800);
-  --brand-ink: var(--rl-amber-700);
-  --brand-soft: var(--rl-amber-50);
-  --brand-soft-border: var(--rl-amber-200);
-  --brand-strong: var(--rl-amber-400);
+  /* Brand (terracotta).
+     --brand is one step deeper than the product's #c67139 on purpose: the
+     product fills its nav pill with the raw terracotta and sets white on it,
+     which measures 3.6:1. Deepening the fill to clay-600 keeps the same
+     terracotta reading and clears AA at 5.09:1 — see tools/ramp.py. */
+  --brand: var(--rl-clay-600);
+  --brand-hover: var(--rl-clay-700);
+  --brand-active: var(--rl-clay-800);
+  --brand-ink: var(--rl-clay-700);
+  --brand-soft: var(--rl-clay-50);
+  --brand-soft-border: var(--rl-clay-200);
+  --brand-strong: var(--rl-clay-600);
+  --text-on-brand: var(--rl-white);
 
-  /* Action (cyan) — the app's primary button colour. */
-  --action: var(--rl-cyan-600);
-  --action-ink: var(--rl-cyan-700);
-  --action-soft: var(--rl-cyan-50);
-  --action-border: var(--rl-cyan-200);
+  /* --brand-vivid is the untouched product hex. Decorative use only: fills
+     that carry no text, gradient stops, glows, the faux-app replica's
+     non-textual chrome. Never put a label on it. */
+  --brand-vivid: var(--rl-terracotta);
 
-  /* Accent (mint) */
-  --accent: var(--rl-mint-600);
-  --accent-ink: var(--rl-mint-700);
-  --accent-soft: var(--rl-mint-50);
+  /* Action — the app's secondary/informational action ("Preparar"). */
+  --action: var(--rl-indigo-600);
+  --action-ink: var(--rl-indigo-700);
+  --action-soft: var(--rl-indigo-50);
+  --action-border: var(--rl-indigo-200);
 
-  /* Status */
-  --status-info: var(--rl-cyan-700);
-  --status-warn: var(--rl-amber-700);
-  --status-danger: var(--rl-rose-600);
-  --status-success: var(--rl-mint-700);
+  /* Accent — the availability green. */
+  --accent: var(--rl-olive-600);
+  --accent-ink: var(--rl-olive-700);
+  --accent-soft: var(--rl-olive-50);
 
-  /* Elevation — cool-tinted, matching the app's soft card shadows. */
-  --shadow-rgb: 30 34 51;
+  /* Status — mapped to the chips the app actually renders. */
+  --status-info: var(--rl-indigo-700);
+  --status-warn: var(--rl-honey-700);
+  --status-danger: var(--rl-rust-700);
+  --status-success: var(--rl-olive-700);
+
+  /* Elevation — warm-tinted, matching the app's soft card shadows. */
+  --shadow-rgb: 62 46 30;
   --shadow-xs: 0 1px 2px rgb(var(--shadow-rgb) / 0.06);
   --shadow-sm: 0 1px 2px rgb(var(--shadow-rgb) / 0.05),
     0 2px 8px rgb(var(--shadow-rgb) / 0.06);
@@ -273,164 +308,171 @@
     0 20px 46px rgb(var(--shadow-rgb) / 0.12);
   --shadow-xl: 0 10px 20px rgb(var(--shadow-rgb) / 0.07),
     0 36px 74px rgb(var(--shadow-rgb) / 0.16);
-  --shadow-brand: 0 10px 28px rgb(245 158 11 / 0.42);
+  --shadow-brand: 0 10px 28px rgb(200 115 59 / 0.38);
 
   /* Gradients ---------------------------------------------------------- */
 
-  /* Decorative only — nothing carries text on this one. */
+  /* Decorative only — nothing carries text on this one. Matches the logo's
+     own sweep from gold through terracotta into coral. */
   --grad-brand: linear-gradient(
     135deg,
-    var(--rl-amber-400) 0%,
-    var(--rl-amber-600) 55%,
-    var(--rl-rose-500) 100%
+    var(--rl-honey-400) 0%,
+    var(--rl-clay-500) 52%,
+    var(--rl-rust-500) 100%
   );
 
   /* Text-safe ramp: every brand surface with a label uses this instead.
      --brand-strong is its lightest stop, i.e. the worst case for contrast. */
   --grad-brand-strong: linear-gradient(
     135deg,
-    var(--rl-amber-300) 0%,
-    var(--brand-strong) 45%,
-    var(--rl-amber-600) 100%
+    var(--rl-clay-600) 0%,
+    var(--rl-clay-700) 55%,
+    var(--rl-rust-700) 100%
   );
 
-  /* The multi-hue wash behind the hero and CTA. Four hues at low alpha —
-     this is what stops the page reading monochrome. */
+  /* The warm wash behind the hero and CTA. Kept inside the family — cream,
+     terracotta, honey, a hint of olive — so the page never reads cold. */
   --grad-warm-wash: radial-gradient(
       62rem 38rem at 8% -6%,
-      rgb(245 158 11 / 0.22),
+      rgb(200 115 59 / 0.2),
       transparent 60%
     ),
-    radial-gradient(56rem 34rem at 78% -4%, rgb(17 165 200 / 0.2), transparent 62%),
-    radial-gradient(46rem 30rem at 96% 30%, rgb(138 81 232 / 0.14), transparent 64%),
-    radial-gradient(50rem 32rem at 30% 20%, rgb(18 165 112 / 0.1), transparent 66%);
+    radial-gradient(56rem 34rem at 78% -4%, rgb(217 160 23 / 0.16), transparent 62%),
+    radial-gradient(46rem 30rem at 96% 30%, rgb(157 89 114 / 0.1), transparent 64%),
+    radial-gradient(50rem 32rem at 30% 22%, rgb(107 120 79 / 0.09), transparent 66%);
 
-  /* Headline gradient — travels amber → rose → violet → cyan. */
+  /* Headline gradient — travels terracotta → rust → plum.
+     --grad-text-floor names the lightest stop, i.e. the worst case for
+     contrast against the page. It exists so the audit can measure the
+     gradient without hard-coding a primitive that only holds in one theme. */
   --grad-text: linear-gradient(
     100deg,
-    var(--rl-amber-700) 0%,
-    var(--rl-rose-600) 38%,
-    var(--rl-violet-600) 72%,
-    var(--rl-cyan-700) 100%
+    var(--rl-clay-700) 0%,
+    var(--rl-rust-700) 45%,
+    var(--rl-plum-700) 100%
   );
+  --grad-text-floor: var(--rl-plum-700);
 
-  /* Full spectrum, used by the scroll progress bar and connector rails. */
+  /* Full spectrum, used by the scroll progress bar and connector rails.
+     Ordered warm → cool so it reads as a service timeline rather than a
+     rainbow: honey, terracotta, rust, plum, olive. */
   --grad-spectrum: linear-gradient(
     90deg,
-    var(--rl-amber-500) 0%,
-    var(--rl-rose-500) 26%,
-    var(--rl-violet-500) 50%,
-    var(--rl-cyan-500) 74%,
-    var(--rl-mint-500) 100%
+    var(--rl-honey-500) 0%,
+    var(--rl-clay-500) 26%,
+    var(--rl-rust-500) 50%,
+    var(--rl-plum-500) 74%,
+    var(--rl-olive-500) 100%
   );
 
-  --hairline: rgb(30 26 79 / 0.1);
-  --scrim: rgb(20 15 51 / 0.5);
+  --hairline: rgb(32 30 29 / 0.09);
+  --scrim: rgb(24 19 12 / 0.5);
 
   /* =====================================================================
      2. HUE RAMPS — the multi-colour accent system (light)
      Each hue is a quintet: base / ink (text) / soft (fill) / border / on.
+     `strong` is the contrast-safe fill for any toned surface with a label.
      ===================================================================== */
-  --hue-amber: var(--rl-amber-600);
-  --hue-amber-ink: var(--rl-amber-700);
-  --hue-amber-soft: var(--rl-amber-50);
-  --hue-amber-border: var(--rl-amber-200);
-  --hue-amber-on: #ffffff;
-  --hue-amber-strong: var(--rl-amber-700);
+  --hue-clay: var(--rl-clay-600);
+  --hue-clay-ink: var(--rl-clay-700);
+  --hue-clay-soft: var(--rl-clay-50);
+  --hue-clay-border: var(--rl-clay-200);
+  --hue-clay-on: var(--rl-white);
+  --hue-clay-strong: var(--rl-clay-700);
 
-  --hue-cyan: var(--rl-cyan-600);
-  --hue-cyan-ink: var(--rl-cyan-700);
-  --hue-cyan-soft: var(--rl-cyan-50);
-  --hue-cyan-border: var(--rl-cyan-200);
-  --hue-cyan-on: #ffffff;
-  --hue-cyan-strong: var(--rl-cyan-700);
+  --hue-honey: var(--rl-honey-600);
+  --hue-honey-ink: var(--rl-honey-700);
+  --hue-honey-soft: var(--rl-honey-50);
+  --hue-honey-border: var(--rl-honey-200);
+  --hue-honey-on: var(--rl-white);
+  --hue-honey-strong: var(--rl-honey-700);
 
-  --hue-mint: var(--rl-mint-600);
-  --hue-mint-ink: var(--rl-mint-700);
-  --hue-mint-soft: var(--rl-mint-50);
-  --hue-mint-border: var(--rl-mint-200);
-  --hue-mint-on: #ffffff;
-  --hue-mint-strong: var(--rl-mint-700);
+  --hue-olive: var(--rl-olive-600);
+  --hue-olive-ink: var(--rl-olive-700);
+  --hue-olive-soft: var(--rl-olive-50);
+  --hue-olive-border: var(--rl-olive-200);
+  --hue-olive-on: var(--rl-white);
+  --hue-olive-strong: var(--rl-olive-700);
 
   --hue-indigo: var(--rl-indigo-600);
   --hue-indigo-ink: var(--rl-indigo-700);
   --hue-indigo-soft: var(--rl-indigo-50);
   --hue-indigo-border: var(--rl-indigo-200);
-  --hue-indigo-on: #ffffff;
+  --hue-indigo-on: var(--rl-white);
   --hue-indigo-strong: var(--rl-indigo-700);
 
-  --hue-rose: var(--rl-rose-600);
-  --hue-rose-ink: var(--rl-rose-700);
-  --hue-rose-soft: var(--rl-rose-50);
-  --hue-rose-border: var(--rl-rose-200);
-  --hue-rose-on: #ffffff;
-  --hue-rose-strong: var(--rl-rose-700);
+  --hue-rust: var(--rl-rust-600);
+  --hue-rust-ink: var(--rl-rust-700);
+  --hue-rust-soft: var(--rl-rust-50);
+  --hue-rust-border: var(--rl-rust-200);
+  --hue-rust-on: var(--rl-white);
+  --hue-rust-strong: var(--rl-rust-700);
 
-  --hue-violet: var(--rl-violet-600);
-  --hue-violet-ink: var(--rl-violet-700);
-  --hue-violet-soft: var(--rl-violet-50);
-  --hue-violet-border: var(--rl-violet-200);
-  --hue-violet-on: #ffffff;
-  --hue-violet-strong: var(--rl-violet-700);
-
-  --hue-teal: var(--rl-teal-600);
-  --hue-teal-ink: var(--rl-teal-700);
-  --hue-teal-soft: #e6f7f4;
-  --hue-teal-border: var(--rl-teal-200);
-  --hue-teal-on: #ffffff;
-  --hue-teal-strong: var(--rl-teal-700);
+  --hue-plum: var(--rl-plum-600);
+  --hue-plum-ink: var(--rl-plum-700);
+  --hue-plum-soft: var(--rl-plum-50);
+  --hue-plum-border: var(--rl-plum-200);
+  --hue-plum-on: var(--rl-white);
+  --hue-plum-strong: var(--rl-plum-700);
 }
 
 /* ==========================================================================
    SEMANTIC TOKENS — DARK
-   A night version of the app chrome: deep indigo-slate rather than black.
+   Night version of the app chrome: the espresso sidebar taken to a full
+   surface set, not a generic near-black. Everything stays warm.
+
+   This block and the prefers-color-scheme block below must stay identical.
+   `tools/check.py` compares them line for line, so the duplication that the
+   cascade forces on us cannot silently drift.
    ========================================================================== */
 
 [data-theme="dark"] {
   color-scheme: dark;
 
-  --bg: #0b0e1a;
-  --bg-tint: var(--rl-slate-900);
-  --surface: var(--rl-slate-850);
-  --surface-2: var(--rl-slate-800);
-  --surface-sunken: #070912;
-  --surface-inverse: var(--rl-slate-50);
+  --bg: #17140f;
+  --bg-tint: #1d1913;
+  --surface: #211d17;
+  --surface-2: #2a251e;
+  --surface-sunken: #100e0a;
+  --surface-inverse: var(--rl-sand-50);
 
-  --glass: rgb(30 34 51 / 0.68);
-  --glass-strong: rgb(17 20 33 / 0.9);
+  --glass: rgb(33 29 23 / 0.7);
+  --glass-strong: rgb(23 20 15 / 0.92);
   --glass-blur: 18px;
 
-  --border: rgb(198 210 235 / 0.13);
-  --border-strong: rgb(198 210 235 / 0.24);
-  --border-brand: rgb(251 164 63 / 0.42);
+  --border: rgb(240 236 230 / 0.13);
+  --border-strong: rgb(240 236 230 / 0.24);
+  --border-brand: rgb(243 176 136 / 0.4);
 
-  --text: #eef1fa;
-  --text-muted: #a8b1cc;
-  --text-subtle: #8e97b3;
-  --text-inverse: var(--rl-indigo-950);
-  --text-on-brand: #2a1704;
+  --text: #f4f0ea;
+  --text-muted: var(--rl-sand-300);
+  --text-subtle: var(--rl-sand-400);
+  --text-inverse: var(--rl-ink);
 
-  --brand: var(--rl-amber-400);
-  --brand-hover: var(--rl-amber-300);
-  --brand-active: var(--rl-amber-500);
-  --brand-ink: var(--rl-amber-300);
-  --brand-soft: rgb(251 164 63 / 0.14);
-  --brand-soft-border: rgb(251 164 63 / 0.32);
-  --brand-strong: var(--rl-amber-400);
+  --brand: var(--rl-clay-300);
+  --brand-hover: var(--rl-clay-200);
+  --brand-active: var(--rl-clay-400);
+  --brand-ink: var(--rl-clay-300);
+  --brand-soft: rgb(243 176 136 / 0.14);
+  --brand-soft-border: rgb(243 176 136 / 0.32);
+  --brand-strong: var(--rl-clay-300);
+  --text-on-brand: var(--rl-clay-950);
 
-  --action: var(--rl-cyan-300);
-  --action-ink: var(--rl-cyan-300);
-  --action-soft: rgb(103 216 242 / 0.14);
-  --action-border: rgb(103 216 242 / 0.32);
+  --brand-vivid: var(--rl-clay-400);
 
-  --accent: var(--rl-mint-300);
-  --accent-ink: var(--rl-mint-300);
-  --accent-soft: rgb(86 217 169 / 0.14);
+  --action: var(--rl-indigo-300);
+  --action-ink: var(--rl-indigo-300);
+  --action-soft: rgb(171 190 252 / 0.14);
+  --action-border: rgb(171 190 252 / 0.32);
 
-  --status-info: var(--rl-cyan-300);
-  --status-warn: var(--rl-amber-300);
-  --status-danger: var(--rl-rose-300);
-  --status-success: var(--rl-mint-300);
+  --accent: var(--rl-olive-300);
+  --accent-ink: var(--rl-olive-300);
+  --accent-soft: rgb(187 198 166 / 0.14);
+
+  --status-info: var(--rl-indigo-300);
+  --status-warn: var(--rl-honey-300);
+  --status-danger: var(--rl-rust-300);
+  --status-success: var(--rl-olive-300);
 
   --shadow-rgb: 0 0 0;
   --shadow-xs: 0 1px 2px rgb(0 0 0 / 0.4);
@@ -438,304 +480,292 @@
   --shadow-md: 0 2px 4px rgb(0 0 0 / 0.38), 0 10px 26px rgb(0 0 0 / 0.46);
   --shadow-lg: 0 4px 10px rgb(0 0 0 / 0.42), 0 22px 50px rgb(0 0 0 / 0.52);
   --shadow-xl: 0 10px 20px rgb(0 0 0 / 0.46), 0 38px 78px rgb(0 0 0 / 0.6);
-  --shadow-brand: 0 12px 36px rgb(251 164 63 / 0.26);
+  --shadow-brand: 0 12px 36px rgb(223 142 92 / 0.26);
 
   --grad-brand: linear-gradient(
     135deg,
-    var(--rl-amber-300) 0%,
-    var(--rl-amber-500) 58%,
-    var(--rl-rose-400) 100%
+    var(--rl-honey-300) 0%,
+    var(--rl-clay-400) 52%,
+    var(--rl-rust-400) 100%
   );
 
   --grad-brand-strong: linear-gradient(
     135deg,
-    var(--rl-amber-300) 0%,
-    var(--rl-amber-400) 58%,
-    #f0b64a 100%
+    var(--rl-clay-300) 0%,
+    var(--rl-clay-300) 55%,
+    var(--rl-honey-300) 100%
   );
 
   --grad-warm-wash: radial-gradient(
       62rem 38rem at 8% -6%,
-      rgb(251 164 63 / 0.22),
+      rgb(223 142 92 / 0.22),
       transparent 60%
     ),
-    radial-gradient(56rem 34rem at 78% -4%, rgb(43 191 226 / 0.2), transparent 62%),
-    radial-gradient(46rem 30rem at 96% 30%, rgb(162 115 246 / 0.16), transparent 64%),
-    radial-gradient(50rem 32rem at 30% 20%, rgb(43 193 137 / 0.12), transparent 66%);
+    radial-gradient(56rem 34rem at 78% -4%, rgb(207 155 41 / 0.16), transparent 62%),
+    radial-gradient(46rem 30rem at 96% 30%, rgb(210 142 165 / 0.12), transparent 64%),
+    radial-gradient(50rem 32rem at 30% 22%, rgb(158 171 132 / 0.1), transparent 66%);
 
   --grad-text: linear-gradient(
     100deg,
-    var(--rl-amber-300) 0%,
-    var(--rl-rose-300) 38%,
-    var(--rl-violet-300) 72%,
-    var(--rl-cyan-300) 100%
+    var(--rl-clay-300) 0%,
+    var(--rl-rust-300) 45%,
+    var(--rl-plum-300) 100%
   );
+  --grad-text-floor: var(--rl-plum-300);
 
   --grad-spectrum: linear-gradient(
     90deg,
-    var(--rl-amber-300) 0%,
-    var(--rl-rose-300) 26%,
-    var(--rl-violet-300) 50%,
-    var(--rl-cyan-300) 74%,
-    var(--rl-mint-300) 100%
+    var(--rl-honey-300) 0%,
+    var(--rl-clay-300) 26%,
+    var(--rl-rust-300) 50%,
+    var(--rl-plum-300) 74%,
+    var(--rl-olive-300) 100%
   );
 
-  --hairline: rgb(198 210 235 / 0.1);
+  --hairline: rgb(240 236 230 / 0.1);
   --scrim: rgb(0 0 0 / 0.66);
 
   /* Hue ramps (dark): bright base, tinted fill, near-black label colour. */
-  --hue-amber: var(--rl-amber-300);
-  --hue-amber-ink: var(--rl-amber-300);
-  --hue-amber-soft: rgb(253 188 109 / 0.14);
-  --hue-amber-border: rgb(253 188 109 / 0.32);
-  --hue-amber-on: #241505;
-  --hue-amber-strong: var(--rl-amber-300);
+  --hue-clay: var(--rl-clay-300);
+  --hue-clay-ink: var(--rl-clay-300);
+  --hue-clay-soft: rgb(243 176 136 / 0.14);
+  --hue-clay-border: rgb(243 176 136 / 0.32);
+  --hue-clay-on: var(--rl-clay-950);
+  --hue-clay-strong: var(--rl-clay-300);
 
-  --hue-cyan: var(--rl-cyan-300);
-  --hue-cyan-ink: var(--rl-cyan-300);
-  --hue-cyan-soft: rgb(103 216 242 / 0.14);
-  --hue-cyan-border: rgb(103 216 242 / 0.32);
-  --hue-cyan-on: #04222c;
-  --hue-cyan-strong: var(--rl-cyan-300);
+  --hue-honey: var(--rl-honey-300);
+  --hue-honey-ink: var(--rl-honey-300);
+  --hue-honey-soft: rgb(228 186 107 / 0.14);
+  --hue-honey-border: rgb(228 186 107 / 0.32);
+  --hue-honey-on: var(--rl-honey-950);
+  --hue-honey-strong: var(--rl-honey-300);
 
-  --hue-mint: var(--rl-mint-300);
-  --hue-mint-ink: var(--rl-mint-300);
-  --hue-mint-soft: rgb(86 217 169 / 0.14);
-  --hue-mint-border: rgb(86 217 169 / 0.32);
-  --hue-mint-on: #032117;
-  --hue-mint-strong: var(--rl-mint-300);
+  --hue-olive: var(--rl-olive-300);
+  --hue-olive-ink: var(--rl-olive-300);
+  --hue-olive-soft: rgb(187 198 166 / 0.14);
+  --hue-olive-border: rgb(187 198 166 / 0.32);
+  --hue-olive-on: var(--rl-olive-950);
+  --hue-olive-strong: var(--rl-olive-300);
 
   --hue-indigo: var(--rl-indigo-300);
   --hue-indigo-ink: var(--rl-indigo-300);
-  --hue-indigo-soft: rgb(160 167 251 / 0.15);
-  --hue-indigo-border: rgb(160 167 251 / 0.32);
-  --hue-indigo-on: #14103a;
+  --hue-indigo-soft: rgb(171 190 252 / 0.15);
+  --hue-indigo-border: rgb(171 190 252 / 0.32);
+  --hue-indigo-on: var(--rl-indigo-950);
   --hue-indigo-strong: var(--rl-indigo-300);
 
-  --hue-rose: var(--rl-rose-300);
-  --hue-rose-ink: var(--rl-rose-300);
-  --hue-rose-soft: rgb(253 143 166 / 0.14);
-  --hue-rose-border: rgb(253 143 166 / 0.32);
-  --hue-rose-on: #350a17;
-  --hue-rose-strong: var(--rl-rose-300);
+  --hue-rust: var(--rl-rust-300);
+  --hue-rust-ink: var(--rl-rust-300);
+  --hue-rust-soft: rgb(255 160 142 / 0.14);
+  --hue-rust-border: rgb(255 160 142 / 0.32);
+  --hue-rust-on: var(--rl-rust-950);
+  --hue-rust-strong: var(--rl-rust-300);
 
-  --hue-violet: var(--rl-violet-300);
-  --hue-violet-ink: var(--rl-violet-300);
-  --hue-violet-soft: rgb(191 157 252 / 0.14);
-  --hue-violet-border: rgb(191 157 252 / 0.32);
-  --hue-violet-on: #22103c;
-  --hue-violet-strong: var(--rl-violet-300);
-
-  --hue-teal: var(--rl-teal-300);
-  --hue-teal-ink: var(--rl-teal-300);
-  --hue-teal-soft: rgb(94 214 196 / 0.14);
-  --hue-teal-border: rgb(94 214 196 / 0.32);
-  --hue-teal-on: #04211d;
-  --hue-teal-strong: var(--rl-teal-300);
+  --hue-plum: var(--rl-plum-300);
+  --hue-plum-ink: var(--rl-plum-300);
+  --hue-plum-soft: rgb(231 175 193 / 0.14);
+  --hue-plum-border: rgb(231 175 193 / 0.32);
+  --hue-plum-on: var(--rl-plum-950);
+  --hue-plum-strong: var(--rl-plum-300);
 }
 
 /* Honour the OS preference before the theme script runs / with JS disabled.
    The dark block is repeated here because :root cannot inherit from an
-   attribute selector, and doing it any other way reintroduces the flash. */
+   attribute selector, and doing it any other way reintroduces the flash.
+   Keep it byte-identical to [data-theme="dark"] above — check.py enforces it. */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     color-scheme: dark;
 
-    --bg: #0b0e1a;
-    --bg-tint: var(--rl-slate-900);
-    --surface: var(--rl-slate-850);
-    --surface-2: var(--rl-slate-800);
-    --surface-sunken: #070912;
-    --surface-inverse: var(--rl-slate-50);
+    --bg: #17140f;
+    --bg-tint: #1d1913;
+    --surface: #211d17;
+    --surface-2: #2a251e;
+    --surface-sunken: #100e0a;
+    --surface-inverse: var(--rl-sand-50);
 
-    --glass: rgb(30 34 51 / 0.68);
-    --glass-strong: rgb(17 20 33 / 0.9);
+    --glass: rgb(33 29 23 / 0.7);
+    --glass-strong: rgb(23 20 15 / 0.92);
+    --glass-blur: 18px;
 
-    --border: rgb(198 210 235 / 0.13);
-    --border-strong: rgb(198 210 235 / 0.24);
-    --border-brand: rgb(251 164 63 / 0.42);
+    --border: rgb(240 236 230 / 0.13);
+    --border-strong: rgb(240 236 230 / 0.24);
+    --border-brand: rgb(243 176 136 / 0.4);
 
-    --text: #eef1fa;
-    --text-muted: #a8b1cc;
-    --text-subtle: #8e97b3;
-    --text-inverse: var(--rl-indigo-950);
-    --text-on-brand: #2a1704;
+    --text: #f4f0ea;
+    --text-muted: var(--rl-sand-300);
+    --text-subtle: var(--rl-sand-400);
+    --text-inverse: var(--rl-ink);
 
-    --brand: var(--rl-amber-400);
-    --brand-hover: var(--rl-amber-300);
-    --brand-active: var(--rl-amber-500);
-    --brand-ink: var(--rl-amber-300);
-    --brand-soft: rgb(251 164 63 / 0.14);
-    --brand-soft-border: rgb(251 164 63 / 0.32);
-    --brand-strong: var(--rl-amber-400);
+    --brand: var(--rl-clay-300);
+    --brand-hover: var(--rl-clay-200);
+    --brand-active: var(--rl-clay-400);
+    --brand-ink: var(--rl-clay-300);
+    --brand-soft: rgb(243 176 136 / 0.14);
+    --brand-soft-border: rgb(243 176 136 / 0.32);
+    --brand-strong: var(--rl-clay-300);
+    --text-on-brand: var(--rl-clay-950);
 
-    --action: var(--rl-cyan-300);
-    --action-ink: var(--rl-cyan-300);
-    --action-soft: rgb(103 216 242 / 0.14);
-    --action-border: rgb(103 216 242 / 0.32);
+    --brand-vivid: var(--rl-clay-400);
 
-    --accent: var(--rl-mint-300);
-    --accent-ink: var(--rl-mint-300);
-    --accent-soft: rgb(86 217 169 / 0.14);
+    --action: var(--rl-indigo-300);
+    --action-ink: var(--rl-indigo-300);
+    --action-soft: rgb(171 190 252 / 0.14);
+    --action-border: rgb(171 190 252 / 0.32);
 
-    --status-info: var(--rl-cyan-300);
-    --status-warn: var(--rl-amber-300);
-    --status-danger: var(--rl-rose-300);
-    --status-success: var(--rl-mint-300);
+    --accent: var(--rl-olive-300);
+    --accent-ink: var(--rl-olive-300);
+    --accent-soft: rgb(187 198 166 / 0.14);
+
+    --status-info: var(--rl-indigo-300);
+    --status-warn: var(--rl-honey-300);
+    --status-danger: var(--rl-rust-300);
+    --status-success: var(--rl-olive-300);
 
     --shadow-rgb: 0 0 0;
+    --shadow-xs: 0 1px 2px rgb(0 0 0 / 0.4);
     --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.4), 0 2px 8px rgb(0 0 0 / 0.36);
     --shadow-md: 0 2px 4px rgb(0 0 0 / 0.38), 0 10px 26px rgb(0 0 0 / 0.46);
     --shadow-lg: 0 4px 10px rgb(0 0 0 / 0.42), 0 22px 50px rgb(0 0 0 / 0.52);
     --shadow-xl: 0 10px 20px rgb(0 0 0 / 0.46), 0 38px 78px rgb(0 0 0 / 0.6);
-    --shadow-brand: 0 12px 36px rgb(251 164 63 / 0.26);
+    --shadow-brand: 0 12px 36px rgb(223 142 92 / 0.26);
 
     --grad-brand: linear-gradient(
       135deg,
-      var(--rl-amber-300) 0%,
-      var(--rl-amber-500) 58%,
-      var(--rl-rose-400) 100%
+      var(--rl-honey-300) 0%,
+      var(--rl-clay-400) 52%,
+      var(--rl-rust-400) 100%
     );
+
     --grad-brand-strong: linear-gradient(
       135deg,
-      var(--rl-amber-300) 0%,
-      var(--rl-amber-400) 58%,
-      #f0b64a 100%
+      var(--rl-clay-300) 0%,
+      var(--rl-clay-300) 55%,
+      var(--rl-honey-300) 100%
     );
+
     --grad-warm-wash: radial-gradient(
         62rem 38rem at 8% -6%,
-        rgb(251 164 63 / 0.22),
+        rgb(223 142 92 / 0.22),
         transparent 60%
       ),
-      radial-gradient(
-        56rem 34rem at 78% -4%,
-        rgb(43 191 226 / 0.2),
-        transparent 62%
-      ),
-      radial-gradient(
-        46rem 30rem at 96% 30%,
-        rgb(162 115 246 / 0.16),
-        transparent 64%
-      ),
-      radial-gradient(
-        50rem 32rem at 30% 20%,
-        rgb(43 193 137 / 0.12),
-        transparent 66%
-      );
+      radial-gradient(56rem 34rem at 78% -4%, rgb(207 155 41 / 0.16), transparent 62%),
+      radial-gradient(46rem 30rem at 96% 30%, rgb(210 142 165 / 0.12), transparent 64%),
+      radial-gradient(50rem 32rem at 30% 22%, rgb(158 171 132 / 0.1), transparent 66%);
+
     --grad-text: linear-gradient(
       100deg,
-      var(--rl-amber-300) 0%,
-      var(--rl-rose-300) 38%,
-      var(--rl-violet-300) 72%,
-      var(--rl-cyan-300) 100%
+      var(--rl-clay-300) 0%,
+      var(--rl-rust-300) 45%,
+      var(--rl-plum-300) 100%
     );
+    --grad-text-floor: var(--rl-plum-300);
+
     --grad-spectrum: linear-gradient(
       90deg,
-      var(--rl-amber-300) 0%,
-      var(--rl-rose-300) 26%,
-      var(--rl-violet-300) 50%,
-      var(--rl-cyan-300) 74%,
-      var(--rl-mint-300) 100%
+      var(--rl-honey-300) 0%,
+      var(--rl-clay-300) 26%,
+      var(--rl-rust-300) 50%,
+      var(--rl-plum-300) 74%,
+      var(--rl-olive-300) 100%
     );
 
-    --hairline: rgb(198 210 235 / 0.1);
+    --hairline: rgb(240 236 230 / 0.1);
     --scrim: rgb(0 0 0 / 0.66);
 
-    --hue-amber: var(--rl-amber-300);
-    --hue-amber-ink: var(--rl-amber-300);
-    --hue-amber-soft: rgb(253 188 109 / 0.14);
-    --hue-amber-border: rgb(253 188 109 / 0.32);
-    --hue-amber-on: #241505;
-  --hue-amber-strong: var(--rl-amber-300);
+    --hue-clay: var(--rl-clay-300);
+    --hue-clay-ink: var(--rl-clay-300);
+    --hue-clay-soft: rgb(243 176 136 / 0.14);
+    --hue-clay-border: rgb(243 176 136 / 0.32);
+    --hue-clay-on: var(--rl-clay-950);
+    --hue-clay-strong: var(--rl-clay-300);
 
-    --hue-cyan: var(--rl-cyan-300);
-    --hue-cyan-ink: var(--rl-cyan-300);
-    --hue-cyan-soft: rgb(103 216 242 / 0.14);
-    --hue-cyan-border: rgb(103 216 242 / 0.32);
-    --hue-cyan-on: #04222c;
-  --hue-cyan-strong: var(--rl-cyan-300);
+    --hue-honey: var(--rl-honey-300);
+    --hue-honey-ink: var(--rl-honey-300);
+    --hue-honey-soft: rgb(228 186 107 / 0.14);
+    --hue-honey-border: rgb(228 186 107 / 0.32);
+    --hue-honey-on: var(--rl-honey-950);
+    --hue-honey-strong: var(--rl-honey-300);
 
-    --hue-mint: var(--rl-mint-300);
-    --hue-mint-ink: var(--rl-mint-300);
-    --hue-mint-soft: rgb(86 217 169 / 0.14);
-    --hue-mint-border: rgb(86 217 169 / 0.32);
-    --hue-mint-on: #032117;
-  --hue-mint-strong: var(--rl-mint-300);
+    --hue-olive: var(--rl-olive-300);
+    --hue-olive-ink: var(--rl-olive-300);
+    --hue-olive-soft: rgb(187 198 166 / 0.14);
+    --hue-olive-border: rgb(187 198 166 / 0.32);
+    --hue-olive-on: var(--rl-olive-950);
+    --hue-olive-strong: var(--rl-olive-300);
 
     --hue-indigo: var(--rl-indigo-300);
     --hue-indigo-ink: var(--rl-indigo-300);
-    --hue-indigo-soft: rgb(160 167 251 / 0.15);
-    --hue-indigo-border: rgb(160 167 251 / 0.32);
-    --hue-indigo-on: #14103a;
-  --hue-indigo-strong: var(--rl-indigo-300);
+    --hue-indigo-soft: rgb(171 190 252 / 0.15);
+    --hue-indigo-border: rgb(171 190 252 / 0.32);
+    --hue-indigo-on: var(--rl-indigo-950);
+    --hue-indigo-strong: var(--rl-indigo-300);
 
-    --hue-rose: var(--rl-rose-300);
-    --hue-rose-ink: var(--rl-rose-300);
-    --hue-rose-soft: rgb(253 143 166 / 0.14);
-    --hue-rose-border: rgb(253 143 166 / 0.32);
-    --hue-rose-on: #350a17;
-  --hue-rose-strong: var(--rl-rose-300);
+    --hue-rust: var(--rl-rust-300);
+    --hue-rust-ink: var(--rl-rust-300);
+    --hue-rust-soft: rgb(255 160 142 / 0.14);
+    --hue-rust-border: rgb(255 160 142 / 0.32);
+    --hue-rust-on: var(--rl-rust-950);
+    --hue-rust-strong: var(--rl-rust-300);
 
-    --hue-violet: var(--rl-violet-300);
-    --hue-violet-ink: var(--rl-violet-300);
-    --hue-violet-soft: rgb(191 157 252 / 0.14);
-    --hue-violet-border: rgb(191 157 252 / 0.32);
-    --hue-violet-on: #22103c;
-  --hue-violet-strong: var(--rl-violet-300);
-
-    --hue-teal: var(--rl-teal-300);
-    --hue-teal-ink: var(--rl-teal-300);
-    --hue-teal-soft: rgb(94 214 196 / 0.14);
-    --hue-teal-border: rgb(94 214 196 / 0.32);
-    --hue-teal-on: #04211d;
-  --hue-teal-strong: var(--rl-teal-300);
+    --hue-plum: var(--rl-plum-300);
+    --hue-plum-ink: var(--rl-plum-300);
+    --hue-plum-soft: rgb(231 175 193 / 0.14);
+    --hue-plum-border: rgb(231 175 193 / 0.32);
+    --hue-plum-on: var(--rl-plum-950);
+    --hue-plum-strong: var(--rl-plum-300);
   }
 }
 
 /* ==========================================================================
-   TONE UTILITY
+   TONE CLASSES
    --------------------------------------------------------------------------
-   Re-points the brand tokens at one hue ramp for a subtree. Because every
-   component already reads --brand / --brand-ink / --brand-soft, wrapping an
-   element in `.tone--cyan` recolours its icon tile, chip, hover glow, border
-   and cursor spotlight with no component-specific CSS at all. This is what
-   makes the page multi-coloured without multiplying the stylesheet.
+   Re-point the brand tokens at one hue ramp for a subtree. Because every
+   component reads --brand / --brand-ink / --brand-soft and never a primitive,
+   wrapping an element in .tone--olive recolours its icon tile, chip, border,
+   hover glow and cursor spotlight with no component CSS at all.
    ========================================================================== */
 
-[class*="tone--"] {
+.tone--clay,
+.tone--honey,
+.tone--olive,
+.tone--indigo,
+.tone--rust,
+.tone--plum {
   --brand: var(--tone);
   --brand-ink: var(--tone-ink);
   --brand-soft: var(--tone-soft);
   --brand-soft-border: var(--tone-border);
-  --border-brand: var(--tone-border);
+  --brand-strong: var(--tone-strong);
   --text-on-brand: var(--tone-on);
+  --border-brand: var(--tone-border);
 }
 
-.tone--amber {
-  --tone: var(--hue-amber);
-  --tone-ink: var(--hue-amber-ink);
-  --tone-soft: var(--hue-amber-soft);
-  --tone-border: var(--hue-amber-border);
-  --tone-on: var(--hue-amber-on);
-  --tone-strong: var(--hue-amber-strong);
+.tone--clay {
+  --tone: var(--hue-clay);
+  --tone-ink: var(--hue-clay-ink);
+  --tone-soft: var(--hue-clay-soft);
+  --tone-border: var(--hue-clay-border);
+  --tone-on: var(--hue-clay-on);
+  --tone-strong: var(--hue-clay-strong);
 }
 
-.tone--cyan {
-  --tone: var(--hue-cyan);
-  --tone-ink: var(--hue-cyan-ink);
-  --tone-soft: var(--hue-cyan-soft);
-  --tone-border: var(--hue-cyan-border);
-  --tone-on: var(--hue-cyan-on);
-  --tone-strong: var(--hue-cyan-strong);
+.tone--honey {
+  --tone: var(--hue-honey);
+  --tone-ink: var(--hue-honey-ink);
+  --tone-soft: var(--hue-honey-soft);
+  --tone-border: var(--hue-honey-border);
+  --tone-on: var(--hue-honey-on);
+  --tone-strong: var(--hue-honey-strong);
 }
 
-.tone--mint {
-  --tone: var(--hue-mint);
-  --tone-ink: var(--hue-mint-ink);
-  --tone-soft: var(--hue-mint-soft);
-  --tone-border: var(--hue-mint-border);
-  --tone-on: var(--hue-mint-on);
-  --tone-strong: var(--hue-mint-strong);
+.tone--olive {
+  --tone: var(--hue-olive);
+  --tone-ink: var(--hue-olive-ink);
+  --tone-soft: var(--hue-olive-soft);
+  --tone-border: var(--hue-olive-border);
+  --tone-on: var(--hue-olive-on);
+  --tone-strong: var(--hue-olive-strong);
 }
 
 .tone--indigo {
@@ -747,52 +777,20 @@
   --tone-strong: var(--hue-indigo-strong);
 }
 
-.tone--rose {
-  --tone: var(--hue-rose);
-  --tone-ink: var(--hue-rose-ink);
-  --tone-soft: var(--hue-rose-soft);
-  --tone-border: var(--hue-rose-border);
-  --tone-on: var(--hue-rose-on);
-  --tone-strong: var(--hue-rose-strong);
+.tone--rust {
+  --tone: var(--hue-rust);
+  --tone-ink: var(--hue-rust-ink);
+  --tone-soft: var(--hue-rust-soft);
+  --tone-border: var(--hue-rust-border);
+  --tone-on: var(--hue-rust-on);
+  --tone-strong: var(--hue-rust-strong);
 }
 
-.tone--violet {
-  --tone: var(--hue-violet);
-  --tone-ink: var(--hue-violet-ink);
-  --tone-soft: var(--hue-violet-soft);
-  --tone-border: var(--hue-violet-border);
-  --tone-on: var(--hue-violet-on);
-  --tone-strong: var(--hue-violet-strong);
-}
-
-.tone--teal {
-  --tone: var(--hue-teal);
-  --tone-ink: var(--hue-teal-ink);
-  --tone-soft: var(--hue-teal-soft);
-  --tone-border: var(--hue-teal-border);
-  --tone-on: var(--hue-teal-on);
-  --tone-strong: var(--hue-teal-strong);
-}
-
-/* Expose semantic tokens to Tailwind utilities. `inline` keeps the var
-   reference live so theme switching works at runtime. */
-@theme inline {
-  --color-bg: var(--bg);
-  --color-bg-tint: var(--bg-tint);
-  --color-surface: var(--surface);
-  --color-surface-2: var(--surface-2);
-  --color-border: var(--border);
-  --color-text: var(--text);
-  --color-muted: var(--text-muted);
-  --color-subtle: var(--text-subtle);
-  --color-brand: var(--brand);
-  --color-brand-ink: var(--brand-ink);
-  --color-action: var(--action);
-  --color-accent: var(--accent);
-
-  --font-sans: var(--font-body);
-  --font-serif: var(--font-accent);
-  --font-mono: var(--font-mono);
-
-  --radius-card: var(--radius-xl);
+.tone--plum {
+  --tone: var(--hue-plum);
+  --tone-ink: var(--hue-plum-ink);
+  --tone-soft: var(--hue-plum-soft);
+  --tone-border: var(--hue-plum-border);
+  --tone-on: var(--hue-plum-on);
+  --tone-strong: var(--hue-plum-strong);
 }

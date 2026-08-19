@@ -166,6 +166,12 @@
   document.querySelectorAll('[data-count]').forEach(function (el) {
     var target = parseFloat((el.dataset.count || '').replace(/[^\d.-]/g, ''));
     if (!isFinite(target)) return;
+    var grouped = el.dataset.countGroup === 'true';
+    var render = function (v) {
+      return grouped
+        ? v.toLocaleString('es-CO', { maximumFractionDigits: 0 })
+        : String(v);
+    };
     new IntersectionObserver(
       function (entries, obs) {
         entries.forEach(function (e) {
@@ -173,7 +179,7 @@
           var start = performance.now();
           (function tick(now) {
             var t = clamp((now - start) / 1600, 0, 1);
-            el.textContent = String(Math.round(target * easeOutExpo(t)));
+            el.textContent = render(Math.round(target * easeOutExpo(t)));
             if (t < 1) requestAnimationFrame(tick);
           })(start);
           obs.disconnect();
@@ -405,6 +411,101 @@
       { rootMargin: '0px 0px -18% 0px' },
     ).observe(panel);
   });
+
+  /* ------------------------------------------------------------- app shell --
+     Vanilla mirror of scenes.ts `shellScene`. Not a fallback — the real site
+     runs GSAP — but the preview has no bundle, and a still replica would hide
+     exactly the behaviour this hero exists to demonstrate. */
+  (function shell() {
+    var root = document.querySelector('[data-shell]');
+    if (!root || document.documentElement.dataset.motion === 'off') return;
+
+    var format = function (v) {
+      return v.toLocaleString('es-CO', { maximumFractionDigits: 0 });
+    };
+
+    /* Shift clock — one minute per four seconds. */
+    var clock = root.querySelector('[data-shell-clock]');
+    if (clock) {
+      var minutes = 14 * 60 + 10;
+      window.setInterval(function () {
+        minutes = (minutes + 1) % (24 * 60);
+        clock.textContent =
+          String(Math.floor(minutes / 60)).padStart(2, '0') +
+          ':' +
+          String(minutes % 60).padStart(2, '0');
+      }, 4000);
+    }
+
+    /* A comanda advancing Pendiente -> Cocinando -> Listo. */
+    var chips = document.querySelectorAll('[data-ticket-state]');
+    var bar = document.querySelector('[data-ticket-bar]');
+    if (chips.length) {
+      var step = 0;
+      window.setInterval(function () {
+        step = (step + 1) % (chips.length + 1);
+        var active = step % chips.length;
+        Array.prototype.forEach.call(chips, function (chip, i) {
+          if (i === active && step < chips.length) chip.dataset.on = 'true';
+          else if (i === 0 && step === chips.length) chip.dataset.on = 'true';
+          else delete chip.dataset.on;
+        });
+        if (bar) {
+          bar.style.width =
+            step >= chips.length
+              ? '8%'
+              : (((active + 1) / chips.length) * 100).toFixed(0) + '%';
+        }
+      }, 2600);
+    }
+
+    /* Payments landing: a row recycles to the top and sales grows by it. */
+    var list = root.querySelector('.shell__rows');
+    var figure = root.querySelector('[data-shell-kpi] [data-count]');
+    if (list && list.children.length > 1) {
+      var payments = [11400, 38500, 24900, 45100, 19800];
+      var index = 0;
+      var sales = Number((figure && figure.dataset.count) || 0);
+
+      window.setInterval(function () {
+        var payment = payments[index % payments.length];
+        index += 1;
+
+        var last = list.lastElementChild;
+        var first = list.firstElementChild;
+        if (!last || !first) return;
+
+        var amount = last.querySelector('.shell__row-amount');
+        if (amount) amount.textContent = '+ $ ' + format(payment);
+        list.insertBefore(last, first);
+
+        last.style.transition = 'none';
+        last.style.opacity = '0';
+        last.style.transform = 'translateY(-14px)';
+        last.style.backgroundColor = 'rgba(200,115,59,0.10)';
+        requestAnimationFrame(function () {
+          last.style.transition =
+            'opacity .5s ease, transform .5s cubic-bezier(.16,1,.3,1), background-color .9s ease';
+          last.style.opacity = '1';
+          last.style.transform = 'translateY(0)';
+          last.style.backgroundColor = 'rgba(200,115,59,0)';
+        });
+
+        if (figure) {
+          var from = sales;
+          sales += payment;
+          var start = performance.now();
+          (function tick(now) {
+            var t = clamp((now - start) / 1100, 0, 1);
+            figure.textContent = format(
+              Math.round(from + (sales - from) * easeOutExpo(t)),
+            );
+            if (t < 1) requestAnimationFrame(tick);
+          })(start);
+        }
+      }, 7900);
+    }
+  })();
 
   // Everything wired successfully — stand the failsafe down.
   window.clearTimeout(failsafe);

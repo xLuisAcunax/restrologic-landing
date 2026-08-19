@@ -1,0 +1,305 @@
+---
+/**
+ * A working replica of the RestroLogic application shell.
+ *
+ * Deliberately markup rather than a screenshot. A screenshot of the Caja
+ * screen is a flat image that cannot re-colour for dark mode, goes soft on a
+ * 2x display, and — most importantly — cannot move. This is ~6 KB of DOM that
+ * themes itself from the same tokens as the rest of the page and gives the
+ * motion layer real elements to drive: figures that count, a comanda that
+ * advances through the kitchen states, cash movements that stream in.
+ *
+ * Fidelity notes. Everything here mirrors the product one-for-one: the
+ * espresso sidebar with its SERVICIO / GESTIÓN / SISTEMA grouping, the
+ * terracotta capsule on the active item, the branch picker and open-register
+ * pill in the top bar, and the four control cards of the Caja screen. The one
+ * intentional deviation is the terracotta itself — the capsule uses --brand
+ * (clay-600) rather than the product's raw #c67139, because white on the raw
+ * hex measures 3.6:1. See tools/ramp.py.
+ *
+ * The block is decorative — the surrounding copy carries the meaning — so it
+ * is hidden from assistive technology in its entirety.
+ */
+import Icon from '../ui/Icon.astro';
+import type { IconName } from '../ui/icons';
+import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+
+const t = useTranslations(getLangFromUrl(Astro.url));
+
+interface NavEntry {
+  icon: IconName;
+  labelKey: string;
+  active?: boolean;
+  badge?: string;
+}
+
+/** The sidebar, grouped exactly as the product groups it. */
+const navGroups: { labelKey: string; items: NavEntry[] }[] = [
+  {
+    labelKey: 'shell.group.service',
+    items: [
+      { icon: 'utensils', labelKey: 'shell.nav.pos' },
+      { icon: 'chefHat', labelKey: 'shell.nav.kitchen', badge: '4' },
+      { icon: 'banknote', labelKey: 'shell.nav.cash', active: true },
+    ],
+  },
+  {
+    labelKey: 'shell.group.manage',
+    items: [
+      { icon: 'sliders', labelKey: 'shell.nav.products' },
+      { icon: 'package', labelKey: 'shell.nav.inventory' },
+      { icon: 'fileText', labelKey: 'shell.nav.reports' },
+      { icon: 'chart', labelKey: 'shell.nav.dashboard' },
+    ],
+  },
+  {
+    labelKey: 'shell.group.system',
+    items: [{ icon: 'settings', labelKey: 'shell.nav.settings' }],
+  },
+];
+
+/**
+ * The four control cards. `count` is the figure the motion layer counts up to;
+ * `prefix` keeps the currency symbol out of the number so the counter can
+ * format thousands without fighting it.
+ */
+const cards = [
+  {
+    id: 'sales',
+    tone: 'clay',
+    icon: 'chart',
+    labelKey: 'shell.kpi.sales',
+    prefix: '$ ',
+    count: 358000,
+    footKey: 'shell.kpi.sales.foot',
+  },
+  {
+    id: 'moves',
+    tone: 'olive',
+    icon: 'trendingUp',
+    labelKey: 'shell.kpi.moves',
+    prefix: '+ $ ',
+    count: 0,
+    footKey: 'shell.kpi.moves.foot',
+  },
+  {
+    id: 'control',
+    tone: 'indigo',
+    icon: 'receipt',
+    labelKey: 'shell.kpi.control',
+    prefix: '$ ',
+    count: 35800,
+    footKey: 'shell.kpi.control.foot',
+  },
+  {
+    id: 'expected',
+    tone: 'honey',
+    icon: 'banknote',
+    labelKey: 'shell.kpi.expected',
+    prefix: '$ ',
+    count: 208900,
+    footKey: 'shell.kpi.expected.foot',
+    featured: true,
+  },
+] as const;
+
+/**
+ * Cash movements. The first row is marked fresh so the motion layer can stream
+ * it in on a loop; the rest are the settled history behind it.
+ */
+const movements = [
+  { time: '2:10PM', descKey: 'shell.move.1', amount: '+ $ 94.600' },
+  { time: '2:10PM', descKey: 'shell.move.2', amount: '+ $ 45.100' },
+  { time: '2:10PM', descKey: 'shell.move.3', amount: '+ $ 51.700' },
+  { time: '2:09PM', descKey: 'shell.move.4', amount: '+ $ 44.000' },
+];
+
+/** The comanda that walks Pendiente → Cocinando → Listo in the overlay card. */
+const ticketStates = [
+  { id: 'pending', tone: 'indigo', labelKey: 'shell.ticket.pending' },
+  { id: 'cooking', tone: 'clay', labelKey: 'shell.ticket.cooking' },
+  { id: 'ready', tone: 'olive', labelKey: 'shell.ticket.ready' },
+];
+---
+
+<div class="shell" data-shell aria-hidden="true">
+  <!-- Browser chrome -->
+  <div class="shell__chrome">
+    <div class="shell__lights"><i></i><i></i><i></i></div>
+    <div class="shell__url">{t('shell.url')}</div>
+  </div>
+
+  <div class="shell__body">
+    <!-- Sidebar ---------------------------------------------------------- -->
+    <aside class="shell__side">
+      <div class="shell__brand">
+        <span class="shell__brand-mark"></span>
+        <span class="shell__brand-word"
+          >Restro<span class="shell__brand-word-alt">Logic</span></span
+        >
+      </div>
+
+      <div class="shell__nav">
+        {
+          navGroups.map((group) => (
+            <div class="shell__navgroup">
+              <span class="shell__navlabel">{t(group.labelKey as never)}</span>
+              {group.items.map((item) => (
+                <span
+                  class="shell__navitem"
+                  data-shell-nav
+                  data-active={item.active ? 'true' : undefined}
+                >
+                  <Icon name={item.icon} />
+                  <span class="shell__navtext">{t(item.labelKey as never)}</span>
+                  {item.badge && <span class="shell__navbadge">{item.badge}</span>}
+                </span>
+              ))}
+            </div>
+          ))
+        }
+      </div>
+
+      <span class="shell__navitem shell__navitem--muted">
+        <Icon name="logOut" />
+        <span class="shell__navtext">{t('shell.logout')}</span>
+      </span>
+    </aside>
+
+    <!-- Main ------------------------------------------------------------- -->
+    <div class="shell__main">
+      <header class="shell__top">
+        <span class="shell__pill shell__pill--branch">
+          <span class="dot"></span>
+          {t('shell.branch')}
+          <Icon name="chevronDown" class="shell__caret" />
+        </span>
+
+        <span class="shell__pill shell__pill--open">
+          <Icon name="clock" />
+          {t('shell.shift')}
+        </span>
+
+        <span class="shell__spacer"></span>
+
+        <span class="shell__clock">
+          <b data-shell-clock>14:10</b>
+          <em>{t('shell.date')}</em>
+        </span>
+
+        <span class="shell__user">
+          <span class="shell__user-text">
+            <b>{t('shell.user.name')}</b>
+            <em>{t('shell.user.role')}</em>
+          </span>
+          <span class="shell__avatar">AR</span>
+        </span>
+      </header>
+
+      <div class="shell__content">
+        <!-- Control cards -->
+        <div class="shell__kpis">
+          {
+            cards.map((card) => (
+              <div
+                class={`shell__kpi tone--${card.tone}`}
+                data-shell-kpi
+                data-featured={'featured' in card ? 'true' : undefined}
+              >
+                <div class="shell__kpi-head">
+                  <span class="shell__kpi-label">{t(card.labelKey as never)}</span>
+                  <span class="shell__kpi-icon">
+                    <Icon name={card.icon} />
+                  </span>
+                </div>
+                <div class="shell__kpi-val">
+                  <span class="shell__kpi-prefix">{card.prefix}</span>
+                  <span data-count={String(card.count)} data-count-group="true">
+                    {card.count.toLocaleString('es-CO')}
+                  </span>
+                </div>
+                <div class="shell__kpi-foot">{t(card.footKey as never)}</div>
+              </div>
+            ))
+          }
+        </div>
+
+        <!-- Cash movements -->
+        <div class="shell__panel">
+          <div class="shell__panel-head">
+            <span class="shell__panel-title">{t('shell.moves.title')}</span>
+            <span class="shell__panel-meta">{t('shell.moves.meta')}</span>
+          </div>
+
+          <div class="shell__rows">
+            {
+              movements.map((row, index) => (
+                <div class="shell__row" data-shell-row data-fresh={index === 0 ? 'true' : undefined}>
+                  <span class="shell__row-time">{row.time}</span>
+                  <span class="shell__row-tag">{t('shell.moves.type')}</span>
+                  <span class="shell__row-desc">{t(row.descKey as never)}</span>
+                  <span class="shell__row-amount">{row.amount}</span>
+                </div>
+              ))
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Overlay: a comanda advancing through the kitchen ---------------------- -->
+<div class="floatcard floatcard--kds" data-float data-shell-ticket aria-hidden="true">
+  <span class="floatcard__row">
+    <span class="floatcard__table">{t('shell.ticket.table')}</span>
+    {
+      ticketStates.map((state, index) => (
+        <span
+          class={`floatcard__state tone--${state.tone}`}
+          data-ticket-state={state.id}
+          data-on={index === 0 ? 'true' : undefined}
+        >
+          {t(state.labelKey as never)}
+        </span>
+      ))
+    }
+  </span>
+  <span class="floatcard__body">
+    <span class="floatcard__title">{t('shell.ticket.title')}</span>
+    <span class="floatcard__meta">
+      <span class="floatcard__bar"><i data-ticket-bar></i></span>
+      <span data-ticket-meta>{t('shell.ticket.meta')}</span>
+    </span>
+  </span>
+</div>
+
+<!-- Overlay: the inventory alert the product raises on its own ------------ -->
+<div
+  class="floatcard floatcard--stock is-floating is-floating--slow tone--rust"
+  data-float
+  aria-hidden="true"
+>
+  <span class="icon-tile" style="inline-size:2rem;block-size:2rem">
+    <Icon name="package" />
+  </span>
+  <span class="floatcard__body">
+    <span class="floatcard__title">{t('shell.card.stock.title')}</span>
+    <span class="floatcard__meta">{t('shell.card.stock.meta')}</span>
+  </span>
+</div>
+
+<!-- Overlay: the close-out that squares ---------------------------------- -->
+<div
+  class="floatcard floatcard--cash is-floating is-floating--fast tone--olive"
+  data-float
+  aria-hidden="true"
+>
+  <span class="icon-tile" style="inline-size:2rem;block-size:2rem">
+    <Icon name="check" />
+  </span>
+  <span class="floatcard__body">
+    <span class="floatcard__title">{t('shell.card.cash.title')}</span>
+    <span class="floatcard__meta">{t('shell.card.cash.meta')}</span>
+  </span>
+</div>

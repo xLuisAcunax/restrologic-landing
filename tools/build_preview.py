@@ -692,7 +692,7 @@ def footer() -> str:
       <a class="footer__link" href="#">{t('footer.terms')}</a></div></nav>
   </div>
   <div class="footer__bottom">
-    <p>© 2026 RestroLogic. {t('footer.rights')} {t('footer.built')} <a href="#" style="color:var(--brand-ink)">Luis Acuña</a>.</p>
+    <p>RestroLogic 2026. {t('footer.built')} <a href="#" style="color:var(--brand-ink)">Luis Acuña</a>.</p>
     <ul class="social">
       <li><a class="social__link" href="#"><span class="sr-only">GitHub</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .5a12 12 0 0 0-3.8 23.4c.6.1.8-.2.8-.6v-2.1c-3.4.7-4.1-1.6-4.1-1.6-.5-1.3-1.1-1.7-1.1-1.7-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.6 2.4 1.1 3 .9.1-.7.3-1.1.6-1.4-2.7-.3-5.4-1.3-5.4-6 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.6.1-3.3 0 0 1-.3 3.3 1.3a11.6 11.6 0 0 1 6.1 0c2.2-1.6 3.3-1.3 3.3-1.3.6 1.7.2 3 .1 3.3.8.8 1.2 1.8 1.2 3.1 0 4.6-2.7 5.6-5.4 5.9.4.4.7 1 .7 2.1v3.1c0 .4.2.8.8.6A12 12 0 0 0 12 .5z"/></svg></a></li>
       <li><a class="social__link" href="#"><span class="sr-only">LinkedIn</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.98 3.5A2.5 2.5 0 1 0 5 8.5a2.5 2.5 0 0 0-.02-5zM3 9h4v12H3zM9 9h3.8v1.7h.1c.5-.9 1.8-1.8 3.7-1.8 4 0 4.7 2.6 4.7 6V21h-4v-5.3c0-1.3 0-3-1.8-3s-2.1 1.4-2.1 2.9V21H9z"/></svg></a></li>

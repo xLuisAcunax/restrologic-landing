@@ -8,13 +8,4 @@
 
 @import "tailwindcss";
 
-@import "./tokens.css";
-@import "./base.css";
-@import "./primitives.css";
-@import "./components.css";
-@import "./sections.css";
-@import "./animations.css";
-
-/* Tailwind's `dark:` variant must follow our [data-theme] contract rather
-   than the OS media query, so utilities and components stay in sync. */
-@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+@import "./redesign.css";

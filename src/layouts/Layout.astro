@@ -1,6 +1,4 @@
 ---
-import ThemeScript from '../components/layout/ThemeScript.astro';
-import Header from '../components/layout/Header.astro';
 import Footer from '../components/layout/Footer.astro';
 import { site } from '../lib/content';
 import { languages } from '../i18n/ui';
@@ -72,14 +70,11 @@ const schema = {
 ---
 
 <!doctype html>
-<html lang={getLocaleTag(lang)} data-theme="light">
+<html lang={getLocaleTag(lang)}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
-
-    <!-- Theme + motion bootstrap. Must run before the first paint. -->
-    <ThemeScript />
 
     <title>{title}</title>
     <meta name="title" content={title} />
@@ -88,14 +83,14 @@ const schema = {
 
     <!-- Icons -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="theme-color" content="#f36d16" />
+    <meta name="theme-color" content="#282820" />
 
     <!-- Fonts. Preconnect first so the CSS request starts a round-trip early. -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Caprasimo&family=Figtree:wght@400;500;600;700;800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&display=swap"
     />
 
     <!-- Open Graph -->
@@ -144,16 +139,10 @@ const schema = {
   <body>
     <a class="skip-link" href="#main">{t('nav.skip')}</a>
 
-    <Header />
-
     <main id="main">
       <slot />
     </main>
 
     <Footer />
-
-    <script>
-      import '../scripts/main';
-    </script>
   </body>
 </html>

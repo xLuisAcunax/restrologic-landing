@@ -1,0 +1,246 @@
+---
+import Logo from './layout/Logo.astro';
+import {
+  getLangFromUrl,
+  useTranslatedPath,
+} from '../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const path = useTranslatedPath(lang);
+const en = lang === 'en';
+
+const c = en
+  ? {
+      nav: ['Product', 'How it works', 'Modules', 'Plans'],
+      demo: 'Book a demo',
+      eyebrow: 'The operating system for your restaurant',
+      hero1: 'Less chaos.',
+      hero2: 'More tables served.',
+      heroText: 'RestroLogic connects front of house, kitchen, cash and inventory so your team works clearly and you lead with real data.',
+      heroCta: 'I want a demo',
+      heroLink: 'See the product',
+      proofStrong: 'One platform',
+      proofText: 'for the whole team',
+      openRegister: 'OPEN REGISTER',
+      shift: 'Shift 5h 53m',
+      todayOrders: "TODAY'S ORDERS",
+      activeNow: '2 active now',
+      marquee: ['POINT OF SALE', 'KITCHEN', 'INVENTORY', 'REPORTS', 'CASH'],
+      introKicker: '01 — A CONNECTED OPERATION',
+      introTitle1: 'Your restaurant moves fast.',
+      introTitle2: 'Your system should too.',
+      introText: 'When every area works separately, errors, delays and blind decisions appear. RestroLogic turns all that movement into one simple, visible flow.',
+      introLink: 'Explore every module',
+      outcomes: [
+        ['Service that flows', 'Clear orders from table to kitchen, without lost messages or duplicate entry.'],
+        ['Numbers that speak', 'Sales, cash and costs while the shift is happening, not after it ends.'],
+        ['A synchronized team', 'Every role sees exactly what it needs to act quickly and confidently.'],
+      ],
+      modulesKicker: '02 — MEET RESTROLOGIC',
+      modulesTitle1: 'The entire shift.',
+      modulesTitle2: 'One clear view.',
+      modulesText: 'Explore a platform designed around the real decisions your team makes every day.',
+      moduleDemo: 'See it in a demo',
+      workflowKicker: '03 — FROM ORDER TO DECISION',
+      workflowTitle1: 'A flow that feels',
+      workflowTitle2: 'natural.',
+      workflowText: 'Fewer unnecessary steps. More clarity at every moment of service.',
+      workflow: [
+        ['The order comes in', 'Front-of-house records the order at the table with clear products, quantities and notes.'],
+        ['Kitchen synchronizes', 'The ticket appears instantly, ordered by status and preparation time.'],
+        ['You see the whole picture', 'Sales, tables, cash and stock update so you can decide with live information.'],
+      ],
+      bentoKicker: '04 — BUILT FOR THE EVERYDAY',
+      bentoTitle1: 'Powerful inside.',
+      bentoTitle2: 'Simple outside.',
+      bentoText: 'A consistent experience from opening the register to the final report of the day.',
+      actionLabel: 'RESTROLOGIC IN ACTION',
+      actionTitle: 'Your operation, in motion.',
+      smartAlerts: 'SMART ALERTS',
+      stockTitle: 'Never let critical stock catch you off guard.',
+      roleLabel: 'ROLE-BASED ACCESS',
+      roleTitle: 'Everyone sees what they need. You stay in control.',
+      admin: 'Administrator', kitchen: 'Kitchen', server: 'Server', fullControl: 'Full control', tickets: 'Tickets and timing', tables: 'Tables and orders', active: 'Active',
+      reportsLabel: 'CLEAR REPORTS',
+      reportsTitle: 'The complete story behind every sale.',
+      reportsText: 'Filter, compare and find answers without endless spreadsheets.',
+      impactLabel: 'LESS FRICTION IN EVERY SHIFT',
+      impactTitle: 'Great service starts long before the plate.',
+      impact: ['platform for the entire operation', 'areas connected in real time', 'visibility to make decisions'],
+      pricingKicker: '05 — FLEXIBLE PLANS',
+      pricingTitle1: 'Start simple.', pricingTitle2: 'Grow without limits.',
+      pricingText: 'Choose what your operation needs today and add capabilities as you reach the next level.',
+      choose: 'Choose', contactSales: 'Contact sales', month: '/ month',
+      faqKicker: '06 — FREQUENTLY ASKED QUESTIONS', faqTitle1: 'What matters,', faqTitle2: 'straightforward.',
+      contactKicker: '07 — LET’S TALK', contactTitle1: 'Your next shift', contactTitle2: 'can feel different.',
+      contactText: 'Tell us how your restaurant works and discover how RestroLogic can help you operate with greater clarity.',
+      promises: ['A demo tailored to your operation', 'No commitment', 'Clear answers'],
+      formName: 'Your name', formNamePh: 'Full name', formEmail: 'Your email', formEmailPh: 'email@restaurant.com',
+      formRestaurant: 'Restaurant name', formRestaurantPh: 'What is your business called?',
+      formMessage: 'What would you like to improve?', formMessagePh: 'Tell us a little about your operation...',
+      formSubmit: 'Book my demo', formSuccess: 'Done! We received your details for this demonstration.',
+    }
+  : {
+      nav: ['Producto', 'Cómo funciona', 'Módulos', 'Planes'],
+      demo: 'Agendar demo', eyebrow: 'El sistema operativo de tu restaurante', hero1: 'Menos caos.', hero2: 'Más mesas servidas.',
+      heroText: 'RestroLogic conecta salón, cocina, caja e inventario para que tu equipo trabaje con claridad y tú dirijas con datos reales.',
+      heroCta: 'Quiero una demo', heroLink: 'Ver el producto', proofStrong: 'Una sola plataforma', proofText: 'para todo el equipo',
+      openRegister: 'CAJA ABIERTA', shift: 'Turno 5h 53m', todayOrders: 'ÓRDENES DE HOY', activeNow: '2 activas ahora',
+      marquee: ['PUNTO DE VENTA', 'COCINA', 'INVENTARIO', 'REPORTES', 'CAJA'],
+      introKicker: '01 — UNA OPERACIÓN CONECTADA', introTitle1: 'Tu restaurante se mueve rápido.', introTitle2: 'Tu sistema también debería.',
+      introText: 'Cuando cada área trabaja por separado, aparecen errores, demoras y decisiones a ciegas. RestroLogic convierte todo ese movimiento en un flujo simple y visible.',
+      introLink: 'Conoce todos los módulos',
+      outcomes: [
+        ['Servicio que fluye', 'Pedidos claros desde la mesa hasta cocina, sin mensajes perdidos ni dobles registros.'],
+        ['Números que hablan', 'Ventas, caja y costos disponibles mientras ocurre el turno, no cuando ya terminó.'],
+        ['Equipo sincronizado', 'Cada rol ve exactamente lo que necesita para actuar con rapidez y confianza.'],
+      ],
+      modulesKicker: '02 — CONOCE RESTROLOGIC', modulesTitle1: 'Todo el turno.', modulesTitle2: 'Una sola vista.',
+      modulesText: 'Explora una plataforma diseñada para las decisiones reales que tu equipo toma todos los días.', moduleDemo: 'Verlo en una demo',
+      workflowKicker: '03 — DEL PEDIDO A LA DECISIÓN', workflowTitle1: 'Un flujo que se siente', workflowTitle2: 'natural.',
+      workflowText: 'Menos pasos innecesarios. Más claridad en cada momento del servicio.',
+      workflow: [
+        ['El pedido entra', 'El equipo de salón registra la orden desde la mesa con productos, cantidades y notas claras.'],
+        ['Cocina se sincroniza', 'La comanda aparece al instante, ordenada por estado y tiempo de preparación.'],
+        ['Tú ves el panorama', 'Ventas, mesas, caja y existencias se actualizan para que decidas con información viva.'],
+      ],
+      bentoKicker: '04 — HECHO PARA EL DÍA A DÍA', bentoTitle1: 'Potente por dentro.', bentoTitle2: 'Simple por fuera.',
+      bentoText: 'Una experiencia consistente desde la apertura de caja hasta el último reporte del día.',
+      actionLabel: 'RESTROLOGIC EN ACCIÓN', actionTitle: 'Tu operación, en movimiento.', smartAlerts: 'ALERTAS INTELIGENTES',
+      stockTitle: 'Que el stock crítico no te tome por sorpresa.', roleLabel: 'ACCESO POR ROLES',
+      roleTitle: 'Cada persona ve lo justo. Tú mantienes el control.', admin: 'Administrador', kitchen: 'Cocina', server: 'Mesero',
+      fullControl: 'Control total', tickets: 'Comandas y tiempos', tables: 'Mesas y pedidos', active: 'Activo',
+      reportsLabel: 'REPORTES CLAROS', reportsTitle: 'La historia completa detrás de cada venta.',
+      reportsText: 'Filtra, compara y encuentra respuestas sin hojas de cálculo interminables.', impactLabel: 'MENOS FRICCIÓN EN CADA TURNO',
+      impactTitle: 'El buen servicio empieza mucho antes del plato.', impact: ['plataforma para toda la operación', 'áreas conectadas en tiempo real', 'visibilidad para tomar decisiones'],
+      pricingKicker: '05 — PLANES FLEXIBLES', pricingTitle1: 'Empieza simple.', pricingTitle2: 'Crece sin límites.',
+      pricingText: 'Elige la base que tu operación necesita hoy y suma capacidades cuando llegue el siguiente nivel.', choose: 'Elegir', contactSales: 'Contactar ventas', month: '/ mes',
+      faqKicker: '06 — PREGUNTAS FRECUENTES', faqTitle1: 'Lo importante,', faqTitle2: 'sin rodeos.',
+      contactKicker: '07 — HABLEMOS', contactTitle1: 'Tu próximo turno', contactTitle2: 'puede sentirse distinto.',
+      contactText: 'Cuéntanos cómo funciona tu restaurante y descubre cómo RestroLogic puede ayudarte a operar con más claridad.',
+      promises: ['Demo adaptada a tu operación', 'Sin compromiso', 'Respuestas claras'],
+      formName: 'Tu nombre', formNamePh: 'Nombre completo', formEmail: 'Tu correo', formEmailPh: 'correo@restaurante.com',
+      formRestaurant: 'Nombre del restaurante', formRestaurantPh: '¿Cómo se llama tu negocio?',
+      formMessage: '¿Qué te gustaría mejorar?', formMessagePh: 'Cuéntanos un poco sobre tu operación...',
+      formSubmit: 'Agendar mi demo', formSuccess: '¡Listo! Recibimos tus datos para esta demostración.',
+    };
+
+const modules = en ? [
+  { id: 'dashboard', eyebrow: 'Real-time control', title: 'Dashboard', copy: 'Sales, cash, tables and operations in one view. Spot what matters before it becomes a problem.', image: '/media/dashboard.webp', alt: 'RestroLogic dashboard with sales and operation metrics', stat: 'Your entire operation, live' },
+  { id: 'pos', eyebrow: 'Frictionless service', title: 'Point of sale', copy: 'Open tables, take orders and send tickets to kitchen without losing the pace of service.', image: '/media/pos-mesas.webp', alt: 'RestroLogic point of sale and table management', stat: 'From table to kitchen in seconds' },
+  { id: 'kitchen', eyebrow: 'Every dish on time', title: 'Kitchen', copy: 'A clear visual queue so the team knows what to prepare, what is ready and how long every ticket has waited.', image: '/media/cocina.png', alt: 'RestroLogic kitchen display with active tickets', stat: 'Less confusion, better service' },
+  { id: 'inventory', eyebrow: 'Costs under control', title: 'Inventory', copy: 'Know stock, costs and alerts. Turn every ingredient into useful information for better decisions.', image: '/media/inventario.webp', alt: 'RestroLogic inventory module', stat: 'Control from ingredient to plate' },
+  { id: 'reports', eyebrow: 'Decisions with context', title: 'Reports', copy: 'Review orders, sales and cash movements with clear filters. Numbers stop being a month-end surprise.', image: '/media/reportes-ordenes.webp', alt: 'RestroLogic order reports', stat: 'Information ready for decisions' },
+] : [
+  { id: 'dashboard', eyebrow: 'Control en tiempo real', title: 'Dashboard', copy: 'Ventas, caja, mesas y operación en una sola vista. Detecta lo importante antes de que se convierta en un problema.', image: '/media/dashboard.webp', alt: 'Dashboard de RestroLogic con métricas de ventas y operación', stat: 'Toda la operación, en vivo' },
+  { id: 'pos', eyebrow: 'Servicio sin fricción', title: 'Punto de venta', copy: 'Abre mesas, toma pedidos y envía comandas a cocina sin perder el ritmo del salón, incluso en las horas más intensas.', image: '/media/pos-mesas.webp', alt: 'Punto de venta de RestroLogic con gestión de mesas', stat: 'De la mesa a cocina en segundos' },
+  { id: 'kitchen', eyebrow: 'Cada plato a tiempo', title: 'Cocina', copy: 'Una cola visual y clara para que el equipo sepa qué preparar, qué está listo y cuánto lleva esperando cada comanda.', image: '/media/cocina.png', alt: 'Pantalla de cocina de RestroLogic con comandas activas', stat: 'Menos confusión, mejor servicio' },
+  { id: 'inventory', eyebrow: 'Costos bajo control', title: 'Inventario', copy: 'Conoce existencias, costos y alertas de stock. Convierte cada insumo en información útil para tomar mejores decisiones.', image: '/media/inventario.webp', alt: 'Módulo de inventario de RestroLogic', stat: 'Control desde el insumo hasta el plato' },
+  { id: 'reports', eyebrow: 'Decisiones con contexto', title: 'Reportes', copy: 'Consulta órdenes, ventas y movimientos de caja con filtros claros. Los números dejan de ser una sorpresa al final del mes.', image: '/media/reportes-ordenes.webp', alt: 'Reportes de órdenes en RestroLogic', stat: 'Información lista para decidir' },
+];
+
+const faqs = en ? [
+  ['Does RestroLogic work for every type of restaurant?', 'It is designed for restaurants, cafés, bars and one or multiple-location operations. Products, tables, taxes, users and workflows can all be adapted.'],
+  ['Can I manage more than one location?', 'Yes. Growth plans centralize locations, users and reports without losing visibility into each venue.'],
+  ['Does my team need technical training?', 'No. The interface follows the real work of front of house, kitchen, cash and administration so every person finds what they need quickly.'],
+  ['How can I see whether it fits my operation?', 'Book a demo. We will review your restaurant flow and show the modules that matter most to your team.'],
+] : [
+  ['¿RestroLogic funciona para cualquier tipo de restaurante?', 'Está pensado para restaurantes, cafés, bares y operaciones con una o varias sedes. La configuración permite adaptar productos, mesas, impuestos, usuarios y flujos de trabajo.'],
+  ['¿Puedo controlar más de una sede?', 'Sí. Los planes para operaciones en crecimiento permiten centralizar sucursales, usuarios y reportes sin perder la visibilidad de cada punto.'],
+  ['¿Mi equipo necesita capacitación técnica?', 'No. La interfaz está diseñada alrededor de las tareas reales de salón, cocina, caja y administración para que cada persona encuentre rápido lo que necesita.'],
+  ['¿Cómo puedo ver si se adapta a mi operación?', 'Agenda una demostración. Revisaremos el flujo de tu restaurante y te mostraremos los módulos más relevantes para tu equipo.'],
+];
+
+const planCopy = en ? [
+  { label: 'BASIC', title: 'To start with order', price: '$29', features: ['1 location', 'Up to 5 users', 'Point of sale and cash', 'Essential reports'] },
+  { label: 'PRO', title: 'For growing operations', price: '$59', features: ['Multiple locations', 'Unlimited users', 'Inventory and recipes', 'Advanced reports'], featured: true },
+  { label: 'ENTERPRISE', title: 'For an operation built around you', price: 'Let’s talk', features: ['Every module', 'Dedicated support', 'Custom development', 'White label'], custom: true },
+] : [
+  { label: 'BÁSICO', title: 'Para empezar con orden', price: '$29', features: ['1 sucursal', 'Hasta 5 usuarios', 'Punto de venta y caja', 'Reportes esenciales'] },
+  { label: 'PRO', title: 'Para operaciones en crecimiento', price: '$59', features: ['Múltiples sucursales', 'Usuarios ilimitados', 'Inventario y recetas', 'Reportes avanzados'], featured: true },
+  { label: 'EMPRESA', title: 'Para una operación a tu medida', price: 'Hablemos', features: ['Todos los módulos', 'Soporte dedicado', 'Desarrollo personalizado', 'Marca blanca'], custom: true },
+];
+---
+
+<div class="landing-redesign">
+  <div class="scroll-progress" data-scroll-progress aria-hidden="true"></div>
+
+  <header class="site-header" data-site-header>
+    <a class="site-brand" href={path('/')} aria-label="RestroLogic — inicio">
+      <Logo class="site-brand__mark" id="redesign-header" />
+      <span>Restro<em>Logic</em></span>
+    </a>
+    <nav class="nav-links" data-nav-menu aria-label={en ? 'Main navigation' : 'Navegación principal'}>
+      <a href="#features">{c.nav[0]}</a>
+      <a href="#how">{c.nav[1]}</a>
+      <a href="#modules">{c.nav[2]}</a>
+      <a href="#pricing">{c.nav[3]}</a>
+    </nav>
+    <a class="button button-small header-cta" href="#contact">{c.demo}<span>↗</span></a>
+    <button class="menu-toggle" data-menu-toggle type="button" aria-label={en ? 'Open menu' : 'Abrir menú'} aria-expanded="false"><span></span><span></span></button>
+  </header>
+
+  <section class="hero" id="inicio" data-hero-pointer>
+    <div class="hero-grain"></div><div class="hero-orb hero-orb-one"></div><div class="hero-orb hero-orb-two"></div>
+    <div class="hero-copy">
+      <div class="eyebrow hero-eyebrow"><span class="live-dot"></span>{c.eyebrow}</div>
+      <h1>{c.hero1}<br /><em>{c.hero2}</em></h1>
+      <p>{c.heroText}</p>
+      <div class="hero-actions"><a class="button button-primary" href="#contact">{c.heroCta}<span>→</span></a><a class="text-link" href="#features">{c.heroLink}<span>↓</span></a></div>
+      <div class="hero-proof"><div class="avatar-stack" aria-hidden="true"><span>MF</span><span>KS</span><span>+8</span></div><p><strong>{c.proofStrong}</strong><br />{c.proofText}</p></div>
+    </div>
+    <div class="hero-product" aria-label={en ? 'RestroLogic product preview' : 'Vista previa del producto RestroLogic'}>
+      <div class="float-card float-card-top"><span class="status-pulse"></span><div><small>{c.openRegister}</small><strong>{c.shift}</strong></div></div>
+      <div class="product-window"><div class="window-bar"><div class="window-dots"><i></i><i></i><i></i></div><span>restrologic.app/dashboard</span><b>{en ? 'LIVE' : 'EN VIVO'}</b></div><img src="/media/dashboard.webp" alt={modules[0].alt} /></div>
+      <div class="float-card float-card-bottom"><div class="order-icon">12</div><div><small>{c.todayOrders}</small><strong>{c.activeNow}</strong></div><span class="trend">+18%</span></div>
+    </div>
+    <div class="hero-scroll"><span>SCROLL</span><i></i></div>
+  </section>
+
+  <div class="marquee" aria-hidden="true"><div class="marquee-track">{[0, 1].map(() => <div class="marquee-group">{c.marquee.map((item) => <><span>{item}</span><i>✦</i></>)}</div>)}</div></div>
+
+  <section class="intro section-pad" id="features">
+    <div class="section-kicker" data-reveal>{c.introKicker}</div>
+    <div class="intro-grid"><h2 data-reveal>{c.introTitle1}<br /><em>{c.introTitle2}</em></h2><div class="intro-copy" data-reveal><p>{c.introText}</p><a class="underlined-link" href="#modules">{c.introLink}<span>↗</span></a></div></div>
+    <div class="outcomes-grid">{c.outcomes.map((item, index) => <article class="outcome-card" data-reveal style={`--delay:${index * 90}ms`}><span>0{index + 1}</span><div class="outcome-mark" aria-hidden="true">{index === 0 ? '↗' : index === 1 ? '◎' : '≋'}</div><h3>{item[0]}</h3><p>{item[1]}</p></article>)}</div>
+  </section>
+
+  <section class="modules section-pad" id="modules">
+    <div class="section-heading" data-reveal><div><div class="section-kicker">{c.modulesKicker}</div><h2>{c.modulesTitle1}<br /><em>{c.modulesTitle2}</em></h2></div><p>{c.modulesText}</p></div>
+    <div class="module-tabs" role="tablist" aria-label={en ? 'RestroLogic modules' : 'Módulos de RestroLogic'} data-reveal>{modules.map((module, index) => <button type="button" role="tab" id={`module-tab-${module.id}`} aria-selected={index === 0 ? 'true' : 'false'} aria-controls={`module-panel-${module.id}`} tabindex={index === 0 ? 0 : -1} class={index === 0 ? 'is-active' : ''} data-module-tab={module.id}><span>0{index + 1}</span>{module.title}</button>)}</div>
+    <div class="module-panels" data-reveal>{modules.map((module, index) => <div class="module-showcase" id={`module-panel-${module.id}`} role="tabpanel" aria-labelledby={`module-tab-${module.id}`} data-module-panel={module.id} hidden={index !== 0}><div class="module-content"><span class="module-eyebrow">{module.eyebrow}</span><h3>{module.title}</h3><p>{module.copy}</p><div class="module-stat"><i></i>{module.stat}</div><a href="#contact" class="button button-dark">{c.moduleDemo}<span>↗</span></a></div><div class="module-screen"><div class="screen-top"><i></i><i></i><i></i><span>{module.title}</span></div><img src={module.image} alt={module.alt} /><div class="screen-glow"></div></div></div>)}</div>
+  </section>
+
+  <section class="workflow section-pad" id="how">
+    <div class="workflow-copy" data-reveal><div class="section-kicker light">{c.workflowKicker}</div><h2>{c.workflowTitle1} <em>{c.workflowTitle2}</em></h2><p>{c.workflowText}</p></div>
+    <div class="workflow-steps">{c.workflow.map((item, index) => <article class="workflow-step" data-reveal style={`--delay:${index * 100}ms`}><div class="step-number">0{index + 1}</div><div><h3>{item[0]}</h3><p>{item[1]}</p></div><span aria-hidden="true">→</span></article>)}</div>
+  </section>
+
+  <section class="bento section-pad">
+    <div class="section-heading" data-reveal><div><div class="section-kicker">{c.bentoKicker}</div><h2>{c.bentoTitle1}<br /><em>{c.bentoTitle2}</em></h2></div><p>{c.bentoText}</p></div>
+    <div class="bento-grid">
+      <article class="bento-card bento-video" data-reveal><video autoplay muted loop playsinline poster="/media/dashboard.webp" aria-label={c.actionTitle}><source src="/media/RestroLogic_Landscape.mp4" type="video/mp4" /></video><div class="video-overlay"><span class="play-chip">▶</span><div><small>{c.actionLabel}</small><h3>{c.actionTitle}</h3></div></div></article>
+      <article class="bento-card bento-stock" data-reveal style="--delay:90ms"><div class="bento-label">{c.smartAlerts}</div><h3>{c.stockTitle}</h3><img src="/media/stock-critico.png" alt={c.stockTitle} /></article>
+      <article class="bento-card bento-roles" data-reveal><div class="bento-label">{c.roleLabel}</div><h3>{c.roleTitle}</h3><div class="role-list"><span><b>MF</b><i><strong>{c.admin}</strong><small>{c.fullControl}</small></i><em>{c.active}</em></span><span><b>KS</b><i><strong>{c.kitchen}</strong><small>{c.tickets}</small></i><em>{c.active}</em></span><span><b>AR</b><i><strong>{c.server}</strong><small>{c.tables}</small></i><em>{c.active}</em></span></div></article>
+      <article class="bento-card bento-report" data-reveal style="--delay:90ms"><div><div class="bento-label">{c.reportsLabel}</div><h3>{c.reportsTitle}</h3><p>{c.reportsText}</p></div><div class="report-mini" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div></article>
+    </div>
+  </section>
+
+  <section class="impact"><div class="impact-intro" data-reveal><span>{c.impactLabel}</span><h2>{c.impactTitle}</h2></div><div class="impact-metrics"><div data-reveal><strong>1</strong><span>{c.impact[0]}</span></div><div data-reveal style="--delay:90ms"><strong>5</strong><span>{c.impact[1]}</span></div><div data-reveal style="--delay:180ms"><strong>24/7</strong><span>{c.impact[2]}</span></div></div></section>
+
+  <section class="pricing section-pad" id="pricing">
+    <div class="pricing-heading" data-reveal><div class="section-kicker">{c.pricingKicker}</div><h2>{c.pricingTitle1}<br /><em>{c.pricingTitle2}</em></h2><p>{c.pricingText}</p></div>
+    <div class="pricing-grid">{planCopy.map((plan, index) => <article class:list={['price-card', { featured: plan.featured }]} data-reveal style={`--delay:${index * 90}ms`}>{plan.featured && <span class="popular-chip">{en ? 'MOST POPULAR' : 'MÁS POPULAR'}</span>}<span class="plan-label">{plan.label}</span><h3>{plan.title}</h3><div class:list={['price', { 'price-custom': plan.custom }]}>{!plan.custom && <sup>USD</sup>}<strong>{plan.price}</strong>{!plan.custom && <span>{c.month}</span>}</div><ul>{plan.features.map((feature) => <li>{feature}</li>)}</ul><a href="#contact" class:list={['button', plan.featured ? 'button-primary' : 'button-outline']}>{plan.custom ? c.contactSales : `${c.choose} ${plan.label}`}<span>→</span></a></article>)}</div>
+  </section>
+
+  <section class="faq section-pad" id="faq"><div class="faq-heading" data-reveal><div class="section-kicker">{c.faqKicker}</div><h2>{c.faqTitle1}<br /><em>{c.faqTitle2}</em></h2></div><div class="faq-list" data-reveal>{faqs.map((item, index) => <details open={index === 0}><summary><span>0{index + 1}</span>{item[0]}<i>+</i></summary><p>{item[1]}</p></details>)}</div></section>
+
+  <section class="contact" id="contact">
+    <div class="contact-copy" data-reveal><div class="section-kicker light">{c.contactKicker}</div><h2>{c.contactTitle1}<br /><em>{c.contactTitle2}</em></h2><p>{c.contactText}</p>{c.promises.map((promise) => <div class="contact-promise"><span>✓</span>{promise}</div>)}</div>
+    <form class="contact-form" data-demo-form data-reveal><div class="form-row"><label>{c.formName}<input required name="name" autocomplete="name" placeholder={c.formNamePh} /></label><label>{c.formEmail}<input required name="email" type="email" autocomplete="email" placeholder={c.formEmailPh} /></label></div><label>{c.formRestaurant}<input required name="restaurant" autocomplete="organization" placeholder={c.formRestaurantPh} /></label><label>{c.formMessage}<textarea required name="message" rows="4" placeholder={c.formMessagePh}></textarea></label><button class="button button-primary form-submit" type="submit">{c.formSubmit}<span>→</span></button><p class="form-success" data-form-success role="status" hidden>{c.formSuccess}</p></form>
+  </section>
+</div>
+
+<script>
+  import '../scripts/redesign';
+</script>

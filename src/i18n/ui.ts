@@ -41,13 +41,13 @@ const es = {
   "nav.skip": "Ir al contenido principal",
 
   /* ---------------------------------------------------------------- hero */
-  "hero.badge": "Diseñado para restaurantes de verdad",
-  "hero.title.1": "El sistema operativo",
-  "hero.title.2": "de tu restaurante",
+  "hero.badge": "El sistema operativo de tu restaurante",
+  "hero.title.1": "Menos caos.",
+  "hero.title.2": "Más mesas servidas.",
   "hero.lede":
-    "Desde que el mesero toma la orden hasta que cierras la caja. RestroLogic conecta mesas, cocina, inventario y reportes en una sola plataforma — sin papeles, sin cuadernos, sin sorpresas al final del día.",
-  "hero.cta.primary": "Solicitar demo",
-  "hero.cta.secondary": "Ver los módulos",
+    "RestroLogic conecta salón, cocina, caja e inventario para que tu equipo trabaje con claridad y tú dirijas con datos reales.",
+  "hero.cta.primary": "Quiero una demo",
+  "hero.cta.secondary": "Ver el producto",
   "hero.proof.1.num": "40%",
   "hero.proof.1.label": "Menos tiempo por orden",
   "hero.proof.2.num": "100%",
@@ -450,13 +450,13 @@ const en: Dictionary = {
   "nav.skip": "Skip to main content",
 
   /* ---------------------------------------------------------------- hero */
-  "hero.badge": "Built for real restaurants",
-  "hero.title.1": "The operating system",
-  "hero.title.2": "for your restaurant",
+  "hero.badge": "The operating system for your restaurant",
+  "hero.title.1": "Less chaos.",
+  "hero.title.2": "More tables served.",
   "hero.lede":
-    "From the moment a server takes the order to the moment you close the register. RestroLogic connects tables, kitchen, inventory and reporting in one platform — no paper tickets, no notebooks, no surprises at the end of the night.",
-  "hero.cta.primary": "Book a demo",
-  "hero.cta.secondary": "See the modules",
+    "RestroLogic connects front of house, kitchen, cash and inventory so your team works clearly and you lead with real data.",
+  "hero.cta.primary": "I want a demo",
+  "hero.cta.secondary": "See the product",
   "hero.proof.1.num": "40%",
   "hero.proof.1.label": "Less time per order",
   "hero.proof.2.num": "100%",
